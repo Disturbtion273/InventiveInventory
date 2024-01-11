@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "inventive_inventory",
+	"version": "${version}",
+	"name": "Inventive Inventory",
+	"description": "This is just a mod template! Only use for copying!",
+	"authors": [
+		"Moritz Strobel"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/strobel273"
+	},
+	"license": "CC0-1.0",
+	"icon": " ",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.strobel.inventive_inventory.InventiveInventory"
+		],
+		"client": [
+			"net.strobel.inventive_inventory.InventiveInventoryClient"
+		],
+		"fabric-datagen": [
+			"net.strobel.inventive_inventory.InventiveInventoryDataGenerator"
+		]
+	},
+	"mixins": [
+		"inventive_inventory.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-key-binding-api-v1": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
