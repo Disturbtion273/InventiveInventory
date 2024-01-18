@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class InventiveInventory implements ModInitializer {
-	private static final String MOD_ID = "inventive_inventory";
+    public static final String MOD_ID = "inventive_inventory";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	@Override
-	public void onInitialize() {
-		LOGGER.info("Welcome to Inventive Inventory!");
-	}
+    @Override
+    public void onInitialize() {
+        LOGGER.info("Welcome to Inventive Inventory!");
+    }
 }

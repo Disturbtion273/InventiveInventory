@@ -3,7 +3,7 @@
 	"id": "inventive_inventory",
 	"version": "${version}",
 	"name": "Inventive Inventory",
-	"description": "This is just a mod template! Only use for copying!",
+	"description": "All you want for your Inventory.",
 	"authors": [
 		"Moritz Strobel"
 	],
@@ -12,7 +12,7 @@
 		"sources": "https://github.com/strobel273"
 	},
 	"license": "CC0-1.0",
-	"icon": " ",
+	"icon": "assets/inventive_inventory/icon/Inventive Inventory Icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
