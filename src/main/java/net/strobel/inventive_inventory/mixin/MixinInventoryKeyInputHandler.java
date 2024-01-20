@@ -1,8 +1,9 @@
 package net.strobel.inventive_inventory.mixin;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.*;
+import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.event.KeyInputHandler;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +22,14 @@ public class MixinInventoryKeyInputHandler {
         } else if ((Object) this instanceof GenericContainerScreen) {
             if (KeyInputHandler.sortInventoryKey.matchesKey(keyCode, scanCode)) {
                 Sorter.sortContainerInventory();
+            }
+        } else if ((Object) this instanceof HopperScreen) {
+            if (KeyInputHandler.sortInventoryKey.matchesKey(keyCode, scanCode)) {
+                Sorter.sortHopperInventory();
+            }
+        } else if ((Object) this instanceof Generic3x3ContainerScreen) {
+            if (KeyInputHandler.sortInventoryKey.matchesKey(keyCode, scanCode)) {
+                Sorter.sort3x3Container();
             }
         }
 

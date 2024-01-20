@@ -8,7 +8,6 @@
   },
   "client": [
     "MixinInventoryKeyInputHandler",
-    "MixinPlayerInteractionManager",
-    "MixinScreenHandler"
+    "MixinPlayerInteractionManager"
     ]
 }
