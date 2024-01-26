@@ -1,13 +1,13 @@
 {
   "required": true,
-  "package": "net.strobel.inventive_inventory.mixin",
+  "package": "net.strobel.inventive_inventory.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "MixinInventoryKeyInputHandler",
-    "MixinPlayerInteractionManager"
-    ]
+    "MixinClientPlayerInteractionManager",
+    "MixinInventoryKeyInputHandler"
+  ]
 }
