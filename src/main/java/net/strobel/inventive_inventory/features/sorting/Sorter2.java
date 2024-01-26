@@ -9,9 +9,9 @@ public class Sorter2 {
     public static void sortPlayerInventory() {
         ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
 
-        if (SorterHelper.cursorCleared(PlayerInventorySlots.FULL_INVENTORY.getSlots(), screenHandler)) {
-            SorterHelper.mergeItemStacks(screenHandler);
-            SorterHelper.sortItemStacks(screenHandler);
+        if (SorterHelper.cursorCleared(PlayerInventorySlots.FULL_INVENTORY, screenHandler)) {
+            SorterHelper.mergeItemStacks(PlayerInventorySlots.UPPER_INVENTORY, screenHandler);
+            SorterHelper.sortItemStacks(PlayerInventorySlots.UPPER_INVENTORY, screenHandler);
         } else {
             InventiveInventoryClient.getPlayer().sendMessage(
                     Text.of("No operating room available. Try emptying the cursor."));
