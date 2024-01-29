@@ -7,7 +7,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 
 public class InteractionHandler {
-    public static final int LEFT_CLICK = 0;
+    private static final int LEFT_CLICK = 0;
 
     public static ItemStack getCursorStack() {
         return InventiveInventoryClient.getScreenHandler().getCursorStack();

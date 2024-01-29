@@ -2,7 +2,7 @@ package net.strobel.inventive_inventory.features.sorting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.strobel.inventive_inventory.enums.PlayerInventorySlots;
+import net.strobel.inventive_inventory.slots.InventorySlots;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 
 import java.util.Comparator;
@@ -11,14 +11,14 @@ import java.util.stream.IntStream;
 
 public class SorterHelper {
 
-    public static boolean cursorCleared(PlayerInventorySlots inventorySlots, ScreenHandler screenHandler) {
+    public static boolean cursorCleared(InventorySlots inventorySlots, ScreenHandler screenHandler) {
         if (!InteractionHandler.hasEmptyCursor()) {
             clearCursor(inventorySlots, screenHandler);
         }
         return InteractionHandler.hasEmptyCursor();
     }
 
-    public static void mergeItemStacks(PlayerInventorySlots inventorySlots, ScreenHandler screenHandler) {
+    public static void mergeItemStacks(InventorySlots inventorySlots, ScreenHandler screenHandler) {
         for (int slot : inventorySlots.getSlots()) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty() && stack.getCount() < stack.getMaxCount()) {
@@ -36,7 +36,7 @@ public class SorterHelper {
         }
     }
 
-    public static void sortItemStacks(PlayerInventorySlots inventorySlots, ScreenHandler screenHandler) {
+    public static void sortItemStacks(InventorySlots inventorySlots, ScreenHandler screenHandler) {
         List<Integer> sortedSlots = getSortedSlots(inventorySlots, screenHandler);
 
         for (int i = 0; i < sortedSlots.size(); i++) {
@@ -45,7 +45,7 @@ public class SorterHelper {
         }
     }
 
-    private static List<Integer> getSortedSlots(PlayerInventorySlots inventorySlots, ScreenHandler screenHandler) {
+    private static List<Integer> getSortedSlots(InventorySlots inventorySlots, ScreenHandler screenHandler) {
         return IntStream.of(inventorySlots.getSlots())
                 .boxed()
                 .filter(slot -> !screenHandler.getSlot(slot).getStack().isEmpty())
@@ -54,7 +54,7 @@ public class SorterHelper {
                 .toList();
     }
 
-    private static void clearCursor(PlayerInventorySlots inventorySlots, ScreenHandler screenHandler) {
+    private static void clearCursor(InventorySlots inventorySlots, ScreenHandler screenHandler) {
 
         for (int slot : inventorySlots.getSlots()) {
             if (ItemStack.areItemsEqual(screenHandler.getSlot(slot).getStack(), InteractionHandler.getCursorStack())) {
