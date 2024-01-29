@@ -3,7 +3,7 @@
 	"id": "inventive_inventory",
 	"version": "${version}",
 	"name": "Inventive Inventory",
-	"description": "All you want for your Inventory.",
+	"description": "A new inventory management mod. From sorting to loading profiles. [Currently in Development]",
 	"authors": [
 		"Moritz Strobel"
 	],
