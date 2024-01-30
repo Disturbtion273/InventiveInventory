@@ -9,6 +9,6 @@
   "client": [
     "MixinClientPlayerInteractionManager",
     "MixinHandledScreen",
-    "MixinInventoryKeyInputHandler"
+    "MixinKeyInputHandler"
   ]
 }
