@@ -14,11 +14,13 @@ public class MousePosition {
         MousePosition.slot = slot;
     }
 
+    public static int getHoveredSlot() { return slot;}
+
     public static boolean isOverInventory(ScreenHandler screenHandler) {
         if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
             return true;
         } else {
-            return Checker.isIncluded(slot, Arrays.stream(PlayerSlots.getFullInventory().getSlots()).boxed().toArray());
+            return Checker.isIncluded(slot, PlayerSlots.getFullInventory().getSlotsAsInteger());
         }
     }
 }

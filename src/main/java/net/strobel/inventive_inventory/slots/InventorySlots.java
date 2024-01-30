@@ -1,5 +1,7 @@
 package net.strobel.inventive_inventory.slots;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class InventorySlots {
@@ -13,6 +15,10 @@ public class InventorySlots {
         this.slots = IntStream.concat(IntStream.range(from, to), IntStream.of(offhand)).toArray();
     }
 
+    public InventorySlots(int[] slots) {
+        this.slots = slots;
+    }
+
     public int[] getSlots() {
         return this.slots;
     }
@@ -23,5 +29,9 @@ public class InventorySlots {
 
     public int getLastSlot() {
         return this.slots[slots.length - 1];
+    }
+
+    public Integer[] getSlotsAsInteger() {
+        return Arrays.stream(this.slots).boxed().toArray(Integer[]::new);
     }
 }

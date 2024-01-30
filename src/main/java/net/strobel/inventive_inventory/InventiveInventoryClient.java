@@ -6,13 +6,16 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
-import net.strobel.inventive_inventory.events.KeyInputHandler;
+import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import net.strobel.inventive_inventory.util.FileHandler;
 
 
 public class InventiveInventoryClient implements ClientModInitializer {
+    public static final String CONFIG_PATH = "config/inventive_inventory/";
     @Override
     public void onInitializeClient() {
         KeyInputHandler.register();
+        FileHandler.createConfigs();
     }
 
     public static MinecraftClient getClient() {

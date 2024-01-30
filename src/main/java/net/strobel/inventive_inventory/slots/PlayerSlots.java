@@ -1,10 +1,15 @@
 package net.strobel.inventive_inventory.slots;
 
+import com.google.gson.JsonElement;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.util.FileHandler;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class PlayerSlots {
     private static final PlayerInventory inventory = InventiveInventoryClient.getPlayer().getInventory();
@@ -46,5 +51,12 @@ public class PlayerSlots {
             to = screenHandler.slots.size() - HOTBAR;
             return new InventorySlots(from, to);
         }
+    }
+
+    public static InventorySlots getUpperInventoryLockedSlotsExcluded() {
+        List<JsonElement> lockedSlots = FileHandler.get(InventiveInventoryClient.CONFIG_PATH + "locked_slots.json").asList();
+        return new InventorySlots(Arrays.stream(getUpperInventory().getSlots())
+                .filter(slot -> lockedSlots.stream().noneMatch(element -> slot == element.getAsInt() && slot != 45))
+                .toArray());
     }
 }

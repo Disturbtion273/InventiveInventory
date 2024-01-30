@@ -1,4 +1,5 @@
 {
   "key.inventive_inventory.category.inventive_inventory": "Inventive Inventory",
-  "key.inventive_inventory.sort_inventory": "Sort Inventory"
+  "key.inventive_inventory.sort_inventory": "Sort Inventory",
+  "key.inventive_inventory.lock_slot": "Lock Slot"
 }
