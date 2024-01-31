@@ -11,11 +11,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileHandler {
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void write(JsonArray array, String filePath, String json_key) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(json_key, array);
         writeToFile(filePath, jsonObject);
+    }
+
+    public static JsonArray get(String filePath) {
+        JsonArray array = new JsonArray();
+        try {
+            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(filePath));
+            array = (JsonArray) jsonObject.get("locked_slots");
+        } catch (FileNotFoundException | ClassCastException ignored) {}
+        return array;
     }
 
     public static void createConfigs() {
@@ -27,17 +37,8 @@ public class FileHandler {
 
     private static void writeToFile(String filePath, JsonObject jsonObject) {
         try (FileWriter file = new FileWriter(filePath)) {
-            file.write(jsonObject.toString());
+            file.write(gson.toJson(jsonObject));
         } catch (IOException ignored) {}
-    }
-
-    public static JsonArray get(String filePath) {
-        JsonArray array = new JsonArray();
-        try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(filePath));
-            array = (JsonArray) jsonObject.get("locked_slots");
-        } catch (FileNotFoundException | ClassCastException ignored) {}
-        return array;
     }
 
 }

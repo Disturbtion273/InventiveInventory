@@ -13,20 +13,30 @@ import java.util.Arrays;
 public class LockedSlots {
 
     private static final String LOCKED_SLOTS_PATH = InventiveInventoryClient.CONFIG_PATH + "locked_slots.json";
+    private static boolean isLockingSlot = false;
     public static void set() {
         JsonPrimitive slot = new JsonPrimitive(MousePosition.getHoveredSlot());
         JsonArray lockedSlots = FileHandler.get(LOCKED_SLOTS_PATH);
         JsonArray inventorySlots = new Gson().toJsonTree(PlayerSlots.getUpperInventory().getSlots()).getAsJsonArray();
 
-        if (inventorySlots.contains(slot)) {
+        if (inventorySlots.contains(slot) && slot.getAsInt() != 45) {
             if (lockedSlots.contains(slot)) {
                 lockedSlots.remove(slot);
+                System.out.println("Unlocked Slot!");
             } else {
                 lockedSlots.add(slot);
+                System.out.println("Locked Slot!");
             }
             FileHandler.write(lockedSlots, LOCKED_SLOTS_PATH, "locked_slots");
         }
+    }
 
+    public static void setLockingSlot(boolean state) {
+        isLockingSlot = state;
+    }
+
+    public static boolean isLockingSlot() {
+        return isLockingSlot;
     }
 
     public static void print() {

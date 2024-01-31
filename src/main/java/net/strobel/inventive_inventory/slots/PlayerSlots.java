@@ -59,4 +59,11 @@ public class PlayerSlots {
                 .filter(slot -> lockedSlots.stream().noneMatch(element -> slot == element.getAsInt() && slot != 45))
                 .toArray());
     }
+
+    public static InventorySlots getFullInventoryLockedSlotsExcluded() {
+        List<JsonElement> lockedSlots = FileHandler.get(InventiveInventoryClient.CONFIG_PATH + "locked_slots.json").asList();
+        return new InventorySlots(Arrays.stream(getFullInventory().getSlots())
+                .filter(slot -> lockedSlots.stream().noneMatch(element -> slot == element.getAsInt() && slot != 45))
+                .toArray());
+    }
 }
