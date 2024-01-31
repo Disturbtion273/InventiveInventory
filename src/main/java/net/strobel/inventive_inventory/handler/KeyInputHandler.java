@@ -13,7 +13,6 @@ public class KeyInputHandler {
     public static KeyBinding lockSlotKey;
 
 
-
     public static void register() {
         sortInventoryKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_SORT_INVENTORY,

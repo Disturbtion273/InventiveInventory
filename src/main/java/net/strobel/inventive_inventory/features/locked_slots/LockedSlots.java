@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class LockedSlots {
 
-    private static final String LOCKED_SLOTS_PATH = InventiveInventoryClient.CONFIG_PATH + "locked_slots.json";
+    public static final String LOCKED_SLOTS_PATH = InventiveInventoryClient.CONFIG_PATH + "locked_slots.json";
     private static boolean isLockingSlot = false;
     public static void set() {
         JsonPrimitive slot = new JsonPrimitive(MousePosition.getHoveredSlot());
