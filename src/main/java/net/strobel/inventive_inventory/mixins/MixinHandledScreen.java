@@ -9,6 +9,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlots;
+import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.util.FileHandler;
 import net.strobel.inventive_inventory.util.MousePosition;
 import net.strobel.inventive_inventory.util.SlotFinder;
@@ -76,7 +77,7 @@ public abstract class MixinHandledScreen {
 
     @Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
     private static void onDrawSlotHighlight(DrawContext context, int x, int y, int z, CallbackInfo ci) {
-        if (LockedSlots.isLockingSlot()) {
+        if (AdvancedOperationHandler.isPressed()) {
             int color = 0xFFFF0000;
             int width = 15;
             int height = 15;

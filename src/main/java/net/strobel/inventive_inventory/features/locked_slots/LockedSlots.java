@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class LockedSlots {
 
     public static final String LOCKED_SLOTS_PATH = InventiveInventoryClient.CONFIG_PATH + "locked_slots.json";
-    private static boolean isLockingSlot = false;
+
     public static void set() {
         JsonPrimitive slot = new JsonPrimitive(MousePosition.getHoveredSlot());
         JsonArray lockedSlots = FileHandler.get(LOCKED_SLOTS_PATH);
@@ -31,15 +31,7 @@ public class LockedSlots {
         }
     }
 
-    public static void setLockingSlot(boolean state) {
-        isLockingSlot = state;
-    }
-
-    public static boolean isLockingSlot() {
-        return isLockingSlot;
-    }
-
     public static void print() {
-        System.out.println("MORITZ: " + Arrays.toString(PlayerSlots.getUpperInventoryLockedSlotsExcluded().getSlots()));
+        System.out.println("Free Slots: " + Arrays.toString(PlayerSlots.getUpperInventoryLockedSlotsExcluded().getSlots()));
     }
 }

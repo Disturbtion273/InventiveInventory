@@ -15,6 +15,7 @@ public class InventiveInventoryClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         KeyInputHandler.register();
+        KeyInputHandler.registerKeyInputs();
         FileHandler.createConfigs();
     }
 
