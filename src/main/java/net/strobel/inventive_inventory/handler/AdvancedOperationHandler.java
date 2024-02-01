@@ -2,7 +2,6 @@ package net.strobel.inventive_inventory.handler;
 
 import net.minecraft.client.util.InputUtil;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
-
 import org.lwjgl.glfw.GLFW;
 
 public class AdvancedOperationHandler {
@@ -11,12 +10,10 @@ public class AdvancedOperationHandler {
 
     public static void press() {
         pressed = true;
-        System.out.println("Pressed");
     }
 
     public static void release() {
         pressed = false;
-        System.out.println("Released");
     }
 
     public static boolean isPressed() {
@@ -25,13 +22,14 @@ public class AdvancedOperationHandler {
 
     public static boolean isReleased() {
         long window = InventiveInventoryClient.getClient().getWindow().getHandle();
-        int keyState = GLFW.glfwGetKey(window, boundKey.getCode());
-        System.out.println(keyState);
-
-        return keyState == GLFW.GLFW_RELEASE && pressed;
+        return GLFW.glfwGetKey(window, AdvancedOperationHandler.getBoundKey().getCode()) == GLFW.GLFW_RELEASE && AdvancedOperationHandler.isPressed();
     }
 
     public static void setBoundKey(InputUtil.Key key) {
         boundKey = key;
+    }
+
+    public static InputUtil.Key getBoundKey() {
+        return boundKey;
     }
 }

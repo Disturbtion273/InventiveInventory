@@ -10,6 +10,7 @@ import net.minecraft.screen.slot.Slot;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlots;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
+import net.strobel.inventive_inventory.util.Drawer;
 import net.strobel.inventive_inventory.util.FileHandler;
 import net.strobel.inventive_inventory.util.MousePosition;
 import net.strobel.inventive_inventory.util.SlotFinder;
@@ -48,29 +49,13 @@ public abstract class MixinHandledScreen {
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (InventiveInventoryClient.getScreenHandler() instanceof PlayerScreenHandler) {
-            int i = this.x;
-            int j = this.y;
             context.getMatrices().push();
-            context.getMatrices().translate(i, j, 0.0f);
+            context.getMatrices().translate(this.x, this.y, 0.0f);
             JsonArray locked_slots = FileHandler.get(LockedSlots.LOCKED_SLOTS_PATH);
-
             for (JsonElement locked_slot : locked_slots) {
                 Slot slot = SlotFinder.getSlotFromSlotIndex(locked_slot.getAsInt());
-                int color = 0xFFFF0000;
-                int width = 15;
-                int height = 15;
-                int x = slot.x;
-                int y = slot.y;
-                // Draw top border
-                context.fill(x, y, x + width, y + 1, color);
-                // Draw bottom border
-                context.fill(x, y + height, x + width + 1, y + height + 1, color);
-                // Draw left border
-                context.fill(x, y, x + 1, y + height, color);
-                // Draw right border
-                context.fill(x + width, y, x + width + 1, y + height, color);
+                Drawer.drawSlotBorder(context, slot.x, slot.y, 0xFFFF0000);
             }
-
             context.getMatrices().pop();
         }
     }
@@ -78,17 +63,7 @@ public abstract class MixinHandledScreen {
     @Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
     private static void onDrawSlotHighlight(DrawContext context, int x, int y, int z, CallbackInfo ci) {
         if (AdvancedOperationHandler.isPressed()) {
-            int color = 0xFFFF0000;
-            int width = 15;
-            int height = 15;
-            // Draw top border
-            context.fill(x, y, x + width, y + 1, color);
-            // Draw bottom border
-            context.fill(x, y + height, x + width + 1, y + height + 1, color);
-            // Draw left border
-            context.fill(x, y, x + 1, y + height, color);
-            // Draw right border
-            context.fill(x + width, y, x + width + 1, y + height, color);
+            Drawer.drawSlotBorder(context, x, y, 0xFFFF0000);
             ci.cancel();
         }
     }

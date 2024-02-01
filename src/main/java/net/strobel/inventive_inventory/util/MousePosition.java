@@ -5,8 +5,6 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 
-import java.util.Arrays;
-
 public class MousePosition {
     private static Integer slot;
 
