@@ -1,16 +1,20 @@
 package net.strobel.inventive_inventory.mixins;
 
+import com.google.gson.JsonArray;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
+import net.strobel.inventive_inventory.util.JsonHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Arrays;
 
 @Mixin(Screen.class)
 public class MixinKeyInputHandler {
