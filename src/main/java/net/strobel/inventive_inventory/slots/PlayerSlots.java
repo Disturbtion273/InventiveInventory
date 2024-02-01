@@ -17,6 +17,7 @@ public class PlayerSlots {
     private static final int HOTBAR = 9;
     private static final int OFFHAND = inventory.offHand.size();
     private static final int CREATIVE_DELETE_SLOT = 1;
+
     public static InventorySlots getFullInventory() {
         ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
         int from;

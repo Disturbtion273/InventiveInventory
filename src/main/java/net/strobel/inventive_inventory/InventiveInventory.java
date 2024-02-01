@@ -11,6 +11,6 @@ public class InventiveInventory implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Welcome to Inventive Inventory!");
+        LOGGER.info("Loading Inventive Inventory...");
     }
 }
