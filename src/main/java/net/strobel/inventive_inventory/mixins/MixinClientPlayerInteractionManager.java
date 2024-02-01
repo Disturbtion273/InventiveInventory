@@ -23,7 +23,6 @@ public abstract class MixinClientPlayerInteractionManager {
     private void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
         if (AdvancedOperationHandler.isPressed()) {
             LockedSlots.set();
-            LockedSlots.print();
             ci.cancel();
         } else {
             if (player.isCreative() && InventiveInventoryClient.getClient().currentScreen instanceof CreativeInventoryScreen) {

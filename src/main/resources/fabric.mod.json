@@ -8,12 +8,12 @@
 		"Moritz Strobel"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/strobel273"
+		"homepage": "",
+		"sources": ""
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/inventive_inventory/icon/Inventive Inventory Icon.png",
-	"environment": "*",
+	"license": "ARR",
+	"icon": "assets/inventive_inventory/icon/mod_icon.png",
+	"environment": "client",
 	"entrypoints": {
 		"main": [
 			"net.strobel.inventive_inventory.InventiveInventory"
@@ -35,7 +35,11 @@
 		"fabric-api": "*",
 		"fabric-key-binding-api-v1": "*"
 	},
-	"suggests": {
-		"another-mod": "*"
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.modrinth": "https://modrinth.com/mod/inventiveinventory"
+			}
+		}
 	}
 }

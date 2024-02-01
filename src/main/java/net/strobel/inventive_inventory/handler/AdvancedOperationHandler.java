@@ -22,14 +22,15 @@ public class AdvancedOperationHandler {
 
     public static boolean isReleased() {
         long window = InventiveInventoryClient.getClient().getWindow().getHandle();
-        return GLFW.glfwGetKey(window, AdvancedOperationHandler.getBoundKey().getCode()) == GLFW.GLFW_RELEASE && AdvancedOperationHandler.isPressed();
-    }
-
-    public static void setBoundKey(InputUtil.Key key) {
-        boundKey = key;
+        int code = AdvancedOperationHandler.getBoundKey().getCode();
+        return GLFW.glfwGetKey(window, code) == GLFW.GLFW_RELEASE && AdvancedOperationHandler.isPressed();
     }
 
     public static InputUtil.Key getBoundKey() {
         return boundKey;
+    }
+
+    public static void setBoundKey(InputUtil.Key key) {
+        boundKey = key;
     }
 }

@@ -12,6 +12,7 @@ import net.strobel.inventive_inventory.util.FileHandler;
 
 public class InventiveInventoryClient implements ClientModInitializer {
     public static final String CONFIG_PATH = "config/inventive_inventory/";
+
     @Override
     public void onInitializeClient() {
         KeyInputHandler.register();
@@ -23,11 +24,22 @@ public class InventiveInventoryClient implements ClientModInitializer {
         return MinecraftClient.getInstance();
     }
 
-    public static ClientPlayerEntity getPlayer() {return MinecraftClient.getInstance().player;}
+    public static ClientPlayerEntity getPlayer() {
+        return MinecraftClient.getInstance().player;
+    }
 
-    public static Screen getScreen() {return MinecraftClient.getInstance().currentScreen;}
+    public static Screen getScreen() {
+        return MinecraftClient.getInstance().currentScreen;
+    }
 
-    public static ScreenHandler getScreenHandler() {return MinecraftClient.getInstance().player.currentScreenHandler;}
+    public static ScreenHandler getScreenHandler() {
+        if (MinecraftClient.getInstance().player != null) {
+            return MinecraftClient.getInstance().player.currentScreenHandler;
+        }
+        return null;
+    }
 
-    public static ClientPlayerInteractionManager getInteractionManager() {return MinecraftClient.getInstance().interactionManager;}
+    public static ClientPlayerInteractionManager getInteractionManager() {
+        return MinecraftClient.getInstance().interactionManager;
+    }
 }
