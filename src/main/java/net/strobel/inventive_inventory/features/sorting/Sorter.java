@@ -21,9 +21,9 @@ public class Sorter {
     }
 
     private static void sortPlayerInventory(ScreenHandler screenHandler) {
-        if (SorterHelper.cursorCleared(PlayerSlots.getFullInventoryLockedSlotsExcluded(), screenHandler)) {
-            SorterHelper.mergeItemStacks(PlayerSlots.getUpperInventoryLockedSlotsExcluded(), screenHandler);
-            SorterHelper.sortItemStacks(PlayerSlots.getUpperInventoryLockedSlotsExcluded(), screenHandler);
+        if (SorterHelper.cursorCleared(PlayerSlots.get(true).excludeLockedSlots(), screenHandler)) {
+            SorterHelper.mergeItemStacks(PlayerSlots.get(false).excludeLockedSlots(), screenHandler);
+            SorterHelper.sortItemStacks(PlayerSlots.get(false).excludeLockedSlots(), screenHandler);
         } else {
             InventiveInventoryClient.getPlayer().sendMessage(
                     Text.of("No operating room available. Try emptying the cursor."));

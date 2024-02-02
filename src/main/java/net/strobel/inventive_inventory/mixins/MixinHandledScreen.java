@@ -4,7 +4,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
@@ -54,13 +53,11 @@ public abstract class MixinHandledScreen {
 
         context.getMatrices().push();
         context.getMatrices().translate(this.x, this.y, 0.0f);
-        List<Integer> locked_slots = JsonHandler.jsonArrayToIntegerList((FileHandler.get(LockedSlots.LOCKED_SLOTS_PATH)));
+        List<Integer> lockedSlots = Utilities.adjustLockedSlots(JsonHandler.jsonArrayToIntegerList((FileHandler.get(LockedSlots.LOCKED_SLOTS_PATH))), screenHandler);
 
-        if (!(InventiveInventoryClient.getScreenHandler() instanceof PlayerScreenHandler)) {
-            locked_slots.replaceAll(integer -> integer + (screenHandler.slots.size() - PlayerSlots.INVENTORY) - 9);
-        }
-        for (Integer locked_slot : locked_slots) {
-            Slot slot = SlotFinder.getSlotFromSlotIndex(locked_slot);
+
+        for (Integer lockedSlot : lockedSlots) {
+            Slot slot = SlotFinder.getSlotFromSlotIndex(lockedSlot);
             Drawer.drawSlotBorder(context, slot.x, slot.y, 0xFFFF0000);
         }
         context.getMatrices().pop();
@@ -71,7 +68,7 @@ public abstract class MixinHandledScreen {
         Screen screen = InventiveInventoryClient.getScreen();
         if (AdvancedOperationHandler.isPressed()) {
             if (screen instanceof InventoryScreen) {
-                if (Checker.isIncluded(SlotFinder.getSlotAtPosition(x, y).getIndex(), PlayerSlots.getUpperInventory().getSlotsAsInteger())) {
+                if (PlayerSlots.get(false).getSlots().contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
                     Drawer.drawSlotBorder(context, x, y, 0xFFFF0000);
                     ci.cancel();
                 }

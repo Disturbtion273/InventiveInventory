@@ -18,7 +18,7 @@ public class MousePosition {
         if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
             return true;
         } else {
-            return Checker.isIncluded(slot, PlayerSlots.getFullInventory().getSlotsAsInteger());
+            return PlayerSlots.get(true).getSlots().contains(slot);
         }
     }
 }
