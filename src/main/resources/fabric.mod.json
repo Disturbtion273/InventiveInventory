@@ -8,8 +8,8 @@
 		"Moritz Strobel"
 	],
 	"contact": {
-		"homepage": "",
-		"sources": ""
+		"homepage": "https://modrinth.com/mod/inventiveinventory",
+		"email": "moritz.strobel@outlook.de"
 	},
 	"license": "ARR",
 	"icon": "assets/inventive_inventory/icon/mod_icon.png",
@@ -35,10 +35,13 @@
 		"fabric-api": "*",
 		"fabric-key-binding-api-v1": "*"
 	},
+	"recommends": {
+		"modmenu": ">=9.0.0"
+	},
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.modrinth": "https://modrinth.com/mod/inventiveinventory"
+				"modmenu.donate": "https://paypal.me/strobel273"
 			}
 		}
 	}

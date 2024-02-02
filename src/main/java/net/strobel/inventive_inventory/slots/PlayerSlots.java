@@ -7,16 +7,17 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 import net.strobel.inventive_inventory.util.FileHandler;
+import net.strobel.inventive_inventory.util.JsonHandler;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class PlayerSlots {
     private static final PlayerInventory inventory = InventiveInventoryClient.getPlayer().getInventory();
-    private static final int INVENTORY = inventory.main.size();
-    private static final int HOTBAR = 9;
-    private static final int OFFHAND = inventory.offHand.size();
-    private static final int CREATIVE_DELETE_SLOT = 1;
+    public static final int INVENTORY = inventory.main.size();
+    public static final int HOTBAR = 9;
+    public static final int OFFHAND = inventory.offHand.size();
+    public static final int CREATIVE_DELETE_SLOT = 1;
 
     public static InventorySlots getFullInventory() {
         ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
@@ -55,9 +56,16 @@ public class PlayerSlots {
     }
 
     public static InventorySlots getUpperInventoryLockedSlotsExcluded() {
-        List<JsonElement> lockedSlots = FileHandler.get(InventiveInventoryClient.CONFIG_PATH + "locked_slots.json").asList();
+        List<Integer> lockedSlots = JsonHandler.jsonArrayToIntegerList(FileHandler.get(InventiveInventoryClient.CONFIG_PATH + "locked_slots.json"));
+        ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
+        if (screenHandler instanceof PlayerScreenHandler) {
+            lockedSlots.replaceAll(integer -> integer);
+        } else {
+            lockedSlots.replaceAll(integer -> integer + (screenHandler.slots.size() - INVENTORY));
+        }
+
         return new InventorySlots(Arrays.stream(getUpperInventory().getSlots())
-                .filter(slot -> lockedSlots.stream().noneMatch(element -> slot == element.getAsInt() && slot != 45))
+                .filter(slot -> lockedSlots.stream().noneMatch(element -> slot == element && slot != 45))
                 .toArray());
     }
 

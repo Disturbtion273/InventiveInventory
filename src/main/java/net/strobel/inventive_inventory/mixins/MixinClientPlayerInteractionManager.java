@@ -1,6 +1,7 @@
 package net.strobel.inventive_inventory.mixins;
 
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -22,8 +23,10 @@ public abstract class MixinClientPlayerInteractionManager {
     @Inject(method = "clickSlot", at = @At("HEAD"), cancellable = true)
     private void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
         if (AdvancedOperationHandler.isPressed()) {
-            LockedSlots.set();
-            ci.cancel();
+            if (InventiveInventoryClient.getScreen() instanceof InventoryScreen) {
+                LockedSlots.set();
+                ci.cancel();
+            }
         } else {
             if (player.isCreative() && InventiveInventoryClient.getClient().currentScreen instanceof CreativeInventoryScreen) {
                 clickCreativeStack(InventiveInventoryClient.getScreenHandler().getSlot(slotId).getStack(), slotId);
