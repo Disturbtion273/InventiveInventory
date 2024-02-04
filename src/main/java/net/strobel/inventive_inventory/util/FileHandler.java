@@ -1,38 +1,47 @@
 package net.strobel.inventive_inventory.util;
 
 import com.google.gson.*;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileHandler {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void write(JsonArray array, String filePath, String json_key) {
+    public static void write(JsonArray array, String filePath, String jsonKey) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add(json_key, array);
+        jsonObject.add(jsonKey, array);
         writeToFile(filePath, jsonObject);
     }
 
-    public static JsonArray get(String filePath) {
-        JsonArray array = new JsonArray();
-        try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(filePath));
-            array = (JsonArray) jsonObject.get("locked_slots");
-        } catch (FileNotFoundException | ClassCastException ignored) {}
-        return array;
+    public static void write(List<?> list, String filePath, String jsonKey) {
+        JsonElement array = gson.toJsonTree(list);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add(jsonKey, array);
+        writeToFile(filePath, jsonObject);
     }
 
-    public static void createConfigs() {
+    public static <Type> List<Type> get(String filePath, String jsonKey) {
         try {
-            Files.createDirectories(Path.of(InventiveInventoryClient.CONFIG_PATH));
-            Files.createFile(Path.of(InventiveInventoryClient.CONFIG_PATH + "locked_slots.json"));
-        } catch (IOException ignored) {}
+            JsonObject jsonObject = JsonParser.parseReader(new FileReader(filePath)).getAsJsonObject();
+            JsonArray array = jsonObject.get(jsonKey).getAsJsonArray();
+            List<Type> list = new ArrayList<>();
+            for (JsonElement element: array) {
+                if (array.get(0).getAsJsonPrimitive().isNumber()) {
+                    list.add((Type) Integer.valueOf(element.getAsInt()));
+                } else if (array.get(0).getAsJsonPrimitive().isString()) {
+                    list.add((Type) String.valueOf(element.getAsString()));
+                } else if (array.get(0).getAsJsonPrimitive().isBoolean()) {
+                    list.add((Type) Boolean.valueOf(element.getAsBoolean()));
+                }
+            }
+            return list;
+        } catch (FileNotFoundException | ClassCastException ignored) {}
+        return null;
     }
 
     private static void writeToFile(String filePath, JsonObject jsonObject) {
@@ -40,5 +49,4 @@ public class FileHandler {
             file.write(gson.toJson(jsonObject));
         } catch (IOException ignored) {}
     }
-
 }

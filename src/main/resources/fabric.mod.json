@@ -9,7 +9,6 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/inventiveinventory",
-		"email": "moritz.strobel@outlook.de",
 		"issues": "https://github.com/strobel273/InventiveInventory/issues"
 	},
 	"license": "ARR",
@@ -35,9 +34,6 @@
 		"java": ">=17",
 		"fabric-api": "*",
 		"fabric-key-binding-api-v1": "*"
-	},
-	"recommends": {
-		"modmenu": ">=9.0.0"
 	},
 	"custom": {
 		"modmenu": {

@@ -1,11 +1,9 @@
 package net.strobel.inventive_inventory.features.locked_slots;
 
-import com.google.gson.Gson;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
-import net.strobel.inventive_inventory.util.JsonHandler;
 import net.strobel.inventive_inventory.util.MousePosition;
 
 import java.util.List;
@@ -22,11 +20,11 @@ public class LockedSlotsHandler {
 
         if (inventorySlots.contains(slot)) {
             lockedSlots.toggle(slot);
-            FileHandler.write(new Gson().toJsonTree(lockedSlots).getAsJsonArray(), LOCKED_SLOTS_PATH, "locked_slots");
+            FileHandler.write(lockedSlots, LOCKED_SLOTS_PATH, "locked_slots");
         }
     }
 
     public static LockedSlots get() {
-        return new LockedSlots(JsonHandler.jsonArrayToIntegerList(FileHandler.get(LOCKED_SLOTS_PATH)));
+        return new LockedSlots(FileHandler.get(LOCKED_SLOTS_PATH, "locked_slots"));
     }
 }

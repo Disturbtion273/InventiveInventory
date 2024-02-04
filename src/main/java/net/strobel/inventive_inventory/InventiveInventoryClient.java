@@ -7,7 +7,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.util.FileHandler;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 public class InventiveInventoryClient implements ClientModInitializer {
@@ -15,9 +18,9 @@ public class InventiveInventoryClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        createConfigs();
         KeyInputHandler.register();
         KeyInputHandler.registerKeyInputs();
-        FileHandler.createConfigs();
     }
 
     public static MinecraftClient getClient() {
@@ -41,5 +44,12 @@ public class InventiveInventoryClient implements ClientModInitializer {
 
     public static ClientPlayerInteractionManager getInteractionManager() {
         return MinecraftClient.getInstance().interactionManager;
+    }
+
+    public static void createConfigs() {
+        try {
+            Files.createDirectories(Path.of(CONFIG_PATH));
+            Files.createFile(Path.of(CONFIG_PATH + "locked_slots.json"));
+        } catch (IOException ignored) {}
     }
 }
