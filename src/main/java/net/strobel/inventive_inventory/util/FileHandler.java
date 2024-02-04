@@ -18,7 +18,7 @@ public class FileHandler {
         writeToFile(filePath, jsonObject);
     }
 
-    public static void write(List<?> list, String filePath, String jsonKey) {
+    public static void write(String filePath, List<?> list, String jsonKey) {
         JsonElement array = gson.toJsonTree(list);
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(jsonKey, array);
@@ -40,7 +40,9 @@ public class FileHandler {
                 }
             }
             return list;
-        } catch (FileNotFoundException | ClassCastException ignored) {}
+        } catch (IllegalStateException e) {
+            return new ArrayList<>();
+        } catch (ClassCastException | FileNotFoundException ignored) {}
         return null;
     }
 
