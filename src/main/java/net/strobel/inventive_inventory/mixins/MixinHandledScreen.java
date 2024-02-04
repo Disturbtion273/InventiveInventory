@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
-import net.strobel.inventive_inventory.features.locked_slots.LockedSlots;
+import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.*;
@@ -49,13 +49,10 @@ public abstract class MixinHandledScreen {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
-
         context.getMatrices().push();
         context.getMatrices().translate(this.x, this.y, 0.0f);
-        List<Integer> lockedSlots = Utilities.adjustLockedSlots(JsonHandler.jsonArrayToIntegerList((FileHandler.get(LockedSlots.LOCKED_SLOTS_PATH))), screenHandler);
 
-
+        List<Integer> lockedSlots = LockedSlotsHandler.get().adjust();
         for (Integer lockedSlot : lockedSlots) {
             Slot slot = SlotFinder.getSlotFromSlotIndex(lockedSlot);
             Drawer.drawSlotBorder(context, slot.x, slot.y, 0xFFFF0000);
@@ -68,7 +65,7 @@ public abstract class MixinHandledScreen {
         Screen screen = InventiveInventoryClient.getScreen();
         if (AdvancedOperationHandler.isPressed()) {
             if (screen instanceof InventoryScreen) {
-                if (PlayerSlots.get(false).getSlots().contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
+                if (PlayerSlots.get(false).contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
                     Drawer.drawSlotBorder(context, x, y, 0xFFFF0000);
                     ci.cancel();
                 }

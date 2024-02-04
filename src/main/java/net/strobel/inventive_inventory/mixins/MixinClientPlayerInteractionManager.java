@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
 import net.strobel.inventive_inventory.InventiveInventoryClient;
-import net.strobel.inventive_inventory.features.locked_slots.LockedSlots;
+import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +24,7 @@ public abstract class MixinClientPlayerInteractionManager {
     private void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
         if (AdvancedOperationHandler.isPressed()) {
             if (InventiveInventoryClient.getScreen() instanceof InventoryScreen) {
-                LockedSlots.set();
+                LockedSlotsHandler.toggle();
                 ci.cancel();
             }
         } else {

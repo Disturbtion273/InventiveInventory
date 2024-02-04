@@ -13,7 +13,7 @@
 		"issues": "https://github.com/strobel273/InventiveInventory/issues"
 	},
 	"license": "ARR",
-	"icon": "assets/inventive_inventory/icon/mod_icon.png",
+	"icon": "assets/inventive_inventory/icon/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"main": [

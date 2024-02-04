@@ -2,6 +2,7 @@ package net.strobel.inventive_inventory.features.sorting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.slots.InventorySlots;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 
@@ -18,12 +19,13 @@ public class SorterHelper {
     }
 
     public static void mergeItemStacks(InventorySlots inventorySlots, ScreenHandler screenHandler) {
-        for (int slot : inventorySlots.getSlots()) {
+        for (int slot : inventorySlots) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty() && stack.getCount() < stack.getMaxCount()) {
                 InteractionHandler.clickStack(slot);
                 for (int tempSlot = slot + 1; InteractionHandler.getCursorStack().getCount() < InteractionHandler.getCursorStack().getMaxCount()
-                        && tempSlot <= inventorySlots.getLastSlot(); tempSlot++) {
+                        && tempSlot <= inventorySlots.getLastSlot() && !InteractionHandler.getCursorStack().isEmpty(); tempSlot++) {
+                    if (LockedSlotsHandler.get().adjust().contains(tempSlot)) continue;
                     if (ItemStack.areItemsEqual(InteractionHandler.getCursorStack(), screenHandler.getSlot(tempSlot).getStack())) {
                         InteractionHandler.clickStack(tempSlot);
                     }
@@ -39,13 +41,13 @@ public class SorterHelper {
         List<Integer> sortedSlots = getSortedSlots(inventorySlots, screenHandler);
 
         for (int i = 0; i < sortedSlots.size(); i++) {
-            InteractionHandler.swapStacks(sortedSlots.get(i), inventorySlots.getSlots().get(i));
+            InteractionHandler.swapStacks(sortedSlots.get(i), inventorySlots.get(i));
             sortedSlots = getSortedSlots(inventorySlots, screenHandler);
         }
     }
 
     private static List<Integer> getSortedSlots(InventorySlots inventorySlots, ScreenHandler screenHandler) {
-        return inventorySlots.getSlots().stream()
+        return inventorySlots.stream()
                 .filter(slot -> !screenHandler.getSlot(slot).getStack().isEmpty())
                 .sorted(Comparator.comparing((Integer slot) -> screenHandler.getSlot(slot).getStack().getName().getString())
                         .thenComparing(slot -> screenHandler.getSlot(slot).getStack().getCount(), Comparator.reverseOrder()))
@@ -53,7 +55,7 @@ public class SorterHelper {
     }
 
     private static void clearCursor(InventorySlots inventorySlots, ScreenHandler screenHandler) {
-        for (int slot : inventorySlots.getSlots()) {
+        for (int slot : inventorySlots) {
             if (ItemStack.areItemsEqual(screenHandler.getSlot(slot).getStack(), InteractionHandler.getCursorStack())) {
                 if (!InteractionHandler.hasEmptyCursor()) {
                     InteractionHandler.clickStack(slot);
@@ -61,7 +63,7 @@ public class SorterHelper {
             }
         }
 
-        for (int slot : inventorySlots.getSlots()) {
+        for (int slot : inventorySlots) {
             if (screenHandler.getSlot(slot).getStack().isEmpty()) {
                 if (!InteractionHandler.hasEmptyCursor()) {
                     InteractionHandler.clickStack(slot);
