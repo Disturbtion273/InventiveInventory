@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/inventiveinventory",
-		"email": "moritz.strobel@outlook.de"
+		"email": "moritz.strobel@outlook.de",
+		"issues": "https://github.com/strobel273/InventiveInventory/issues"
 	},
 	"license": "ARR",
 	"icon": "assets/inventive_inventory/icon/mod_icon.png",
