@@ -13,16 +13,14 @@ import java.util.List;
 public class FileHandler {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void write(Path filePath, String jsonKey, JsonArray array) {
+    public static void write(Path filePath, String jsonKey, List<?> list) {
+        JsonElement array = gson.toJsonTree(list);
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(jsonKey, array);
         writeToFile(filePath, jsonObject);
     }
 
-    public static void write(Path filePath, String jsonKey, List<?> list) {
-        JsonElement array = gson.toJsonTree(list);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add(jsonKey, array);
+    public static void write(Path filePath, JsonObject jsonObject) {
         writeToFile(filePath, jsonObject);
     }
 
@@ -42,8 +40,24 @@ public class FileHandler {
                     }
                 }
             }
-        } catch (IllegalStateException | ClassCastException | FileNotFoundException ignored) {}
+        } catch (FileNotFoundException | IllegalStateException | ClassCastException ignored) {}
         return list;
+    }
+
+    public static JsonObject getJsonObject(Path filePath, String jsonKey) {
+        JsonObject jsonObject = new JsonObject();
+        try {
+            jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
+        } catch (FileNotFoundException | IllegalStateException | ClassCastException ignored) {}
+        return jsonObject.get(jsonKey).getAsJsonObject();
+    }
+
+    public static JsonObject getJsonFile(Path filePath) {
+        JsonObject jsonObject = new JsonObject();
+        try {
+            jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
+        } catch (FileNotFoundException ignored) {}
+        return jsonObject;
     }
 
 
