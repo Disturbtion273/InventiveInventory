@@ -66,7 +66,7 @@ public abstract class MixinHandledScreen {
         if (AdvancedOperationHandler.isPressed()) {
             if (screen instanceof InventoryScreen) {
                 if (PlayerSlots.get(false).contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
-                    Drawer.drawSlotBorder(context, x, y, 0xFFFF0000);
+                    Drawer.drawSlotBackground(context, x, y, 0xFFFF8080);
                     ci.cancel();
                 }
             }

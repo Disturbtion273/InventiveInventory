@@ -11,4 +11,9 @@ public class Drawer {
         context.fill(x, y, x + 1, y + height, color);
         context.fill(x + width, y, x + width + 1, y + height, color);
     }
+
+    public static void drawSlotBackground(DrawContext context, int x, int y, int color) {
+        int width = 16, height = 16;
+        context.fillGradient(x, y, x + width, y + height, color, color);
+    }
 }

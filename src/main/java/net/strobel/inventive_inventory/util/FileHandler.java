@@ -12,39 +12,39 @@ import java.util.List;
 public class FileHandler {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void write(JsonArray array, String filePath, String jsonKey) {
+    public static void write(String filePath, String jsonKey, JsonArray array) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(jsonKey, array);
         writeToFile(filePath, jsonObject);
     }
 
-    public static void write(String filePath, List<?> list, String jsonKey) {
+    public static void write(String filePath, String jsonKey, List<?> list) {
         JsonElement array = gson.toJsonTree(list);
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(jsonKey, array);
         writeToFile(filePath, jsonObject);
     }
 
-    public static <Type> List<Type> get(String filePath, String jsonKey) {
+    public static <T> List<T> get(String filePath, String jsonKey) {
+        List<T> list = new ArrayList<>();
         try {
             JsonObject jsonObject = JsonParser.parseReader(new FileReader(filePath)).getAsJsonObject();
             JsonArray array = jsonObject.get(jsonKey).getAsJsonArray();
-            List<Type> list = new ArrayList<>();
-            for (JsonElement element: array) {
-                if (array.get(0).getAsJsonPrimitive().isNumber()) {
-                    list.add((Type) Integer.valueOf(element.getAsInt()));
-                } else if (array.get(0).getAsJsonPrimitive().isString()) {
-                    list.add((Type) String.valueOf(element.getAsString()));
-                } else if (array.get(0).getAsJsonPrimitive().isBoolean()) {
-                    list.add((Type) Boolean.valueOf(element.getAsBoolean()));
+            if (!array.isEmpty()) {
+                for (JsonElement element: array) {
+                    if (element.getAsJsonPrimitive().isNumber()) {
+                        list.add((T) Integer.valueOf(element.getAsInt()));
+                    } else if (element.getAsJsonPrimitive().isString()) {
+                        list.add((T) String.valueOf(element.getAsString()));
+                    } else if (element.getAsJsonPrimitive().isBoolean()) {
+                        list.add((T) Boolean.valueOf(element.getAsBoolean()));
+                    }
                 }
             }
-            return list;
-        } catch (IllegalStateException e) {
-            return new ArrayList<>();
-        } catch (ClassCastException | FileNotFoundException ignored) {}
-        return null;
+        } catch (IllegalStateException | ClassCastException | FileNotFoundException ignored) {}
+        return list;
     }
+
 
     private static void writeToFile(String filePath, JsonObject jsonObject) {
         try (FileWriter file = new FileWriter(filePath)) {

@@ -20,7 +20,7 @@ public class LockedSlotsHandler {
 
         if (inventorySlots.contains(slot)) {
             lockedSlots.toggle(slot);
-            FileHandler.write(LOCKED_SLOTS_PATH, lockedSlots, "locked_slots");
+            FileHandler.write(LOCKED_SLOTS_PATH, "locked_slots", lockedSlots);
         }
     }
 

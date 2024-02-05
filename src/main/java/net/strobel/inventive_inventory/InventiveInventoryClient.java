@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
+import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class InventiveInventoryClient implements ClientModInitializer {
     public static void createConfigs() {
         try {
             Files.createDirectories(Path.of(CONFIG_PATH));
-            Files.createFile(Path.of(CONFIG_PATH + "locked_slots.json"));
+            Files.createFile(Path.of(LockedSlotsHandler.LOCKED_SLOTS_PATH));
         } catch (IOException ignored) {}
     }
 }
