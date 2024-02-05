@@ -1,11 +1,11 @@
 package net.strobel.inventive_inventory.util;
 
 import net.minecraft.screen.slot.Slot;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 
 public class SlotFinder {
     public static Slot getSlotAtPosition(int x, int y) {
-        for (Slot slot : InventiveInventoryClient.getScreenHandler().slots) {
+        for (Slot slot : InventiveInventory.getScreenHandler().slots) {
             if (isPointInRegion(slot.x, slot.y, x, y)) {
                 return slot;
             }
@@ -18,6 +18,6 @@ public class SlotFinder {
     }
 
     public static Slot getSlotFromSlotIndex(int slotIndex) {
-        return InventiveInventoryClient.getScreenHandler().getSlot(slotIndex);
+        return InventiveInventory.getScreenHandler().getSlot(slotIndex);
     }
 }

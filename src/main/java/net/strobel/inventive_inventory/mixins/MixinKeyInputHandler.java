@@ -2,7 +2,7 @@ package net.strobel.inventive_inventory.mixins;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinKeyInputHandler {
     @Inject(method = "keyPressed", at = @At("HEAD"))
     private void onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (InventiveInventoryClient.getPlayer() != null) {
+        if (InventiveInventory.getPlayer() != null) {
             if (KeyInputHandler.advancedOperationKey.matchesKey(keyCode, scanCode)) {
                 AdvancedOperationHandler.press();
             }

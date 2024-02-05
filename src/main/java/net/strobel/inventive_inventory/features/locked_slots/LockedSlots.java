@@ -3,7 +3,7 @@ package net.strobel.inventive_inventory.features.locked_slots;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class LockedSlots extends ArrayList<Integer> {
     }
 
     public LockedSlots adjust() {
-        ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         if (!(screenHandler instanceof PlayerScreenHandler)) {
             this.replaceAll(integer -> integer + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE) - 9);
         }

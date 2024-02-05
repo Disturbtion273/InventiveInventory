@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
@@ -32,7 +32,7 @@ public class KeyInputHandler {
 
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (InventiveInventoryClient.getScreen() == null) {
+            if (InventiveInventory.getScreen() == null) {
                 if (advancedOperationKey.isPressed() && !AdvancedOperationHandler.isPressed()) {
                     AdvancedOperationHandler.press();
                 } else if (AdvancedOperationHandler.isPressed()) {

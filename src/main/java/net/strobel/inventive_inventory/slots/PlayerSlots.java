@@ -4,12 +4,12 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 
 public class PlayerSlots {
 
     public static InventorySlots get(boolean withHotbar) {
-        ScreenHandler screenHandler = InventiveInventoryClient.getScreenHandler();
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
 
         int from, to;
         if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {

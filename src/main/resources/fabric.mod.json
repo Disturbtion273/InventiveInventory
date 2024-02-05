@@ -16,14 +16,8 @@
 	"icon": "assets/inventive_inventory/icon/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"net.strobel.inventive_inventory.InventiveInventory"
-		],
 		"client": [
-			"net.strobel.inventive_inventory.InventiveInventoryClient"
-		],
-		"fabric-datagen": [
-			"net.strobel.inventive_inventory.InventiveInventoryDataGenerator"
+          "net.strobel.inventive_inventory.InventiveInventory"
 		]
 	},
 	"mixins": [

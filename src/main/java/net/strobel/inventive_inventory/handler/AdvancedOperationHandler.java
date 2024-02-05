@@ -1,7 +1,7 @@
 package net.strobel.inventive_inventory.handler;
 
 import net.minecraft.client.util.InputUtil;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 import org.lwjgl.glfw.GLFW;
 
 public class AdvancedOperationHandler {
@@ -21,7 +21,7 @@ public class AdvancedOperationHandler {
     }
 
     public static boolean isReleased() {
-        long window = InventiveInventoryClient.getClient().getWindow().getHandle();
+        long window = InventiveInventory.getClient().getWindow().getHandle();
         int code = AdvancedOperationHandler.getBoundKey().getCode();
         return GLFW.glfwGetKey(window, code) == GLFW.GLFW_RELEASE && AdvancedOperationHandler.isPressed();
     }

@@ -1,16 +1,18 @@
 package net.strobel.inventive_inventory.features.locked_slots;
 
 import net.minecraft.screen.PlayerScreenHandler;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 import net.strobel.inventive_inventory.util.MousePosition;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class LockedSlotsHandler {
 
-    public static final String LOCKED_SLOTS_PATH = InventiveInventoryClient.CONFIG_PATH + "locked_slots.json";
+    private static final String LOCKED_SLOTS_FILE = "locked_slots.json";
+    public static final Path LOCKED_SLOTS_PATH = ConfigManager.PATH.resolve(LOCKED_SLOTS_FILE);
 
     public static void toggle() {
         int slot = MousePosition.getHoveredSlot();

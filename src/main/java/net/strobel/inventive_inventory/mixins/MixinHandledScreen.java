@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.strobel.inventive_inventory.InventiveInventoryClient;
+import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
@@ -62,7 +62,7 @@ public abstract class MixinHandledScreen {
 
     @Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
     private static void onDrawSlotHighlight(DrawContext context, int x, int y, int z, CallbackInfo ci) {
-        Screen screen = InventiveInventoryClient.getScreen();
+        Screen screen = InventiveInventory.getScreen();
         if (AdvancedOperationHandler.isPressed()) {
             if (screen instanceof InventoryScreen) {
                 if (PlayerSlots.get(false).contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
