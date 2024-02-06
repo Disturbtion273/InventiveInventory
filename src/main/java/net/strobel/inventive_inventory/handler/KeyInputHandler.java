@@ -8,25 +8,25 @@ import net.strobel.inventive_inventory.InventiveInventory;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
-    public static final String KEY_CATEGORY_INVENTIVE_INVENTORY = "key.inventive_inventory.category.inventive_inventory";
-    public static final String ADVANCED_OPERATION = "key.inventive_inventory.advanced_operation";
-    public static final String KEY_SORT_INVENTORY = "key.inventive_inventory.sort_inventory";
+    private static final String INVENTIVE_INVENTORY_CATEGORY = "key.inventive_inventory.category.inventive_inventory";
+    private static final String KEY_ADVANCED_OPERATION = "key.inventive_inventory.advanced_operation";
+    private static final String KEY_SORT_INVENTORY = "key.inventive_inventory.sort_inventory";
     public static KeyBinding advancedOperationKey;
     public static KeyBinding sortInventoryKey;
 
 
     public static void register() {
         advancedOperationKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                ADVANCED_OPERATION,
+                KEY_ADVANCED_OPERATION,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_LEFT_ALT,
-                KEY_CATEGORY_INVENTIVE_INVENTORY
+                INVENTIVE_INVENTORY_CATEGORY
         ));
         sortInventoryKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_SORT_INVENTORY,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
-                KEY_CATEGORY_INVENTIVE_INVENTORY
+                INVENTIVE_INVENTORY_CATEGORY
         ));
     }
 

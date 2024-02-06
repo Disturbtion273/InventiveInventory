@@ -12,7 +12,7 @@
 		"homepage": "https://modrinth.com/mod/inventiveinventory",
 		"issues": "https://github.com/strobel273/InventiveInventory/issues"
 	},
-	"license": "ARR",
+	"license": "All-Rights-Reserved",
 	"icon": "assets/inventive_inventory/icon/icon.png",
 	"environment": "client",
 	"entrypoints": {
