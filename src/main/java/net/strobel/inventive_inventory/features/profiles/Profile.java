@@ -15,20 +15,22 @@ public class Profile {
     public Profile(String name) {
         this.name = name;
         load();
-        save();
+        // save();
     }
 
     private void load() {
         JsonObject profile = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, this.name);
-        JsonArray savedSlots = profile.get("saved_slots").getAsJsonArray();
-        for (JsonElement savedSlotElement : savedSlots) {
-            JsonObject savedSlotObject = savedSlotElement.getAsJsonObject();
-            SavedSlot savedSlot = new SavedSlot(
-                    savedSlotObject.get("slot").getAsInt(),
-                    savedSlotObject.get("id").getAsString(),
-                    savedSlotObject.get("nbt_data").getAsJsonObject());
-            this.savedSlots.add(savedSlot);
-        }
+        try {
+            JsonArray savedSlots = profile.get("saved_slots").getAsJsonArray();
+            for (JsonElement savedSlotElement : savedSlots) {
+                JsonObject savedSlotObject = savedSlotElement.getAsJsonObject();
+                SavedSlot savedSlot = new SavedSlot(
+                        savedSlotObject.get("slot").getAsInt(),
+                        savedSlotObject.get("id").getAsString(),
+                        savedSlotObject.get("nbt_data").getAsJsonObject());
+                this.savedSlots.add(savedSlot);
+            }
+        } catch (NullPointerException ignored) {}
     }
 
     private void save() {
@@ -50,6 +52,7 @@ public class Profile {
         jsonObject.add("saved_slots", jsonArray);
 
         profiles.add(this.name, jsonObject);
+        FileHandler.write(ProfileHandler.PROFILES_PATH, profiles);
     }
 }
 

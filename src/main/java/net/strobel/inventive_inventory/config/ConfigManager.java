@@ -13,9 +13,15 @@ public class ConfigManager {
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve(InventiveInventory.MOD_ID);
     public static void initialize() {
         try {
-            Files.createDirectories(ConfigManager.PATH);
-            Files.createFile(LockedSlotsHandler.LOCKED_SLOTS_PATH);
-            Files.createFile(ProfileHandler.PROFILES_PATH);
+            if (!Files.exists(ConfigManager.PATH)) {
+                Files.createDirectories(ConfigManager.PATH);
+            }
+            if (!Files.exists(LockedSlotsHandler.LOCKED_SLOTS_PATH)) {
+                Files.createFile(LockedSlotsHandler.LOCKED_SLOTS_PATH);
+            }
+            if (!Files.exists(ProfileHandler.PROFILES_PATH)) {
+                Files.createFile(ProfileHandler.PROFILES_PATH);
+            }
         } catch (IOException ignored) {}
     }
 }

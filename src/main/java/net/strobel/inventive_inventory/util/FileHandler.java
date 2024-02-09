@@ -48,15 +48,16 @@ public class FileHandler {
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
+            jsonObject.get(jsonKey).getAsJsonObject();
         } catch (FileNotFoundException | IllegalStateException | ClassCastException ignored) {}
-        return jsonObject.get(jsonKey).getAsJsonObject();
+        return jsonObject;
     }
 
     public static JsonObject getJsonFile(Path filePath) {
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
-        } catch (FileNotFoundException ignored) {}
+        } catch (FileNotFoundException | IllegalStateException ignored) {}
         return jsonObject;
     }
 
