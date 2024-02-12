@@ -4,14 +4,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.*;
-import org.spongepowered.asm.mixin.Final;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,12 +21,6 @@ import java.util.List;
 
 @Mixin(HandledScreen.class)
 public abstract class MixinHandledScreen {
-    @Shadow
-    @Final
-    protected ScreenHandler handler;
-
-    @Shadow
-    protected abstract boolean isPointOverSlot(Slot slot, double pointX, double pointY);
 
     @Shadow
     protected int x;
@@ -35,16 +28,11 @@ public abstract class MixinHandledScreen {
     @Shadow
     protected int y;
 
+    @Shadow @Nullable protected Slot focusedSlot;
+
     @Inject(method = "render", at = @At("HEAD"))
     private void mouseOverSlot(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        for (Slot slot : this.handler.slots) {
-            if (this.isPointOverSlot(slot, mouseX, mouseY)) {
-                MousePosition.setHoveredSlot(slot.id);
-                break;
-            } else {
-                MousePosition.setHoveredSlot(-1);
-            }
-        }
+        MousePosition.setHoveredSlot(this.focusedSlot.id);
     }
 
     @Inject(method = "render", at = @At("TAIL"))

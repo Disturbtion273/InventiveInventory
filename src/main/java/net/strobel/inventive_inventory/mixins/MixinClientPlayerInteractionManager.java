@@ -22,7 +22,7 @@ public abstract class MixinClientPlayerInteractionManager {
 
     @Inject(method = "clickSlot", at = @At("HEAD"), cancellable = true)
     private void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
-        if (AdvancedOperationHandler.isPressed()) {
+        if (AdvancedOperationHandler.isPressed() && actionType == SlotActionType.PICKUP) {
             if (InventiveInventory.getScreen() instanceof InventoryScreen) {
                 LockedSlotsHandler.toggle();
                 ci.cancel();
