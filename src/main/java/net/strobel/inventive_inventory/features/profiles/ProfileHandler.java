@@ -7,11 +7,7 @@ public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
 
-    public static void save(int keycode) {
-        Profile profile = new Profile(Integer.toString(keycode));
-        if (!profile.exists()) {
-            profile.create();
-            profile.save();
-        }
+    public static void save(String name) {
+        new Profile(name).create();
     }
 }

@@ -27,4 +27,24 @@ public class PlayerSlots {
             return new InventorySlots(from, to);
         }
     }
+
+    public static InventorySlots get(boolean withHotbar, boolean withArmor) {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+
+        int from, to;
+        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
+            from = withArmor ? PlayerScreenHandler.EQUIPMENT_START : PlayerScreenHandler.INVENTORY_START;
+            if (withHotbar) {
+                to = PlayerScreenHandler.HOTBAR_END;
+                return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
+            } else {
+                to = PlayerScreenHandler.INVENTORY_END;
+                return new InventorySlots(from, to);
+            }
+        } else {
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            to = withHotbar ? screenHandler.slots.size() : screenHandler.slots.size() - PlayerInventory.getHotbarSize();
+            return new InventorySlots(from, to);
+        }
+    }
 }

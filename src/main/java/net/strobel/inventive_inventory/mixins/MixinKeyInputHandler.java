@@ -22,7 +22,6 @@ public class MixinKeyInputHandler {
         if (InventiveInventory.getPlayer() != null) {
             if (KeyInputHandler.advancedOperationKey.matchesKey(keyCode, scanCode)) {
                 AdvancedOperationHandler.press();
-                ProfileHandler.save(GLFW.GLFW_KEY_1);
             }
             if (KeyInputHandler.sortInventoryKey.matchesKey(keyCode, scanCode)) {
                 if ((Object) this instanceof HandledScreen<?>) {

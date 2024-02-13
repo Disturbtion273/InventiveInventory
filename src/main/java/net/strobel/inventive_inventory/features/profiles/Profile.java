@@ -3,8 +3,6 @@ package net.strobel.inventive_inventory.features.profiles;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.jna.platform.unix.X11;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
@@ -19,7 +17,6 @@ import java.util.List;
 public class Profile {
     private final String name;
     private final List<SavedSlot> savedSlots = new ArrayList<>();
-    private boolean exists;
 
     public Profile(String name) {
         this.name = name;
@@ -28,12 +25,8 @@ public class Profile {
 
     private void load() {
         JsonObject profile = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, this.name);
-        if (profile.isEmpty()) {
-            this.exists = false;
-            return;
-        } else {
-            this.exists = true;
-        }
+        if (profile.isEmpty()) return;
+
         try {
             JsonArray savedSlots = profile.get("saved_slots").getAsJsonArray();
             for (JsonElement savedSlotElement : savedSlots) {
@@ -47,11 +40,24 @@ public class Profile {
         } catch (NullPointerException ignored) {}
     }
 
-    public void save() {
-        JsonObject profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
-        if (profiles.has(this.name)) {
-            profiles.remove(this.name);
+    public void create() {
+        this.savedSlots.clear();
+        InventorySlots inventorySlots = PlayerSlots.get(true, true);
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        for (int slot: inventorySlots) {
+            ItemStack stack = screenHandler.getSlot(slot).getStack();
+            if (!stack.isEmpty()) {
+                String id = stack.getItem().toString();
+                NbtCompound nbt = stack.getNbt();
+                SavedSlot savedSlot = new SavedSlot(slot, id, nbt);
+                this.savedSlots.add(savedSlot);
+            }
         }
+        this.save();
+    }
+
+    private void save() {
+        JsonObject profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
 
         JsonArray jsonArray = new JsonArray();
         for (SavedSlot savedSlot: this.savedSlots) {
@@ -67,24 +73,6 @@ public class Profile {
 
         profiles.add(this.name, jsonObject);
         FileHandler.write(ProfileHandler.PROFILES_PATH, profiles);
-    }
-
-    public void create() {
-        InventorySlots inventorySlots = PlayerSlots.get(true);
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        for (int slot: inventorySlots) {
-            ItemStack stack = screenHandler.getSlot(slot).getStack();
-            if (!stack.isEmpty()) {
-                String id = stack.getItem().toString();
-                NbtCompound nbt = stack.getNbt();
-                SavedSlot savedSlot = new SavedSlot(slot, id, nbt);
-                this.savedSlots.add(savedSlot);
-            }
-        }
-    }
-
-    public boolean exists() {
-        return this.exists;
     }
 }
 
