@@ -32,7 +32,9 @@ public abstract class MixinHandledScreen {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void mouseOverSlot(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        MousePosition.setHoveredSlot(this.focusedSlot.id);
+        try {
+            MousePosition.setHoveredSlot(this.focusedSlot.id);
+        } catch (NullPointerException ignored) {}
     }
 
     @Inject(method = "render", at = @At("TAIL"))
