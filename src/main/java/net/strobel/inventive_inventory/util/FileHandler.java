@@ -47,9 +47,8 @@ public class FileHandler {
     public static JsonObject getJsonObject(Path filePath, String jsonKey) {
         JsonObject jsonObject = new JsonObject();
         try {
-            jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
-            jsonObject.get(jsonKey).getAsJsonObject();
-        } catch (FileNotFoundException | IllegalStateException | ClassCastException ignored) {}
+            jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject().get(jsonKey).getAsJsonObject();
+        } catch (FileNotFoundException | IllegalStateException | ClassCastException | NullPointerException ignored) {}
         return jsonObject;
     }
 
