@@ -33,7 +33,6 @@ public class InventorySlots extends ArrayList<Integer> {
     public InventorySlots excludeLockedSlots() {
         List<Integer> lockedSlots = LockedSlotsHandler.getLockedSlots().adjust();
         return new InventorySlots(this.stream().filter(slot -> !lockedSlots.contains(slot)).toList());
-
     }
 
     public InventorySlots excludeOffhand() {
