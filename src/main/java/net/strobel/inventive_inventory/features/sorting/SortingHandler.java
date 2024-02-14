@@ -24,8 +24,8 @@ public class SortingHandler {
 
     private static void sortPlayerInventory(ScreenHandler screenHandler) {
         if (Sorter.cursorCleared(PlayerSlots.getWithHotbar().excludeLockedSlots(), screenHandler)) {
-            Sorter.mergeItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
-            Sorter.sortItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
+            Sorter.mergeItemStacks(PlayerSlots.get().excludeOffhand().excludeLockedSlots(), screenHandler);
+            Sorter.sortItemStacks(PlayerSlots.get().excludeOffhand().excludeLockedSlots(), screenHandler);
         } else {
             sendWarning();
         }
