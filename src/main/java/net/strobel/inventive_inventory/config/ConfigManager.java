@@ -11,17 +11,16 @@ import java.nio.file.Path;
 
 public class ConfigManager {
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve(InventiveInventory.MOD_ID);
-    public static void initialize() {
-        try {
-            if (!Files.exists(ConfigManager.PATH)) {
-                Files.createDirectories(ConfigManager.PATH);
-            }
-            if (!Files.exists(LockedSlotsHandler.LOCKED_SLOTS_PATH)) {
-                Files.createFile(LockedSlotsHandler.LOCKED_SLOTS_PATH);
-            }
-            if (!Files.exists(ProfileHandler.PROFILES_PATH)) {
-                Files.createFile(ProfileHandler.PROFILES_PATH);
-            }
-        } catch (IOException ignored) {}
+
+    public static void initialize() throws IOException {
+        Files.createDirectories(ConfigManager.PATH);
+        createFileIfNotExists(LockedSlotsHandler.LOCKED_SLOTS_PATH);
+        createFileIfNotExists(ProfileHandler.PROFILES_PATH);
+    }
+
+    private static void createFileIfNotExists(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
     }
 }

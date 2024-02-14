@@ -6,7 +6,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.config.ConfigManager;
-import net.strobel.inventive_inventory.features.sorting.SorterHelper;
+import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 
@@ -20,24 +20,24 @@ public class ProfileHandler {
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
 
     public static void save(String name) {
-        new Profile(name).create();
+        Profile.create(name);
     }
 
     public static void load(String name) {
-        Profile profile = new Profile(name);
+        Profile profile = Profile.load(name);
         List<SavedSlot> savedSlots = profile.getSavedSlots();
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
 
-        SorterHelper.mergeItemStacks(PlayerSlots.get(false).excludeLockedSlots(), screenHandler);
+        Sorter.mergeItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
 
         for (SavedSlot savedSlot: savedSlots) {
             boolean matchFound = false;
 
-            for (int i : PlayerSlots.get(true, true)) {
+            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
                 ItemStack stack = screenHandler.getSlot(i).getStack();
                 NbtCompound stackNbt = stack.getNbt();
                 if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
-                    if (stackNbt.getString("custom_name").equals(savedSlot.getNbtData().getString("custom_name"))) {
+                    if (stackNbt.getCompound("display").getString("Name").equals(savedSlot.getNbtData().getString("custom_name"))) {
                         if (equalNbt(stackNbt, savedSlot.getNbtData())) {
                             InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                             matchFound = true;
@@ -48,7 +48,7 @@ public class ProfileHandler {
             }
             if (matchFound) continue;
 
-            for (int i : PlayerSlots.get(true, true)) {
+            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
                 ItemStack stack = screenHandler.getSlot(i).getStack();
                 NbtCompound stackNbt = stack.getNbt();
                 if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
@@ -61,7 +61,7 @@ public class ProfileHandler {
             }
             if (matchFound) continue;
 
-            for (int i : PlayerSlots.get(true, true)) {
+            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
                 ItemStack stack = screenHandler.getSlot(i).getStack();
                 if (stack.getItem().toString().equals(savedSlot.getId())) {
                     InteractionHandler.swapStacks(savedSlot.getSlot(), i);

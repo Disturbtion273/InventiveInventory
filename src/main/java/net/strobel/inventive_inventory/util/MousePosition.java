@@ -1,8 +1,5 @@
 package net.strobel.inventive_inventory.util;
 
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 
 public class MousePosition {
@@ -14,11 +11,11 @@ public class MousePosition {
 
     public static int getHoveredSlot() { return slot;}
 
-    public static boolean isOverInventory(ScreenHandler screenHandler) {
-        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
+    public static boolean isOverInventory() {
+        if (ScreenCheck.isRegularInventory() || ScreenCheck.isCreativeInventory()) {
             return true;
         } else {
-            return PlayerSlots.get(true).contains(slot);
+            return PlayerSlots.getWithHotbar().contains(slot);
         }
     }
 }

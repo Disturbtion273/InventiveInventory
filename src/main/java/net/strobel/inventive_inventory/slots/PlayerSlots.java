@@ -1,67 +1,53 @@
 package net.strobel.inventive_inventory.slots;
 
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.util.ScreenCheck;
 
 public class PlayerSlots {
 
-    public static InventorySlots get(boolean withHotbar) {
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-
+    public static InventorySlots getWithHotbar() {
         int from, to;
-        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
+        if (ScreenCheck.isRegularInventory()) {
             from = PlayerScreenHandler.INVENTORY_START;
-            if (withHotbar) {
-                to = PlayerScreenHandler.HOTBAR_END;
-                return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
-            } else {
-                to = PlayerScreenHandler.INVENTORY_END;
-                return new InventorySlots(from, to);
-            }
+            to = PlayerScreenHandler.HOTBAR_END;
+            return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
         } else {
-            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
-            to = withHotbar ? screenHandler.slots.size() : screenHandler.slots.size() - PlayerInventory.getHotbarSize();
-            return new InventorySlots(from, to);
-        }
-    }
-
-    public static InventorySlots get(boolean withHotbar, boolean withArmor) {
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-
-        int from, to;
-        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
-            from = withArmor ? PlayerScreenHandler.EQUIPMENT_START : PlayerScreenHandler.INVENTORY_START;
-            if (withHotbar) {
-                to = PlayerScreenHandler.HOTBAR_END;
-                return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
-            } else {
-                to = PlayerScreenHandler.INVENTORY_END;
-                return new InventorySlots(from, to);
-            }
-        } else {
-            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
-            to = withHotbar ? screenHandler.slots.size() : screenHandler.slots.size() - PlayerInventory.getHotbarSize();
-            return new InventorySlots(from, to);
-        }
-    }
-
-    public static InventorySlots getHotbarAndEquipment() {
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-
-        int from, to;
-        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
-            from = PlayerScreenHandler.EQUIPMENT_START;
-            to = PlayerScreenHandler.EQUIPMENT_END;
-            int from2 = PlayerScreenHandler.HOTBAR_START;
-            int to2 = PlayerScreenHandler.OFFHAND_ID;
-            return new InventorySlots(from, to, from2, to2);
-        } else {
+            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
             from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
             to = screenHandler.slots.size();
             return new InventorySlots(from, to);
         }
+    }
+
+    public static InventorySlots get() {
+        int from, to;
+        if (ScreenCheck.isRegularInventory()) {
+            from = PlayerScreenHandler.INVENTORY_START;
+            to = PlayerScreenHandler.INVENTORY_END;
+            return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
+        } else {
+            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            to = screenHandler.slots.size() - PlayerInventory.getHotbarSize();
+            return new InventorySlots(from, to);
+        }
+    }
+
+    public static InventorySlots getWithHotbarAndArmor() {
+        int from, to;
+        from = PlayerScreenHandler.EQUIPMENT_START;
+        to = PlayerScreenHandler.HOTBAR_END;
+        return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
+    }
+
+    public static InventorySlots getHotbarAndEquipment() {
+        int from = PlayerScreenHandler.EQUIPMENT_START;
+        int to = PlayerScreenHandler.EQUIPMENT_END;
+        int from2 = PlayerScreenHandler.HOTBAR_START;
+        int to2 = PlayerScreenHandler.OFFHAND_ID;
+        return new InventorySlots(from, to, from2, to2);
     }
 }

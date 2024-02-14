@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
-import net.strobel.inventive_inventory.slots.InventorySlots;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -16,51 +15,46 @@ import java.util.List;
 
 class Profile {
     private final String name;
-    private final List<SavedSlot> savedSlots = new ArrayList<>();
+    private final List<SavedSlot> savedSlots;
 
-    public Profile(String name) {
+    private Profile(String name, List<SavedSlot> savedSlots) {
         this.name = name;
-        this.load();
+        this.savedSlots = savedSlots;
     }
 
-    private void load() {
-        JsonObject profile = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, this.name);
-        if (profile.isEmpty()) return;
-
-        try {
-            JsonArray savedSlots = profile.get("saved_slots").getAsJsonArray();
-            for (JsonElement savedSlotElement : savedSlots) {
-                JsonObject savedSlotObject = savedSlotElement.getAsJsonObject();
-                SavedSlot savedSlot = new SavedSlot(
-                        savedSlotObject.get("slot").getAsInt(),
-                        savedSlotObject.get("id").getAsString(),
-                        savedSlotObject.get("nbt_data").getAsJsonObject());
-                this.savedSlots.add(savedSlot);
-            }
-        } catch (NullPointerException ignored) {}
-    }
-
-    public void create() {
-        this.savedSlots.clear();
-        InventorySlots inventorySlots = PlayerSlots.getHotbarAndEquipment();
+    public static void create(String name) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        for (int slot: inventorySlots) {
+        List<SavedSlot> savedSlots = new ArrayList<>();
+        for (int slot : PlayerSlots.getHotbarAndEquipment()) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty()) {
                 String id = stack.getItem().toString();
                 NbtCompound nbt = stack.getNbt();
-                SavedSlot savedSlot = new SavedSlot(slot, id, nbt);
-                this.savedSlots.add(savedSlot);
+                savedSlots.add(new SavedSlot(slot, id, nbt));
             }
         }
-        this.save();
+        new Profile(name, savedSlots).save();
+    }
+
+    public static Profile load(String name) {
+        JsonObject jsonProfile = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, name);
+        JsonArray jsonSavedSlots = jsonProfile.get("saved_slots").getAsJsonArray();
+
+        List<SavedSlot> savedSlots = new ArrayList<>();
+        for (JsonElement savedSlotElement : jsonSavedSlots) {
+            JsonObject savedSlotObject = savedSlotElement.getAsJsonObject();
+            SavedSlot savedSlot = new SavedSlot(
+                    savedSlotObject.get("slot").getAsInt(),
+                    savedSlotObject.get("id").getAsString(),
+                    savedSlotObject.get("nbt_data").getAsJsonObject());
+            savedSlots.add(savedSlot);
+        }
+        return new Profile(name, savedSlots);
     }
 
     private void save() {
-        JsonObject profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
-
         JsonArray jsonArray = new JsonArray();
-        for (SavedSlot savedSlot: this.savedSlots) {
+        for (SavedSlot savedSlot : this.savedSlots) {
             JsonObject savedSlotMap = new JsonObject();
             savedSlotMap.addProperty("slot", savedSlot.getSlot());
             savedSlotMap.addProperty("id", savedSlot.getId());
@@ -71,6 +65,7 @@ class Profile {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("saved_slots", jsonArray);
 
+        JsonObject profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
         profiles.add(this.name, jsonObject);
         FileHandler.write(ProfileHandler.PROFILES_PATH, profiles);
     }

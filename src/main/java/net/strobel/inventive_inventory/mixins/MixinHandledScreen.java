@@ -1,11 +1,8 @@
 package net.strobel.inventive_inventory.mixins;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.slot.Slot;
-import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
@@ -28,13 +25,15 @@ public abstract class MixinHandledScreen {
     @Shadow
     protected int y;
 
-    @Shadow @Nullable protected Slot focusedSlot;
+    @Shadow
+    @Nullable
+    protected Slot focusedSlot;
 
     @Inject(method = "render", at = @At("HEAD"))
     private void mouseOverSlot(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        try {
+        if (this.focusedSlot != null) {
             MousePosition.setHoveredSlot(this.focusedSlot.id);
-        } catch (NullPointerException ignored) {}
+        }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
@@ -42,7 +41,7 @@ public abstract class MixinHandledScreen {
         context.getMatrices().push();
         context.getMatrices().translate(this.x, this.y, 0.0f);
 
-        List<Integer> lockedSlots = LockedSlotsHandler.get().adjust();
+        List<Integer> lockedSlots = LockedSlotsHandler.getLockedSlots().adjust();
         for (Integer lockedSlot : lockedSlots) {
             Slot slot = SlotFinder.getSlotFromSlotIndex(lockedSlot);
             Drawer.drawSlotBorder(context, slot.x, slot.y, 0xFFFF0000);
@@ -52,13 +51,11 @@ public abstract class MixinHandledScreen {
 
     @Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
     private static void onDrawSlotHighlight(DrawContext context, int x, int y, int z, CallbackInfo ci) {
-        Screen screen = InventiveInventory.getScreen();
-        if (AdvancedOperationHandler.isPressed()) {
-            if (screen instanceof InventoryScreen) {
-                if (PlayerSlots.get(false).contains(SlotFinder.getSlotAtPosition(x, y).getIndex())) {
-                    Drawer.drawSlotBackground(context, x, y, 0xFFFF8080);
-                    ci.cancel();
-                }
+        if (AdvancedOperationHandler.isPressed() && ScreenCheck.isPlayerInventory()) {
+            Slot slot = SlotFinder.getSlotAtPosition(x, y);
+            if (slot != null && PlayerSlots.get().contains(slot.getIndex())) {
+                Drawer.drawSlotBackground(context, x, y, 0xFFFF8080);
+                ci.cancel();
             }
         }
     }

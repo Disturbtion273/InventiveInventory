@@ -30,7 +30,7 @@ public class FileHandler {
             JsonObject jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
             JsonArray array = jsonObject.get(jsonKey).getAsJsonArray();
             if (!array.isEmpty()) {
-                for (JsonElement element: array) {
+                for (JsonElement element : array) {
                     if (element.getAsJsonPrimitive().isNumber()) {
                         list.add((T) Integer.valueOf(element.getAsInt()));
                     } else if (element.getAsJsonPrimitive().isString()) {
@@ -48,7 +48,8 @@ public class FileHandler {
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject().get(jsonKey).getAsJsonObject();
-        } catch (FileNotFoundException | IllegalStateException | ClassCastException | NullPointerException ignored) {}
+        } catch (FileNotFoundException | IllegalStateException | ClassCastException | NullPointerException ignored) {
+        }
         return jsonObject;
     }
 
@@ -56,7 +57,8 @@ public class FileHandler {
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
-        } catch (FileNotFoundException | IllegalStateException ignored) {}
+        } catch (FileNotFoundException | IllegalStateException ignored) {
+        }
         return jsonObject;
     }
 
@@ -64,6 +66,7 @@ public class FileHandler {
     private static void writeToFile(Path filePath, JsonObject jsonObject) {
         try (FileWriter file = new FileWriter(filePath.toFile())) {
             file.write(gson.toJson(jsonObject));
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 }

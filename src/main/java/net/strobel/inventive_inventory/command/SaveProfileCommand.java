@@ -14,11 +14,13 @@ import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 
 public class SaveProfileCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
-        dispatcher.register(ClientCommandManager.literal("inventiveprofile")
+        dispatcher.register(ClientCommandManager.literal("inventive-profile")
                 .then(ClientCommandManager.literal("save")
                         .then(ClientCommandManager.argument("name", StringArgumentType.word())
-                                .executes(SaveProfileCommand::run))));
-
+                                .executes(SaveProfileCommand::run)
+                        )
+                )
+        );
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {

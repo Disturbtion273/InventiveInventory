@@ -1,6 +1,8 @@
 package net.strobel.inventive_inventory.slots;
 
+import net.minecraft.screen.PlayerScreenHandler;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
+import net.strobel.inventive_inventory.util.ScreenCheck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,16 @@ public class InventorySlots extends ArrayList<Integer> {
     }
 
     public InventorySlots excludeLockedSlots() {
-        List<Integer> lockedSlots = LockedSlotsHandler.get().adjust();
+        List<Integer> lockedSlots = LockedSlotsHandler.getLockedSlots().adjust();
         return new InventorySlots(this.stream().filter(slot -> !lockedSlots.contains(slot)).toList());
 
+    }
+
+    public InventorySlots excludeOffhand() {
+        if (ScreenCheck.isPlayerInventory()) {
+            this.remove(Integer.valueOf(PlayerScreenHandler.OFFHAND_ID));
+            return new InventorySlots(this);
+        }
+        return this;
     }
 }

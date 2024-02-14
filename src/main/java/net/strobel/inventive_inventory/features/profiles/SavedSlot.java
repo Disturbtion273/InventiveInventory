@@ -25,7 +25,7 @@ class SavedSlot {
     private NbtCompound convertJsonObjectToNbt(JsonObject nbtData) {
         NbtCompound nbt = new NbtCompound();
         try {
-            nbt.putString("custom_name", nbtData.get("custom_name").getAsString());
+            nbt.putString("custom_name", "\"" + nbtData.get("custom_name").getAsString() + "\"");
         } catch (IllegalStateException | NullPointerException ignored) {}
 
         try {
@@ -39,7 +39,8 @@ class SavedSlot {
                 enchantments.add(enchantment);
             }
             nbt.put("Enchantments", enchantments);
-        } catch (IllegalStateException | NullPointerException ignored) {}
+        } catch (IllegalStateException | NullPointerException ignored) {
+        }
 
         try {
             JsonObject trimObject = nbtData.get("Trim").getAsJsonObject();
@@ -47,7 +48,8 @@ class SavedSlot {
             trim.putString("material", trimObject.get("material").getAsString());
             trim.putString("pattern", trimObject.get("pattern").getAsString());
             nbt.put("Trim", trim);
-        } catch (IllegalStateException | NullPointerException ignored) {}
+        } catch (IllegalStateException | NullPointerException ignored) {
+        }
 
         return nbt;
     }
@@ -60,18 +62,16 @@ class SavedSlot {
         }
 
         if (!this.nbtData.getList("Enchantments", 10).isEmpty()) {
-            try {
-                JsonArray enchantments = new JsonArray();
-                NbtList enchantmentsNbtList = this.nbtData.getList("Enchantments", 10);
-                for (NbtElement enchantmentElement : enchantmentsNbtList) {
-                    NbtCompound enchantmentCompound = (NbtCompound) enchantmentElement;
-                    JsonObject enchantment = new JsonObject();
-                    enchantment.addProperty("id", enchantmentCompound.getString("id"));
-                    enchantment.addProperty("lvl", enchantmentCompound.getShort("lvl"));
-                    enchantments.add(enchantment);
-                }
-                jsonObject.add("Enchantments", enchantments);
-            } catch (NullPointerException ignored) {}
+            JsonArray enchantments = new JsonArray();
+            NbtList enchantmentsNbtList = this.nbtData.getList("Enchantments", 10);
+            for (NbtElement enchantmentElement : enchantmentsNbtList) {
+                NbtCompound enchantmentCompound = (NbtCompound) enchantmentElement;
+                JsonObject enchantment = new JsonObject();
+                enchantment.addProperty("id", enchantmentCompound.getString("id"));
+                enchantment.addProperty("lvl", enchantmentCompound.getShort("lvl"));
+                enchantments.add(enchantment);
+            }
+            jsonObject.add("Enchantments", enchantments);
         }
 
         if (this.nbtData.get("Trim") != null) {
@@ -90,14 +90,13 @@ class SavedSlot {
         if (nbtData == null) return nbt;
 
         if (nbtData.get("display") != null) {
-            String customName;
-            customName = nbtData.getCompound("display").getString("Name");
-            nbt.putString("custom_name", customName);
+            String customName = nbtData.getCompound("display").getString("Name");
+            nbt.putString("custom_name", customName.substring(1, customName.length() - 1));
         }
 
         if (nbtData.get("Enchantments") != null) {
             NbtList enchantments = new NbtList();
-            for (NbtElement rawEnchantment: nbtData.getList("Enchantments", 10)) {
+            for (NbtElement rawEnchantment : nbtData.getList("Enchantments", 10)) {
                 NbtCompound rawEnchantmentCompound = (NbtCompound) rawEnchantment;
                 NbtCompound enchantment = new NbtCompound();
                 enchantment.putString("id", rawEnchantmentCompound.getString("id"));

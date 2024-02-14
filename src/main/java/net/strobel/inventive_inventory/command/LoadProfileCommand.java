@@ -20,11 +20,14 @@ import java.util.concurrent.CompletableFuture;
 
 public class LoadProfileCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
-        dispatcher.register(ClientCommandManager.literal("inventiveprofile")
+        dispatcher.register(ClientCommandManager.literal("inventive-profile")
                 .then(ClientCommandManager.literal("load")
-                .then(ClientCommandManager.argument("profile", StringArgumentType.word())
-                        .suggests(LoadProfileCommand::getProfiles)
-                        .executes(LoadProfileCommand::run))));
+                        .then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                                .suggests(LoadProfileCommand::getProfiles)
+                                .executes(LoadProfileCommand::run)
+                        )
+                )
+        );
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {

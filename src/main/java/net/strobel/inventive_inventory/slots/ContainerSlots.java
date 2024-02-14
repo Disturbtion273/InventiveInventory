@@ -5,11 +5,10 @@ import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 
 public class ContainerSlots {
-    public static final PlayerInventory playerInventory = InventiveInventory.getPlayer().getInventory();
-    public static InventorySlots getInventory() {
+    public static InventorySlots get() {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         int from = 0;
-        int to = screenHandler.slots.size() - playerInventory.main.size();
+        int to = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
         return new InventorySlots(from, to);
     }
 }

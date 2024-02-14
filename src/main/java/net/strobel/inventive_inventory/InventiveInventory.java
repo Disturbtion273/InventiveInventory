@@ -11,17 +11,29 @@ import net.strobel.inventive_inventory.command.LoadProfileCommand;
 import net.strobel.inventive_inventory.command.SaveProfileCommand;
 import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class InventiveInventory implements ClientModInitializer {
     public static final String MOD_ID = "inventive_inventory";
+    public static final String MOD_NAME = "Inventive Inventory";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     @Override
     public void onInitializeClient() {
-        ConfigManager.initialize();
-        KeyInputHandler.register();
-        KeyInputHandler.registerKeyInputs();
-        ClientCommandRegistrationCallback.EVENT.register(LoadProfileCommand::register);
-        ClientCommandRegistrationCallback.EVENT.register(SaveProfileCommand::register);
+        try {
+            ConfigManager.initialize();
+            KeyInputHandler.register();
+            KeyInputHandler.registerKeyInputs();
+            ClientCommandRegistrationCallback.EVENT.register(LoadProfileCommand::register);
+            ClientCommandRegistrationCallback.EVENT.register(SaveProfileCommand::register);
+            LOGGER.info(MOD_NAME + " initialized successfully!");
+        } catch (IOException e) {
+            LOGGER.error("Couldn't create config files", e);
+            LOGGER.error(MOD_NAME + " could not be initialized correctly!");
+        }
     }
 
     public static MinecraftClient getClient() {
@@ -37,10 +49,7 @@ public class InventiveInventory implements ClientModInitializer {
     }
 
     public static ScreenHandler getScreenHandler() {
-        if (MinecraftClient.getInstance().player != null) {
-            return MinecraftClient.getInstance().player.currentScreenHandler;
-        }
-        return null;
+        return MinecraftClient.getInstance().player.currentScreenHandler;
     }
 
     public static ClientPlayerInteractionManager getInteractionManager() {
