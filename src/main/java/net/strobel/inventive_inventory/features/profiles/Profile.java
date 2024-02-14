@@ -14,7 +14,7 @@ import net.strobel.inventive_inventory.util.FileHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Profile {
+class Profile {
     private final String name;
     private final List<SavedSlot> savedSlots = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class Profile {
 
     public void create() {
         this.savedSlots.clear();
-        InventorySlots inventorySlots = PlayerSlots.get(true, true);
+        InventorySlots inventorySlots = PlayerSlots.getHotbarAndEquipment();
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         for (int slot: inventorySlots) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
@@ -73,6 +73,10 @@ public class Profile {
 
         profiles.add(this.name, jsonObject);
         FileHandler.write(ProfileHandler.PROFILES_PATH, profiles);
+    }
+
+    public List<SavedSlot> getSavedSlots() {
+        return savedSlots;
     }
 }
 

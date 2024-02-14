@@ -47,4 +47,21 @@ public class PlayerSlots {
             return new InventorySlots(from, to);
         }
     }
+
+    public static InventorySlots getHotbarAndEquipment() {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+
+        int from, to;
+        if (screenHandler instanceof PlayerScreenHandler || screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler) {
+            from = PlayerScreenHandler.EQUIPMENT_START;
+            to = PlayerScreenHandler.EQUIPMENT_END;
+            int from2 = PlayerScreenHandler.HOTBAR_START;
+            int to2 = PlayerScreenHandler.OFFHAND_ID;
+            return new InventorySlots(from, to, from2, to2);
+        } else {
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            to = screenHandler.slots.size();
+            return new InventorySlots(from, to);
+        }
+    }
 }

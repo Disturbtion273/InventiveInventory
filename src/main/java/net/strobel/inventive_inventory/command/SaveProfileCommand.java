@@ -14,9 +14,7 @@ public class SaveProfileCommand {
         dispatcher.register(ClientCommandManager.literal("inventiveprofile")
                 .then(ClientCommandManager.literal("save")
                         .then(ClientCommandManager.argument("name", StringArgumentType.word())
-                                .executes(SaveProfileCommand::run)
-                        .then(ClientCommandManager.argument("keybind", StringArgumentType.word())
-                                .executes(SaveProfileCommand::runWithKeybind)))));
+                                .executes(SaveProfileCommand::run))));
 
     }
 
@@ -24,14 +22,6 @@ public class SaveProfileCommand {
         String name = StringArgumentType.getString(context, "name");
         ProfileHandler.save(name);
         context.getSource().sendFeedback(Text.of("Saved successfully: " + name));
-        return 1;
-    }
-
-    private static int runWithKeybind(CommandContext<FabricClientCommandSource> context) {
-        String name = StringArgumentType.getString(context, "name");
-        String keybind = StringArgumentType.getString(context, "keybind");
-        // ProfileHandler.save(name);
-        context.getSource().sendFeedback(Text.of("Saved successfully: " + name + ", " + keybind));
         return 1;
     }
 }

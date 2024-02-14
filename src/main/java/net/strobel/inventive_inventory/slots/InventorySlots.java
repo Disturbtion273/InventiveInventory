@@ -16,6 +16,10 @@ public class InventorySlots extends ArrayList<Integer> {
         super(IntStream.concat(IntStream.range(from, to), IntStream.of(offhand)).boxed().toList());
     }
 
+    public InventorySlots(int from, int to, int from2, int to2) {
+        super(IntStream.concat(IntStream.range(from, to), IntStream.rangeClosed(from2, to2)).boxed().toList());
+    }
+
     public InventorySlots(List<Integer> slots) {
         super(slots);
     }

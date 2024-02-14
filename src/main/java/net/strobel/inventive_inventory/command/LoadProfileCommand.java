@@ -28,9 +28,10 @@ public class LoadProfileCommand {
         String profile = StringArgumentType.getString(context, "profile");
         List<String> profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().stream().toList();
         if (profiles.contains(profile)) {
+            ProfileHandler.load(profile);
             context.getSource().sendFeedback(Text.of("Loading successfully: " + profile));
         } else {
-            context.getSource().sendFeedback(Text.of("Profile " + profile + " not found!"));
+            context.getSource().sendFeedback(Text.of("Profile '" + profile + "' not found!"));
         }
         return 1;
     }

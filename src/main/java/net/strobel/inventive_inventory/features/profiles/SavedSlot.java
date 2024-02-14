@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.*;
 
-public class SavedSlot {
+class SavedSlot {
     private final int slot;
     private final String id;
     private final NbtCompound nbtData;
@@ -125,5 +125,9 @@ public class SavedSlot {
 
     public String getId() {
         return this.id;
+    }
+
+    public NbtCompound getNbtData() {
+        return this.nbtData;
     }
 }
