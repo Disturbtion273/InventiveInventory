@@ -8,7 +8,10 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -29,9 +32,11 @@ public class LoadProfileCommand {
         List<String> profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().stream().toList();
         if (profiles.contains(profile)) {
             ProfileHandler.load(profile);
-            context.getSource().sendFeedback(Text.of("Loading successfully: " + profile));
+            Text text = Text.of("Loaded: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
+            InventiveInventory.getPlayer().sendMessage(text, true);
         } else {
-            context.getSource().sendFeedback(Text.of("Profile '" + profile + "' not found!"));
+            Text text = Text.of("Profile '" + profile + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+            InventiveInventory.getPlayer().sendMessage(text, true);
         }
         return 1;
     }
