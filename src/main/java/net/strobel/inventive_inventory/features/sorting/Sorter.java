@@ -3,8 +3,8 @@ package net.strobel.inventive_inventory.features.sorting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
-import net.strobel.inventive_inventory.slots.InventorySlots;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
+import net.strobel.inventive_inventory.slots.InventorySlots;
 
 import java.util.Comparator;
 import java.util.List;

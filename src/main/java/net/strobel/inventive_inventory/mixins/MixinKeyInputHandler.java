@@ -1,9 +1,9 @@
 package net.strobel.inventive_inventory.mixins;
 
-import net.minecraft.client.gui.screen.ingame.*;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.strobel.inventive_inventory.features.sorting.SortingHandler;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.features.sorting.SortingHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

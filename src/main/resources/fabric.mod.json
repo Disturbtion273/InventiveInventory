@@ -1,40 +1,38 @@
 {
-	"schemaVersion": 1,
-	"id": "inventive_inventory",
-	"version": "${version}",
-	"name": "Inventive Inventory",
-	"description": "An all in one inventory management mod. [Currently in Development]",
-	"authors": [
-		"Strobel273",
-		"LU_XD"
-	],
-	"contact": {
-		"homepage": "https://modrinth.com/mod/inventiveinventory",
-		"issues": "https://github.com/strobel273/InventiveInventory/issues"
-	},
-	"license": "All-Rights-Reserved",
-	"icon": "assets/inventive_inventory/icon/icon.png",
-	"environment": "client",
-	"entrypoints": {
-		"client": [
-          "net.strobel.inventive_inventory.InventiveInventory"
-		]
-	},
-	"mixins": [
-		"inventive_inventory.mixins.json"
-	],
-	"depends": {
-		"fabricloader": ">=0.15.3",
-		"minecraft": "~1.20.4",
-		"java": ">=17",
-		"fabric-api": "*",
-		"fabric-key-binding-api-v1": "*"
-	},
-	"custom": {
-		"modmenu": {
-			"links": {
-				"modmenu.donate": "https://paypal.me/strobel273"
-			}
-		}
-	}
+    "schemaVersion": 1,
+    "id": "inventive_inventory",
+    "version": "${version}",
+    "name": "Inventive Inventory",
+    "description": "An all in one inventory management mod. [Currently in Development]",
+    "authors": [
+        "Strobel273",
+        "LU_XD"
+    ],
+    "contact": {
+        "homepage": "https://modrinth.com/mod/inventiveinventory",
+        "issues": "https://github.com/strobel273/InventiveInventory/issues"
+    },
+    "license": "All-Rights-Reserved",
+    "icon": "assets/inventive_inventory/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "net.strobel.inventive_inventory.InventiveInventory"
+        ]
+    },
+    "mixins": [
+        "inventive_inventory.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}"
+    },
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.donate": "https://paypal.me/strobel273"
+            }
+        }
+    }
 }

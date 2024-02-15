@@ -1,6 +1,6 @@
 package net.strobel.inventive_inventory.features.sorting;
 
-import net.minecraft.screen.*;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;

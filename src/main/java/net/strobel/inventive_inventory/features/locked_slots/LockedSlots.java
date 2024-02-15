@@ -5,8 +5,8 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LockedSlots extends ArrayList<Integer> {
 

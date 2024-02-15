@@ -1,14 +1,15 @@
 {
-  "required": true,
-  "package": "net.strobel.inventive_inventory.mixins",
-  "compatibilityLevel": "JAVA_17",
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "client": [
-    "MixinClientPlayerInteractionManager",
-    "MixinHandledScreen",
-    "MixinKeyBinding",
-    "MixinKeyInputHandler"
-  ]
+    "required": true,
+    "minVersion": "0.8",
+    "package": "net.strobel.inventive_inventory.mixins",
+    "compatibilityLevel": "JAVA_17",
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "client": [
+        "MixinClientPlayerInteractionManager",
+        "MixinHandledScreen",
+        "MixinKeyBinding",
+        "MixinKeyInputHandler"
+    ]
 }
