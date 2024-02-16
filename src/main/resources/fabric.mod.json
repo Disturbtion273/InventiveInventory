@@ -21,7 +21,8 @@
         ]
     },
     "mixins": [
-        "inventive_inventory.mixins.json"
+        "inventive_inventory.mixins.json",
+        "inventive_keybindfix.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",

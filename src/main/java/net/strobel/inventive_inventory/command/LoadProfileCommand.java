@@ -33,14 +33,14 @@ public class LoadProfileCommand {
     private static int run(CommandContext<FabricClientCommandSource> context) {
         String profile = StringArgumentType.getString(context, "profile");
         List<String> profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().stream().toList();
+        Text text;
         if (profiles.contains(profile)) {
             ProfileHandler.load(profile);
-            Text text = Text.of("Loaded: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-            InventiveInventory.getPlayer().sendMessage(text, true);
+            text = Text.of("Loaded: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
         } else {
-            Text text = Text.of("Profile '" + profile + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
-            InventiveInventory.getPlayer().sendMessage(text, true);
+            text = Text.of("Profile '" + profile + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
         }
+        InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 

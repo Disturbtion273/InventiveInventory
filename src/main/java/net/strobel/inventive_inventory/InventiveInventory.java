@@ -11,6 +11,7 @@ import net.strobel.inventive_inventory.command.LoadProfileCommand;
 import net.strobel.inventive_inventory.command.SaveProfileCommand;
 import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class InventiveInventory implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         try {
+            GLFW.glfwInit();
             ConfigManager.initialize();
             KeyInputHandler.register();
             KeyInputHandler.registerKeyInputs();

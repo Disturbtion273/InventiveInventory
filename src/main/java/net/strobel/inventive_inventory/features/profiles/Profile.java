@@ -3,10 +3,13 @@ package net.strobel.inventive_inventory.features.profiles;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import net.strobel.inventive_inventory.keybindfix.mixins.MixinIKeyBindingAccessor;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -15,14 +18,28 @@ import java.util.List;
 
 class Profile {
     private final String name;
+    private final String key;
     private final List<SavedSlot> savedSlots;
 
-    private Profile(String name, List<SavedSlot> savedSlots) {
+    private Profile(String name, String key, List<SavedSlot> savedSlots) {
         this.name = name;
+        this.key = key;
         this.savedSlots = savedSlots;
+        for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
+            if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
+                ((MixinIKeyBindingAccessor) keyBinding).setTranslationKey("Profile: " + name);
+            }
+        }
     }
 
-    public static void create(String name) {
+    private Profile(String name, KeyBinding keyBinding, List<SavedSlot> savedSlots) {
+        this.name = name;
+        this.key = keyBinding.getBoundKeyLocalizedText().getString();
+        this.savedSlots = savedSlots;
+        ((MixinIKeyBindingAccessor) keyBinding).setTranslationKey("Profile: " + name);
+    }
+
+    public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
         for (int slot : PlayerSlots.getHotbarAndEquipment()) {
@@ -33,11 +50,26 @@ class Profile {
                 savedSlots.add(new SavedSlot(slot, id, nbt));
             }
         }
-        new Profile(name, savedSlots).save();
+        new Profile(name, key, savedSlots).save();
+    }
+
+    public static void create(String name, KeyBinding keyBinding) {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        List<SavedSlot> savedSlots = new ArrayList<>();
+        for (int slot : PlayerSlots.getHotbarAndEquipment()) {
+            ItemStack stack = screenHandler.getSlot(slot).getStack();
+            if (!stack.isEmpty()) {
+                String id = stack.getItem().toString();
+                NbtCompound nbt = stack.getNbt();
+                savedSlots.add(new SavedSlot(slot, id, nbt));
+            }
+        }
+        new Profile(name, keyBinding, savedSlots).save();
     }
 
     public static Profile load(String name) {
         JsonObject jsonProfile = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, name);
+        String key = jsonProfile.get("keybind").getAsString();
         JsonArray jsonSavedSlots = jsonProfile.get("saved_slots").getAsJsonArray();
 
         List<SavedSlot> savedSlots = new ArrayList<>();
@@ -49,7 +81,7 @@ class Profile {
                     savedSlotObject.get("nbt_data").getAsJsonObject());
             savedSlots.add(savedSlot);
         }
-        return new Profile(name, savedSlots);
+        return new Profile(name, key, savedSlots);
     }
 
     private void save() {
@@ -63,6 +95,7 @@ class Profile {
         }
 
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("keybind", this.key);
         jsonObject.add("saved_slots", jsonArray);
 
         JsonObject profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);

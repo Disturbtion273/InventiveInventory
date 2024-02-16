@@ -1,9 +1,13 @@
 package net.strobel.inventive_inventory.features.profiles;
 
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
@@ -19,8 +23,20 @@ public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
 
-    public static void save(String name) {
-        Profile.create(name);
+    // Commands
+    public static void save(String name, String key) {
+        Profile.create(name, key);
+        Text text = Text.of("Saved: " + name).copy()
+                .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
+        InventiveInventory.getPlayer().sendMessage(text, true);
+    }
+
+    // Hotkeys
+    public static  void save(String name, KeyBinding keyBinding) {
+        Profile.create(name, keyBinding);
+        Text text = Text.of("Saved: " + name).copy()
+                .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void load(String name) {
