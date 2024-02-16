@@ -28,7 +28,7 @@ public class KeybindFixer {
         List<KeyBinding> keyBindings = keyFixMap.get(key).stream().toList();
         for (KeyBinding keyBind : keyBindings) {
             if (allHotbarKeyBindings.contains(keyBind)) {
-                if (KeyInputHandler.profileSavingKey.isPressed()) {
+                if (KeyInputHandler.profileSavingKey.isPressed() || KeyInputHandler.profileLoadingKey.isPressed()) {
                     return true;
                 }
             }
