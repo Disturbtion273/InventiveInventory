@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
-import net.strobel.inventive_inventory.keybindfix.mixins.MixinIKeyBindingAccessor;
 import net.strobel.inventive_inventory.util.FileHandler;
 import net.strobel.inventive_inventory.util.ScreenCheck;
 import org.lwjgl.glfw.GLFW;
