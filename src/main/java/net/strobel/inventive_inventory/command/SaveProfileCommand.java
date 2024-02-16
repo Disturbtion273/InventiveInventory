@@ -7,11 +7,11 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.command.CommandRegistryAccess;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class SaveProfileCommand {
@@ -41,11 +41,12 @@ public class SaveProfileCommand {
         return 1;
     }
 
-    private static int run(CommandContext<FabricClientCommandSource> context) {
-        String name = StringArgumentType.getString(context, "name");
-        ProfileHandler.save(name);
-        Text text = Text.of("Saved: " + name).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-        InventiveInventory.getPlayer().sendMessage(text, true);
-        return 1;
+    private static CompletableFuture<Suggestions> getKeyBinds(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+        KeyBinding[] keyBindings = KeyInputHandler.profileKeys;
+
+        for (KeyBinding keyBinding : keyBindings) {
+            builder.suggest(keyBinding.getBoundKeyLocalizedText().getString());
+        }
+        return builder.buildFuture();
     }
 }
