@@ -7,7 +7,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.command.CommandRegistryAccess;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
