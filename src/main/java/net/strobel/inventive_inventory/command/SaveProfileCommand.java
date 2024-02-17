@@ -12,6 +12,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class SaveProfileCommand {
@@ -42,11 +43,7 @@ public class SaveProfileCommand {
     }
 
     private static CompletableFuture<Suggestions> getKeyBinds(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
-        KeyBinding[] keyBindings = KeyInputHandler.profileKeys;
-
-        for (KeyBinding keyBinding : keyBindings) {
-            builder.suggest(keyBinding.getBoundKeyLocalizedText().getString());
-        }
+        Arrays.stream(KeyInputHandler.profileKeys).forEach(keybind -> builder.suggest(keybind.getBoundKeyLocalizedText().getString()));
         return builder.buildFuture();
     }
 }

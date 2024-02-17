@@ -18,13 +18,13 @@ import net.strobel.inventive_inventory.util.FileHandler;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class LoadProfileCommand {
+public class DeleteProfileCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-profile")
-                .then(ClientCommandManager.literal("load")
-                        .then(ClientCommandManager.argument("profile", StringArgumentType.word())
-                                .suggests(LoadProfileCommand::getProfiles)
-                                .executes(LoadProfileCommand::run)
+                .then(ClientCommandManager.literal("delete")
+                        .then(ClientCommandManager.argument("profile", StringArgumentType.greedyString())
+                                .suggests(DeleteProfileCommand::getProfiles)
+                                .executes(DeleteProfileCommand::run)
                         )
                 )
         );
@@ -35,8 +35,8 @@ public class LoadProfileCommand {
         List<String> profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().stream().toList();
         Text text;
         if (profiles.contains(profile)) {
-            ProfileHandler.load(profile);
-            text = Text.of("Loaded: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
+            ProfileHandler.delete(profile);
+            text = Text.of("Deleted: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
         } else {
             text = Text.of("Profile '" + profile + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
         }
@@ -45,7 +45,12 @@ public class LoadProfileCommand {
     }
 
     private static CompletableFuture<Suggestions> getProfiles(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
-        FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().forEach(builder::suggest);
+        String[] profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().toArray(new String[0]);
+
+        for (String profile : profiles) {
+            builder.suggest(profile);
+        }
         return builder.buildFuture();
     }
 }
+

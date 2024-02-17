@@ -83,9 +83,10 @@ public class KeyInputHandler {
                     if (profileKeys[i].isPressed() && !executed[i]) {
                         KeyBinding keyBinding = profileKeys[i];
                         String name = Text.translatable(keyBinding.getTranslationKey()).getString();
-                        if (!name.equals(keyBinding.getTranslationKey())) {
+                        if (name.equals(keyBinding.getTranslationKey())) {
                             name = keyBinding.getTranslationKey();
                         }
+                        System.out.println(name);
                         ProfileHandler.save(name, keyBinding);
                         executed[i] = true;
                     } else if (!profileKeys[i].isPressed()) {
@@ -101,7 +102,7 @@ public class KeyInputHandler {
                         JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
                         for (String profileKey: profilesFile.keySet()) {
                             JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                            if (keybind != null && keybind.getAsString().equals(String.valueOf(i+1))) {
+                            if (keybind.getAsString().equals(String.valueOf(i+1))) {
                                 ProfileHandler.load(profileKey);
                                 Text text = Text.of("Loaded: " + profileKey).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
                                 InventiveInventory.getPlayer().sendMessage(text, true);

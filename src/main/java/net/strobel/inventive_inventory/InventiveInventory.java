@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
+import net.strobel.inventive_inventory.command.DeleteProfileCommand;
 import net.strobel.inventive_inventory.command.LoadProfileCommand;
 import net.strobel.inventive_inventory.command.SaveProfileCommand;
 import net.strobel.inventive_inventory.config.ConfigManager;
@@ -31,6 +32,7 @@ public class InventiveInventory implements ClientModInitializer {
             KeyInputHandler.registerKeyInputs();
             ClientCommandRegistrationCallback.EVENT.register(LoadProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(SaveProfileCommand::register);
+            ClientCommandRegistrationCallback.EVENT.register(DeleteProfileCommand::register);
             LOGGER.info(MOD_NAME + " initialized successfully!");
         } catch (IOException e) {
             LOGGER.error("Couldn't create config files", e);

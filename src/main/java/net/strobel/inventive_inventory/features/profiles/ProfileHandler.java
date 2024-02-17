@@ -1,5 +1,7 @@
 package net.strobel.inventive_inventory.features.profiles;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -13,6 +15,7 @@ import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
+import net.strobel.inventive_inventory.util.FileHandler;
 
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -25,7 +28,20 @@ public class ProfileHandler {
 
     // Commands
     public static void save(String name, String key) {
-        Profile.create(name, key);
+        if (key.isBlank()) {
+            Profile.create(name, key);
+        } else {
+            JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+            for (String profileKey : allProfiles.keySet()) {
+                JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
+                if (keybind.getAsString().equals(key) && !key.isBlank()) {
+                    ProfileHandler.delete(profileKey);
+                    Profile.create(name, key);
+                    break;
+                }
+            }
+        }
+
         Text text = Text.of("Saved: " + name).copy()
                 .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
         InventiveInventory.getPlayer().sendMessage(text, true);
@@ -87,6 +103,12 @@ public class ProfileHandler {
         }
     }
 
+    public static void delete(String name) {
+        JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        allProfiles.remove(name);
+        FileHandler.write(PROFILES_PATH, allProfiles);
+    }
+
     private static boolean equalNbt(NbtCompound stackNbt, NbtCompound savedSlotNbt) {
         boolean equalEnchantments = equalElements(stackNbt, savedSlotNbt, "Enchantments");
         boolean equalTrim = equalElements(stackNbt, savedSlotNbt, "Trim");
@@ -101,5 +123,4 @@ public class ProfileHandler {
         }
         return stackNbt.get(elementName) == null && savedSlotNbt.get(elementName) == null;
     }
-
 }
