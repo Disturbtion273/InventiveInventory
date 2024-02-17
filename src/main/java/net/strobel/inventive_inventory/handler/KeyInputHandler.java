@@ -11,6 +11,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.util.FileHandler;
 import net.strobel.inventive_inventory.util.ScreenCheck;
@@ -76,6 +77,10 @@ public class KeyInputHandler {
                 } else if (AdvancedOperationHandler.isPressed()) {
                     AdvancedOperationHandler.release();
                 }
+            }
+
+            if (AdvancedOperationHandler.isPressed()) {
+                AutomaticRefillingHandler.run();
             }
 
             if (profileSavingKey.isPressed()) {

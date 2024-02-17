@@ -50,4 +50,16 @@ public class PlayerSlots {
         int to2 = PlayerScreenHandler.OFFHAND_ID;
         return new InventorySlots(from, to, from2, to2);
     }
+
+    public static InventorySlots getHotbar() {
+        int from = PlayerScreenHandler.HOTBAR_START;
+        int to = PlayerScreenHandler.HOTBAR_END;
+        return new InventorySlots(from, to);
+    }
+
+    public static InventorySlots getInventory() {
+        int from = PlayerScreenHandler.INVENTORY_START;
+        int to = PlayerScreenHandler.INVENTORY_END;
+        return new InventorySlots(from, to);
+    }
 }
