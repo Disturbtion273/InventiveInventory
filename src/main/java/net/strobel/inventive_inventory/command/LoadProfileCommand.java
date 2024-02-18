@@ -22,7 +22,7 @@ public class LoadProfileCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-profile")
                 .then(ClientCommandManager.literal("load")
-                        .then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                        .then(ClientCommandManager.argument("profile", StringArgumentType.greedyString())
                                 .suggests(LoadProfileCommand::getProfiles)
                                 .executes(LoadProfileCommand::run)
                         )
