@@ -9,7 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.mixins.MixinIKeyBindingAccessor;
+import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -27,7 +27,7 @@ class Profile {
         this.savedSlots = savedSlots;
         for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
             if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
-                ((MixinIKeyBindingAccessor) keyBinding).setTranslationKey("Profile: " + name);
+                ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
             }
         }
     }
@@ -36,7 +36,7 @@ class Profile {
         this.name = name;
         this.key = keyBinding.getBoundKeyLocalizedText().getString();
         this.savedSlots = savedSlots;
-        ((MixinIKeyBindingAccessor) keyBinding).setTranslationKey("Profile: " + name);
+        ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
     }
 
     public static void create(String name, String key) {

@@ -14,6 +14,8 @@ import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
+import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -26,18 +28,36 @@ public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
 
+    public static void initialize() {
+        JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        Set<String> profileNames = allProfiles.keySet();
+        for (String profileName : profileNames) {
+            JsonObject profile = allProfiles.getAsJsonObject(profileName);
+            for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
+                if (keyBinding.getBoundKeyLocalizedText().getString().equals(profile.get("keybind").getAsString())) {
+                    ((IKeyBindingDisplay) keyBinding).main$setDisplayName(profileName);
+                    break;
+                }
+            }
+        }
+    }
+
     // Commands
     public static void save(String name, String key) {
         if (key.isBlank()) {
             Profile.create(name, key);
         } else {
             JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-            for (String profileKey : allProfiles.keySet()) {
-                JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                if (keybind.getAsString().equals(key) && !key.isBlank()) {
-                    ProfileHandler.delete(profileKey);
-                    Profile.create(name, key);
-                    break;
+            if (allProfiles.keySet().isEmpty()) {
+                Profile.create(name, key);
+            } else {
+                for (String profileKey : allProfiles.keySet()) {
+                    JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
+                    if (keybind.getAsString().equals(key) && !key.isBlank()) {
+                        ProfileHandler.delete(profileKey);
+                        Profile.create(name, key);
+                        break;
+                    }
                 }
             }
         }
@@ -105,6 +125,13 @@ public class ProfileHandler {
 
     public static void delete(String name) {
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        String keybind = allProfiles.getAsJsonObject(name).get("keybind").getAsString();
+        for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
+            if (keyBinding.getBoundKeyLocalizedText().getString().equals(keybind)) {
+                ((IKeyBindingDisplay) keyBinding).main$resetDisplayName();
+                break;
+            }
+        }
         allProfiles.remove(name);
         FileHandler.write(PROFILES_PATH, allProfiles);
     }

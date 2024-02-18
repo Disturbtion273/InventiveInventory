@@ -11,6 +11,7 @@ import net.strobel.inventive_inventory.command.DeleteProfileCommand;
 import net.strobel.inventive_inventory.command.LoadProfileCommand;
 import net.strobel.inventive_inventory.command.SaveProfileCommand;
 import net.strobel.inventive_inventory.config.ConfigManager;
+import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class InventiveInventory implements ClientModInitializer {
             ConfigManager.initialize();
             KeyInputHandler.register();
             KeyInputHandler.registerKeyInputs();
+            ProfileHandler.initialize();
             ClientCommandRegistrationCallback.EVENT.register(LoadProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(SaveProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(DeleteProfileCommand::register);

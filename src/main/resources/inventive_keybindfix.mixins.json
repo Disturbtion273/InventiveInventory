@@ -8,7 +8,6 @@
     },
     "client": [
         "MixinIKeyBindingAccessor",
-        "MixinControlsListWidget",
         "MixinKeyBinding"
     ]
 }

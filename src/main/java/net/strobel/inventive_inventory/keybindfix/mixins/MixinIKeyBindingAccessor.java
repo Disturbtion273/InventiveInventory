@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(KeyBinding.class)
 public interface MixinIKeyBindingAccessor {
+
     @Accessor(value = "timesPressed")
     int getTimesPressed();
 
@@ -15,7 +16,4 @@ public interface MixinIKeyBindingAccessor {
 
     @Accessor(value = "boundKey")
     InputUtil.Key getBoundKey();
-
-    @Accessor(value = "translationKey")
-    void setTranslationKey(String translationKey);
 }

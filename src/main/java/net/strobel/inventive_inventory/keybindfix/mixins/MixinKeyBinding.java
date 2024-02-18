@@ -4,8 +4,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
+import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.keybindfix.KeybindFixer;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(value = KeyBinding.class, priority = 10000)
-public abstract class MixinKeyBinding {
+public abstract class MixinKeyBinding implements IKeyBindingDisplay {
+    @Unique
+    private String displayName;
     @Final
     @Shadow
     private static Map<String, KeyBinding> KEYS_BY_ID;
@@ -64,10 +68,9 @@ public abstract class MixinKeyBinding {
 
     @Inject(method = "getTranslationKey", at = @At("HEAD"), cancellable = true)
     private void onGetTranslationKey(CallbackInfoReturnable<String> cir) {
-        this.translationKey = translationKey.replaceFirst("Profile: ", "");
         List<KeyBinding> profileKeys = Arrays.asList(KeyInputHandler.profileKeys);
         if (profileKeys.contains((KeyBinding) (Object) this)) {
-            cir.setReturnValue(this.translationKey);
+            cir.setReturnValue(this.main$getDisplayName());
             cir.cancel();
         }
     }
@@ -77,5 +80,27 @@ public abstract class MixinKeyBinding {
         if ((Object) this == KeyInputHandler.advancedOperationKey) {
             AdvancedOperationHandler.setBoundKey(KeyBindingHelper.getBoundKeyOf(KeyInputHandler.advancedOperationKey));
         }
+    }
+
+    @Override
+    public String main$getDisplayName() {
+        if (this.displayName == null) {
+            this.displayName = Text.translatable(this.translationKey).getString();
+        }
+        return this.displayName;
+    }
+
+    @Override
+    public void main$setDisplayName(String displayName) {
+        if (Text.translatable(this.translationKey).getString().equals(displayName)) {
+            this.displayName = displayName;
+            return;
+        }
+        this.displayName = "Profile: " + displayName;
+    }
+
+    @Override
+    public void main$resetDisplayName() {
+        this.displayName = null;
     }
 }

@@ -41,7 +41,7 @@ public class KeybindFixer {
         for (KeyBinding keyBinding : keyFixMap.get(key)) {
             if (keyBinding == null || keyBinding == baseBinding) continue;
             MixinIKeyBindingAccessor keyBindingAccessor  = (MixinIKeyBindingAccessor) keyBinding;
-            (keyBindingAccessor).setTimesPressed(keyBindingAccessor.getTimesPressed() + 1);
+            keyBindingAccessor.setTimesPressed(keyBindingAccessor.getTimesPressed() + 1);
         }
     }
 
