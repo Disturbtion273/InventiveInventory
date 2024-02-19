@@ -8,14 +8,9 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.util.FileHandler;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LoadProfileCommand {
@@ -32,15 +27,7 @@ public class LoadProfileCommand {
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
         String profile = StringArgumentType.getString(context, "profile");
-        List<String> profiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH).keySet().stream().toList();
-        Text text;
-        if (profiles.contains(profile)) {
-            ProfileHandler.load(profile);
-            text = Text.of("Loaded: " + profile).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-        } else {
-            text = Text.of("Profile '" + profile + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
-        }
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        ProfileHandler.load(profile);
         return 1;
     }
 

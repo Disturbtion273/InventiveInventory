@@ -27,82 +27,72 @@ public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
 
+    private static final Style style = Style.EMPTY.withBold(true);
+
     public static void initialize() {
+        int i = 1;
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-        Set<String> profileNames = allProfiles.keySet();
-        for (String profileName : profileNames) {
-            JsonObject profile = allProfiles.getAsJsonObject(profileName);
-            for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
-                if (keyBinding.getBoundKeyLocalizedText().getString().equals(profile.get("keybind").getAsString())) {
-                    ((IKeyBindingDisplay) keyBinding).main$setDisplayName(profileName);
+        for (KeyBinding profileKey : KeyInputHandler.profileKeys) {
+            String displayName = String.valueOf(i);
+            for (String profileName : allProfiles.keySet()) {
+                String keybind = allProfiles.getAsJsonObject(profileName).get("keybind").getAsString();
+                if (keybind.equals(profileKey.getBoundKeyLocalizedText().getString())) {
+                    displayName = profileName;
                     break;
                 }
             }
+            ((IKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
+            i++;
         }
     }
 
-    // Commands
     public static void save(String name, String key) {
-        if (key.isBlank()) {
-            Profile.create(name, key);
-        } else {
-            JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-            if (allProfiles.keySet().isEmpty()) {
-                Profile.create(name, key);
-            } else {
-                for (String profileKey : allProfiles.keySet()) {
-                    String keybind = allProfiles.getAsJsonObject(profileKey).get("keybind").getAsString();
-                    if (keybind.equals(key)) {
-                        ProfileHandler.delete(profileKey);
-                        Profile.create(name, key);
-                        break;
-                    }
-                }
-            }
-        }
-
-        Text text = Text.of("Saved: " + name).copy()
-                .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-        InventiveInventory.getPlayer().sendMessage(text, true);
-    }
-
-    // Hotkeys
-    public static void save(String name, KeyBinding keyBinding) {
-        String key = keyBinding.getBoundKeyLocalizedText().getString();
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-        if (allProfiles.isEmpty()) {
-            Profile.create(name, key);
-        } else {
-            for (String profileKey : allProfiles.keySet()) {
-                String keybind = allProfiles.getAsJsonObject(profileKey).get("keybind").getAsString();
-                if (keybind.equals(key)) {
-                    ProfileHandler.delete(profileKey);
-                    Profile.create(name, key);
-                    break;
-                }
-            }
-        }
+        List<String> allKeybinds = allProfiles.keySet().stream()
+                .map(profileName -> allProfiles.getAsJsonObject(profileName).get("keybind").getAsString())
+                .filter(keybind -> !keybind.isBlank())
+                .toList();
 
-        Text text = Text.of("Saved: " + name).copy()
-                .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
+        if (allProfiles.has(name) || allKeybinds.contains(key)) {
+            Profile.overwrite(name, key);
+        } else {
+            Profile.create(name, key);
+        }
+        Text text = Text.of("Saved: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void load(String name) {
-        Profile profile = Profile.load(name);
-        List<SavedSlot> savedSlots = profile.getSavedSlots();
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        Text text;
+        if (FileHandler.getJsonFile(PROFILES_PATH).has(name)) {
+            Profile profile = Profile.load(name);
+            List<SavedSlot> savedSlots = profile.getSavedSlots();
+            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
 
-        Sorter.mergeItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
+            Sorter.mergeItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
 
-        for (SavedSlot savedSlot : savedSlots) {
-            boolean matchFound = false;
+            for (SavedSlot savedSlot : savedSlots) {
+                boolean matchFound = false;
 
-            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
-                ItemStack stack = screenHandler.getSlot(i).getStack();
-                NbtCompound stackNbt = stack.getNbt();
-                if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
-                    if (stackNbt.getCompound("display").getString("Name").equals(savedSlot.getNbtData().getString("custom_name"))) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                    ItemStack stack = screenHandler.getSlot(i).getStack();
+                    NbtCompound stackNbt = stack.getNbt();
+                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
+                        if (stackNbt.getCompound("display").getString("Name").equals(savedSlot.getNbtData().getString("custom_name"))) {
+                            if (equalNbt(stackNbt, savedSlot.getNbtData())) {
+                                InteractionHandler.swapStacks(savedSlot.getSlot(), i);
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (matchFound) continue;
+
+                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                    ItemStack stack = screenHandler.getSlot(i).getStack();
+                    NbtCompound stackNbt = stack.getNbt();
+                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
                         if (equalNbt(stackNbt, savedSlot.getNbtData())) {
                             InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                             matchFound = true;
@@ -110,43 +100,42 @@ public class ProfileHandler {
                         }
                     }
                 }
-            }
-            if (matchFound) continue;
+                if (matchFound) continue;
 
-            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
-                ItemStack stack = screenHandler.getSlot(i).getStack();
-                NbtCompound stackNbt = stack.getNbt();
-                if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
-                    if (equalNbt(stackNbt, savedSlot.getNbtData())) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                    ItemStack stack = screenHandler.getSlot(i).getStack();
+                    if (stack.getItem().toString().equals(savedSlot.getId())) {
                         InteractionHandler.swapStacks(savedSlot.getSlot(), i);
-                        matchFound = true;
                         break;
                     }
                 }
             }
-            if (matchFound) continue;
-
-            for (int i : PlayerSlots.getWithHotbarAndArmor()) {
-                ItemStack stack = screenHandler.getSlot(i).getStack();
-                if (stack.getItem().toString().equals(savedSlot.getId())) {
-                    InteractionHandler.swapStacks(savedSlot.getSlot(), i);
-                    break;
-                }
-            }
+            text = Text.of("Loaded: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
+        } else {
+            text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));
         }
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void delete(String name) {
+        Text text;
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-        String keybind = allProfiles.getAsJsonObject(name).get("keybind").getAsString();
-        for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
-            if (keyBinding.getBoundKeyLocalizedText().getString().equals(keybind)) {
-                ((IKeyBindingDisplay) keyBinding).main$resetDisplayName();
-                break;
+
+        if (allProfiles.has(name)) {
+            String keybind = allProfiles.getAsJsonObject(name).get("keybind").getAsString();
+            for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
+                if (keyBinding.getBoundKeyLocalizedText().getString().equals(keybind)) {
+                    ((IKeyBindingDisplay) keyBinding).main$resetDisplayName();
+                    break;
+                }
             }
+            allProfiles.remove(name);
+            FileHandler.write(PROFILES_PATH, allProfiles);
+            text = Text.of("Deleted: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
+        } else {
+            text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));
         }
-        allProfiles.remove(name);
-        FileHandler.write(PROFILES_PATH, allProfiles);
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     private static boolean equalNbt(NbtCompound stackNbt, NbtCompound savedSlotNbt) {

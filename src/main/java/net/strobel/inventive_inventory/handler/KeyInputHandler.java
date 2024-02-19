@@ -57,7 +57,6 @@ public class KeyInputHandler {
                 GLFW.GLFW_KEY_LEFT_ALT,
                 INVENTIVE_INVENTORY_PROFILES_CATEGORY
         ));
-
         for (int i = 0; i < 9; i++) {
             profileKeys[i] = (KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.inventive_inventory.profile_" + (i + 1),
@@ -80,7 +79,7 @@ public class KeyInputHandler {
                     if (profileKeys[i].isPressed() && !executed[i]) {
                         KeyBinding keyBinding = profileKeys[i];
                         String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
-                        ProfileHandler.save(name, keyBinding);
+                        ProfileHandler.save(name, keyBinding.getBoundKeyLocalizedText().getString());
                         executed[i] = true;
                     } else if (!profileKeys[i].isPressed()) {
                         executed[i] = false;
@@ -97,8 +96,6 @@ public class KeyInputHandler {
                             JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
                             if (keybind.getAsString().equals(String.valueOf(i+1))) {
                                 ProfileHandler.load(profileKey);
-                                Text text = Text.of("Loaded: " + profileKey).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-                                InventiveInventory.getPlayer().sendMessage(text, true);
                                 return;
                             }
                         }
