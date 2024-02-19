@@ -11,7 +11,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
-import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.util.FileHandler;
@@ -72,9 +71,9 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
 
-            if (AdvancedOperationHandler.isPressed()) {
-                AutomaticRefillingHandler.run();
-            }
+//            if (AdvancedOperationHandler.isPressed()) {
+//                AutomaticRefillingHandler.run();
+//            }
 
             if (profileSavingKey.isPressed()) {
                 for (int i = 0; i < profileKeys.length; i++) {
