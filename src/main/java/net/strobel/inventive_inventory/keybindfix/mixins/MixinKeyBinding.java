@@ -15,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Mixin(value = KeyBinding.class, priority = 10000)
@@ -31,12 +29,9 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
     private static Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS;
     @Shadow
     private InputUtil.Key boundKey;
+    @Shadow @Final private String translationKey;
     @Unique
     private static final KeybindFixer keybindFixer = new KeybindFixer();
-    @Final
-    @Mutable
-    @Shadow
-    private String translationKey;
 
     @Inject(method = "onKeyPressed", at = @At(value = "HEAD"), cancellable = true)
     private static void onKeyPressedFixed(InputUtil.Key key, CallbackInfo ci) {
@@ -66,17 +61,6 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
         keybindFixer.putKey(boundKey, (KeyBinding) (Object) this);
     }
 
-    @Inject(method = "getTranslationKey", at = @At("HEAD"), cancellable = true)
-    private void onGetTranslationKey(CallbackInfoReturnable<String> cir) {
-        List<KeyBinding> profileKeys = Arrays.asList(KeyInputHandler.profileKeys);
-        if (profileKeys.contains((KeyBinding) (Object) this)) {
-            if (this.displayName != null) {
-                cir.setReturnValue(this.displayName);
-                cir.cancel();
-            }
-        }
-    }
-
     @Inject(method = "setBoundKey", at = @At("TAIL"))
     private void onSetBoundKey(InputUtil.Key boundKey, CallbackInfo ci) {
         if ((Object) this == KeyInputHandler.advancedOperationKey) {
@@ -84,26 +68,26 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
         }
     }
 
+    @Inject(method = "getTranslationKey", at = @At("HEAD"), cancellable = true)
+    private void onGetTranslationKey(CallbackInfoReturnable<String> cir) {
+        if (this.displayName != null) {
+            cir.setReturnValue("Profile: " + this.displayName);
+            cir.cancel();
+        }
+    }
+
     @Override
     public String main$getDisplayName() {
-        if (this.displayName == null) {
-            this.displayName = Text.translatable(this.translationKey).getString();
-            return this.displayName;
-        }
-        return this.displayName.replaceFirst("Profile: ", "");
+        return this.displayName;
     }
 
     @Override
     public void main$setDisplayName(String displayName) {
-        if (Text.translatable(this.translationKey).getString().equals(displayName)) {
-            this.displayName = displayName;
-            return;
-        }
-        this.displayName = "Profile: " + displayName;
+        this.displayName = displayName;
     }
 
     @Override
     public void main$resetDisplayName() {
-        this.displayName = null;
+        this.displayName = Text.translatable(this.translationKey).getString();
     }
 }
