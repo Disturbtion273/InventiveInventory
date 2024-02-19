@@ -47,7 +47,7 @@ public class ProfileHandler {
             Profile.create(name, key);
         } else {
             JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-            if (allProfiles.isEmpty()) {
+            if (allProfiles.keySet().isEmpty()) {
                 Profile.create(name, key);
             } else {
                 for (String profileKey : allProfiles.keySet()) {
