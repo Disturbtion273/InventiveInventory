@@ -33,7 +33,7 @@ public class ProfileHandler {
         int i = 1;
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
         for (KeyBinding profileKey : KeyInputHandler.profileKeys) {
-            String displayName = String.valueOf(i);
+            String displayName = "Profile " + i;
             for (String profileName : allProfiles.keySet()) {
                 String keybind = allProfiles.getAsJsonObject(profileName).get("keybind").getAsString();
                 if (keybind.equals(profileKey.getBoundKeyLocalizedText().getString())) {
@@ -58,7 +58,7 @@ public class ProfileHandler {
         } else {
             Profile.create(name, key);
         }
-        Text text = Text.of("Saved: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
+        Text text = Text.of("Saved Profile: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
@@ -110,7 +110,7 @@ public class ProfileHandler {
                     }
                 }
             }
-            text = Text.of("Loaded: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
+            text = Text.of("Loaded Profile: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         } else {
             text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));
         }
