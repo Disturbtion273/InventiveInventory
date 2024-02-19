@@ -11,7 +11,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
-import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.util.FileHandler;
@@ -58,7 +57,6 @@ public class KeyInputHandler {
                 GLFW.GLFW_KEY_LEFT_ALT,
                 INVENTIVE_INVENTORY_PROFILES_CATEGORY
         ));
-
         for (int i = 0; i < 9; i++) {
             profileKeys[i] = (KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.inventive_inventory.profile_" + (i + 1),
@@ -72,16 +70,16 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
 
-            if (AdvancedOperationHandler.isPressed()) {
-                AutomaticRefillingHandler.run();
-            }
+//            if (AdvancedOperationHandler.isPressed()) {
+//                AutomaticRefillingHandler.run();
+//            }
 
             if (profileSavingKey.isPressed()) {
                 for (int i = 0; i < profileKeys.length; i++) {
                     if (profileKeys[i].isPressed() && !executed[i]) {
                         KeyBinding keyBinding = profileKeys[i];
                         String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
-                        ProfileHandler.save(name, keyBinding);
+                        ProfileHandler.save(name, keyBinding.getBoundKeyLocalizedText().getString());
                         executed[i] = true;
                     } else if (!profileKeys[i].isPressed()) {
                         executed[i] = false;
@@ -98,8 +96,6 @@ public class KeyInputHandler {
                             JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
                             if (keybind.getAsString().equals(String.valueOf(i+1))) {
                                 ProfileHandler.load(profileKey);
-                                Text text = Text.of("Loaded: " + profileKey).copy().setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
-                                InventiveInventory.getPlayer().sendMessage(text, true);
                                 return;
                             }
                         }
