@@ -1,6 +1,5 @@
 package net.strobel.inventive_inventory.features.profiles;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
@@ -48,12 +47,12 @@ public class ProfileHandler {
             Profile.create(name, key);
         } else {
             JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-            if (allProfiles.keySet().isEmpty()) {
+            if (allProfiles.isEmpty()) {
                 Profile.create(name, key);
             } else {
                 for (String profileKey : allProfiles.keySet()) {
-                    JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                    if (keybind.getAsString().equals(key) && !key.isBlank()) {
+                    String keybind = allProfiles.getAsJsonObject(profileKey).get("keybind").getAsString();
+                    if (keybind.equals(key)) {
                         ProfileHandler.delete(profileKey);
                         Profile.create(name, key);
                         break;
@@ -68,8 +67,22 @@ public class ProfileHandler {
     }
 
     // Hotkeys
-    public static  void save(String name, KeyBinding keyBinding) {
-        Profile.create(name, keyBinding);
+    public static void save(String name, KeyBinding keyBinding) {
+        String key = keyBinding.getBoundKeyLocalizedText().getString();
+        JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        if (allProfiles.isEmpty()) {
+            Profile.create(name, key);
+        } else {
+            for (String profileKey : allProfiles.keySet()) {
+                String keybind = allProfiles.getAsJsonObject(profileKey).get("keybind").getAsString();
+                if (keybind.equals(key)) {
+                    ProfileHandler.delete(profileKey);
+                    Profile.create(name, key);
+                    break;
+                }
+            }
+        }
+
         Text text = Text.of("Saved: " + name).copy()
                 .setStyle(Style.EMPTY.withColor(Formatting.GREEN).withBold(true));
         InventiveInventory.getPlayer().sendMessage(text, true);
@@ -82,7 +95,7 @@ public class ProfileHandler {
 
         Sorter.mergeItemStacks(PlayerSlots.get().excludeLockedSlots(), screenHandler);
 
-        for (SavedSlot savedSlot: savedSlots) {
+        for (SavedSlot savedSlot : savedSlots) {
             boolean matchFound = false;
 
             for (int i : PlayerSlots.getWithHotbarAndArmor()) {

@@ -28,15 +28,9 @@ class Profile {
         for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
             if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
                 ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
+                break;
             }
         }
-    }
-
-    private Profile(String name, KeyBinding keyBinding, List<SavedSlot> savedSlots) {
-        this.name = name;
-        this.key = keyBinding.getBoundKeyLocalizedText().getString();
-        this.savedSlots = savedSlots;
-        ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
     }
 
     public static void create(String name, String key) {
@@ -51,20 +45,6 @@ class Profile {
             }
         }
         new Profile(name, key, savedSlots).save();
-    }
-
-    public static void create(String name, KeyBinding keyBinding) {
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        List<SavedSlot> savedSlots = new ArrayList<>();
-        for (int slot : PlayerSlots.getHotbarAndEquipment()) {
-            ItemStack stack = screenHandler.getSlot(slot).getStack();
-            if (!stack.isEmpty()) {
-                String id = stack.getItem().toString();
-                NbtCompound nbt = stack.getNbt();
-                savedSlots.add(new SavedSlot(slot, id, nbt));
-            }
-        }
-        new Profile(name, keyBinding, savedSlots).save();
     }
 
     public static Profile load(String name) {
