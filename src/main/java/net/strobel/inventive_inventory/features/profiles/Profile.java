@@ -64,6 +64,17 @@ class Profile {
         return new Profile(name, key, savedSlots);
     }
 
+    public static void overwrite(String name, String key) {
+        JsonObject allProfiles = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
+        for (String profileName : allProfiles.keySet()) {
+            String keybind = allProfiles.getAsJsonObject(profileName).get("keybind").getAsString();
+            if (profileName.equals(name) || keybind.equals(key)) {
+                ProfileHandler.delete(profileName);
+            }
+        }
+        Profile.create(name, key);
+    }
+
     private void save() {
         JsonArray jsonArray = new JsonArray();
         for (SavedSlot savedSlot : this.savedSlots) {
