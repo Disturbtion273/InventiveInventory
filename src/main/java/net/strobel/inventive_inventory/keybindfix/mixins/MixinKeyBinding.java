@@ -70,8 +70,10 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
     private void onGetTranslationKey(CallbackInfoReturnable<String> cir) {
         List<KeyBinding> profileKeys = Arrays.asList(KeyInputHandler.profileKeys);
         if (profileKeys.contains((KeyBinding) (Object) this)) {
-            cir.setReturnValue(this.main$getDisplayName());
-            cir.cancel();
+            if (this.displayName != null) {
+                cir.setReturnValue(this.displayName);
+                cir.cancel();
+            }
         }
     }
 
@@ -86,8 +88,9 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
     public String main$getDisplayName() {
         if (this.displayName == null) {
             this.displayName = Text.translatable(this.translationKey).getString();
+            return this.displayName;
         }
-        return this.displayName;
+        return this.displayName.replaceFirst("Profile: ", "");
     }
 
     @Override
