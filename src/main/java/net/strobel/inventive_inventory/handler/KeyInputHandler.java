@@ -13,6 +13,7 @@ import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
+import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.util.FileHandler;
 import org.lwjgl.glfw.GLFW;
 
@@ -79,11 +80,7 @@ public class KeyInputHandler {
                 for (int i = 0; i < profileKeys.length; i++) {
                     if (profileKeys[i].isPressed() && !executed[i]) {
                         KeyBinding keyBinding = profileKeys[i];
-                        String name = Text.translatable(keyBinding.getTranslationKey()).getString();
-                        if (name.equals(keyBinding.getTranslationKey())) {
-                            name = keyBinding.getTranslationKey();
-                        }
-                        System.out.println(name);
+                        String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
                         ProfileHandler.save(name, keyBinding);
                         executed[i] = true;
                     } else if (!profileKeys[i].isPressed()) {
