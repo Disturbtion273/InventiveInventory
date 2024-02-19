@@ -47,7 +47,7 @@ public class ProfileHandler {
             Profile.create(name, key);
         } else {
             JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-            if (allProfiles.isEmpty()) {
+            if (allProfiles.keySet().isEmpty()) {
                 Profile.create(name, key);
             } else {
                 for (String profileKey : allProfiles.keySet()) {
@@ -70,7 +70,7 @@ public class ProfileHandler {
     public static void save(String name, KeyBinding keyBinding) {
         String key = keyBinding.getBoundKeyLocalizedText().getString();
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
-        if (allProfiles.isEmpty()) {
+        if (allProfiles.keySet().isEmpty()) {
             Profile.create(name, key);
         } else {
             for (String profileKey : allProfiles.keySet()) {
