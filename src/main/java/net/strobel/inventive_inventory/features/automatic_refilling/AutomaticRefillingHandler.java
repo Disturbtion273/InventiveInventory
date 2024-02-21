@@ -1,8 +1,7 @@
- package net.strobel.inventive_inventory.features.automatic_refilling;
+package net.strobel.inventive_inventory.features.automatic_refilling;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -10,61 +9,64 @@ import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.slots.InventorySlots;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
+import net.strobel.inventive_inventory.util.StreamUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
- public class AutomaticRefillingHandler {
-    private static ItemStack lastItemStack = ItemStack.EMPTY;
-    private static int lastItemStackSlot = -1;
+public class AutomaticRefillingHandler {
+    private static Integer lastSlot;
+    private static Item lastItem;
     private static final List<Item> ITEMS_TO_CHECK = Arrays.asList(
-            Items.BUCKET.asItem(),
-            Items.GLASS_BOTTLE.asItem(),
-            Items.BOWL.asItem(),
-            Items.AIR.asItem());
+            Items.AIR,
+            Items.BUCKET,
+            Items.GLASS_BOTTLE,
+            Items.BOWL
+    );
 
     public static void run() {
-        update();
-
         ClientPlayerEntity player = InventiveInventory.getPlayer();
-        if (player != null && !lastItemStack.isEmpty()) {
-            ItemStack currentItemStack = player.getMainHandStack();
-            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-            if (ITEMS_TO_CHECK.contains(currentItemStack.getItem()) && PlayerSlots.getHotbar().stream().noneMatch(slot -> ItemStack.areItemsEqual(lastItemStack, screenHandler.getSlot(slot).getStack()))) {
-                Slot sameStack = getFirstOfSameStacks(PlayerSlots.getInventory(), screenHandler);
-                if (sameStack != null) InteractionHandler.swapStacks(lastItemStackSlot, sameStack.getIndex());
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+
+        Integer currentSlot = getCurrentSlot(player, screenHandler);
+        Item currentItem = screenHandler.getSlot(currentSlot).getStack().getItem();
+        if (!ITEMS_TO_CHECK.contains(currentItem)) {
+            lastSlot = getCurrentSlot(player, screenHandler);
+            lastItem = screenHandler.getSlot(lastSlot).getStack().getItem();
+        } else {
+            if (!currentSlot.equals(lastSlot)) return;
+        }
+
+        if (ITEMS_TO_CHECK.contains(currentItem) && lastSlot != -1) {
+            Predicate<Integer> hasSameItem = StreamUtils.sameItem(lastItem, screenHandler);
+            if (PlayerSlots.getHotbar().exclude(lastSlot).stream().anyMatch(hasSameItem)) {
+                Slot slot = getLowestStack(PlayerSlots.getHotbar(), screenHandler);
+                if (slot != null) player.getInventory().selectedSlot = slot.getIndex();
                 reset();
-            } else if (ITEMS_TO_CHECK.contains(currentItemStack.getItem()) && PlayerSlots.getHotbar().stream().anyMatch(slot -> ItemStack.areItemsEqual(lastItemStack, screenHandler.getSlot(slot).getStack()))) {
-                Slot sameStack = getFirstOfSameStacks(PlayerSlots.getHotbar(), screenHandler);
-                if (sameStack != null) player.getInventory().selectedSlot = sameStack.getIndex();
+            } else if (PlayerSlots.getInventory().stream().anyMatch(hasSameItem)) {
+                Slot slot = getLowestStack(PlayerSlots.getInventory(), screenHandler);
+                if (slot != null) InteractionHandler.swapStacks(lastSlot, slot.getIndex());
                 reset();
             }
         }
     }
 
     public static void reset() {
-        lastItemStack = ItemStack.EMPTY;
-        lastItemStackSlot = -1;
+        lastSlot = null;
+        lastItem = null;
     }
 
-    private static void update() {
-        ClientPlayerEntity player = InventiveInventory.getPlayer();
-        if (player != null) {
-            ItemStack currentItemStack = player.getMainHandStack();
-            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-            if (!ITEMS_TO_CHECK.contains(currentItemStack.getItem())) {
-                lastItemStack = currentItemStack.copy();
-                lastItemStackSlot = PlayerSlots.getHotbar().stream().filter(i -> ItemStack.areItemsEqual(lastItemStack, screenHandler.getSlot(i).getStack())).findFirst().orElse(-1);
-            }
-        }
+    private static int getCurrentSlot(ClientPlayerEntity player, ScreenHandler screenHandler) {
+        return screenHandler.getSlotIndex(player.getInventory(), player.getInventory().selectedSlot).orElse(-1);
     }
 
     @Nullable
-    private static Slot getFirstOfSameStacks(InventorySlots inventorySlots, ScreenHandler screenHandler) {
+    private static Slot getLowestStack(InventorySlots inventorySlots, ScreenHandler screenHandler) {
         return inventorySlots.stream()
-                .filter(slot -> ItemStack.areItemsEqual(lastItemStack, screenHandler.getSlot(slot).getStack()))
+                .filter(StreamUtils.sameItem(lastItem, screenHandler))
                 .map(screenHandler::getSlot)
                 .min(Comparator.comparingInt(slot -> slot.getStack().getCount()))
                 .orElse(null);

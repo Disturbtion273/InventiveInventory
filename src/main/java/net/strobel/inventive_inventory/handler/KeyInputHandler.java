@@ -11,6 +11,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.config.ConfigManager;
+import net.strobel.inventive_inventory.config.Mode;
 import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
@@ -69,12 +71,17 @@ public class KeyInputHandler {
     }
 
     public static void registerKeyInputs() {
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
-
-            if (advancedOperationKey.isPressed()) {
-                AutomaticRefillingHandler.run();
-            } else {
-                AutomaticRefillingHandler.reset();
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (InventiveInventory.getPlayer() == null) return;
+            KeyBinding useKey = InventiveInventory.getClient().options.useKey;
+            if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
+                if (advancedOperationKey.isPressed()) {
+                    AutomaticRefillingHandler.run();
+                } else {
+                    AutomaticRefillingHandler.reset();
+                }
+            } else if (ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED){
+                // TODO
             }
 
             if (profileSavingKey.isPressed()) {

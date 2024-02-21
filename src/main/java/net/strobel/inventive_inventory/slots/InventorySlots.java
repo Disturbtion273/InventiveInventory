@@ -42,4 +42,9 @@ public class InventorySlots extends ArrayList<Integer> {
         }
         return this;
     }
+
+    public InventorySlots exclude(Integer slot) {
+        this.remove(slot);
+        return new InventorySlots(this);
+    }
 }

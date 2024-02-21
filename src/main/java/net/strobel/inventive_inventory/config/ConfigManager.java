@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 public class ConfigManager {
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve(InventiveInventory.MOD_ID);
+    public static final Mode AUTOMATIC_REFILLING = Mode.STANDARD;
 
     public static void initialize() throws IOException {
         Files.createDirectories(ConfigManager.PATH);
