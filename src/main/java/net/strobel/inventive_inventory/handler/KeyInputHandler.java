@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Style;
@@ -26,16 +27,24 @@ public class KeyInputHandler {
     private static final String KEY_PROFILE_SAVING = "key.inventive_inventory.profile_saving";
     private static final String KEY_PROFILE_LOADING = "key.inventive_inventory.profile_loading";
     private static final String KEY_SORT_INVENTORY = "key.inventive_inventory.sort_inventory";
+    private static final String KEY_DEBUGGING = "key.inventive_inventory.debugging";
+    public static KeyBinding debuggingKey;
     public static KeyBinding advancedOperationKey;
+    public static KeyBinding sortInventoryKey;
     public static KeyBinding profileSavingKey;
     public static KeyBinding profileLoadingKey;
-    public static KeyBinding sortInventoryKey;
 
     public static KeyBinding[] profileKeys = new KeyBinding[9];
     private static final boolean[] executed = new boolean[9];
 
 
     public static void register() {
+        debuggingKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_DEBUGGING,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_RIGHT_CONTROL,
+                INVENTIVE_INVENTORY_CATEGORY
+        ));
         advancedOperationKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_ADVANCED_OPERATION,
                 InputUtil.Type.KEYSYM,
@@ -61,61 +70,80 @@ public class KeyInputHandler {
                 INVENTIVE_INVENTORY_PROFILES_CATEGORY
         ));
         for (int i = 0; i < 9; i++) {
-            profileKeys[i] = (KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            profileKeys[i] = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.inventive_inventory.profile_" + (i + 1),
                     InputUtil.Type.KEYSYM,
                     GLFW.GLFW_KEY_1 + i,
                     INVENTIVE_INVENTORY_PROFILES_CATEGORY
-            )));
+            ));
         }
     }
 
     public static void registerKeyInputs() {
+        ClientTickEvents.START_CLIENT_TICK.register(AutomaticRefillingHandler::captureCurrentState);
+        ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::automaticRefilling);
+        ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::saveProfile);
+        ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::loadProfile);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (InventiveInventory.getPlayer() == null) return;
-            KeyBinding useKey = InventiveInventory.getClient().options.useKey;
+            if (debuggingKey.isPressed()) {
+                if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
+                    ConfigManager.AUTOMATIC_REFILLING = Mode.INVERTED;
+                } else ConfigManager.AUTOMATIC_REFILLING = Mode.STANDARD;
+            }
+        });
+    }
+
+    private static void automaticRefilling(MinecraftClient client) {
+        if (client.currentScreen == null && client.player != null) {
+            KeyBinding useKey = client.options.useKey;
             if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
                 if (advancedOperationKey.isPressed()) {
                     AutomaticRefillingHandler.run();
-                } else {
-                    AutomaticRefillingHandler.reset();
-                }
-            } else if (ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED){
-                // TODO
-            }
-
-            if (profileSavingKey.isPressed()) {
-                for (int i = 0; i < profileKeys.length; i++) {
-                    if (profileKeys[i].isPressed() && !executed[i]) {
-                        KeyBinding keyBinding = profileKeys[i];
-                        String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
-                        ProfileHandler.save(name, keyBinding.getBoundKeyLocalizedText().getString());
-                        executed[i] = true;
-                    } else if (!profileKeys[i].isPressed()) {
-                        executed[i] = false;
+                } else AutomaticRefillingHandler.reset();
+            } else if (ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED) {
+                if (!advancedOperationKey.isPressed()) {
+                    if (useKey.isPressed()) {
+                        AutomaticRefillingHandler.run();
                     }
+                } else AutomaticRefillingHandler.reset();
+            }
+        }
+    }
+
+    private static void saveProfile(MinecraftClient ignored) {
+        if (profileSavingKey.isPressed()) {
+            for (int i = 0; i < profileKeys.length; i++) {
+                if (profileKeys[i].isPressed() && !executed[i]) {
+                    KeyBinding keyBinding = profileKeys[i];
+                    String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
+                    ProfileHandler.save(name, keyBinding.getBoundKeyLocalizedText().getString());
+                    executed[i] = true;
+                } else if (!profileKeys[i].isPressed()) {
+                    executed[i] = false;
                 }
             }
+        }
+    }
 
-            if (profileLoadingKey.isPressed()) {
-                for (int i = 0; i < profileKeys.length; i++) {
-                    if (profileKeys[i].isPressed() && !executed[i]) {
-                        executed[i] = true;
-                        JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
-                        for (String profileKey: profilesFile.keySet()) {
-                            JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                            if (keybind.getAsString().equals(String.valueOf(i+1))) {
-                                ProfileHandler.load(profileKey);
-                                return;
-                            }
+    private static void loadProfile(MinecraftClient ignored) {
+        if (profileLoadingKey.isPressed()) {
+            for (int i = 0; i < profileKeys.length; i++) {
+                if (profileKeys[i].isPressed() && !executed[i]) {
+                    executed[i] = true;
+                    JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
+                    for (String profileKey : profilesFile.keySet()) {
+                        JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
+                        if (keybind.getAsString().equals(String.valueOf(i + 1))) {
+                            ProfileHandler.load(profileKey);
+                            return;
                         }
-                        Text text = Text.of("Profile for Keybind '" + (i+1) + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
-                        InventiveInventory.getPlayer().sendMessage(text, true);
-                    } else if (!profileKeys[i].isPressed()) {
-                        executed[i] = false;
                     }
+                    Text text = Text.of("Profile for Keybind '" + (i + 1) + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+                    InventiveInventory.getPlayer().sendMessage(text, true);
+                } else if (!profileKeys[i].isPressed()) {
+                    executed[i] = false;
                 }
             }
-        });
+        }
     }
 }

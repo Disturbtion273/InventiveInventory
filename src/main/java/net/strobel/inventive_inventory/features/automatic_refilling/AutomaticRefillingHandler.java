@@ -1,5 +1,6 @@
 package net.strobel.inventive_inventory.features.automatic_refilling;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -27,20 +28,27 @@ public class AutomaticRefillingHandler {
             Items.BOWL
     );
 
+    public static void captureCurrentState(MinecraftClient client) {
+        if (client.player != null) {
+            ScreenHandler screenHandler = client.player.currentScreenHandler;
+            int currentSlot = getCurrentSlot(client.player);
+            Item currentItem = screenHandler.getSlot(currentSlot).getStack().getItem();
+            if (!ITEMS_TO_CHECK.contains(currentItem)) {
+                lastSlot = currentSlot;
+                lastItem = screenHandler.getSlot(lastSlot).getStack().getItem();
+            }
+        }
+    }
+
     public static void run() {
         ClientPlayerEntity player = InventiveInventory.getPlayer();
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
 
-        Integer currentSlot = getCurrentSlot(player, screenHandler);
+        int currentSlot = getCurrentSlot(player);
         Item currentItem = screenHandler.getSlot(currentSlot).getStack().getItem();
-        if (!ITEMS_TO_CHECK.contains(currentItem)) {
-            lastSlot = getCurrentSlot(player, screenHandler);
-            lastItem = screenHandler.getSlot(lastSlot).getStack().getItem();
-        } else {
-            if (!currentSlot.equals(lastSlot)) return;
-        }
 
-        if (ITEMS_TO_CHECK.contains(currentItem) && lastSlot != -1) {
+        if (ITEMS_TO_CHECK.contains(currentItem) && lastSlot != null) {
+            if (currentSlot != lastSlot) return;
             Predicate<Integer> hasSameItem = StreamUtils.sameItem(lastItem, screenHandler);
             if (PlayerSlots.getHotbar().exclude(lastSlot).stream().anyMatch(hasSameItem)) {
                 Slot slot = getLowestStack(PlayerSlots.getHotbar(), screenHandler);
@@ -59,8 +67,8 @@ public class AutomaticRefillingHandler {
         lastItem = null;
     }
 
-    private static int getCurrentSlot(ClientPlayerEntity player, ScreenHandler screenHandler) {
-        return screenHandler.getSlotIndex(player.getInventory(), player.getInventory().selectedSlot).orElse(-1);
+    private static int getCurrentSlot(ClientPlayerEntity player) {
+        return player.currentScreenHandler.getSlotIndex(player.getInventory(), player.getInventory().selectedSlot).orElse(-1);
     }
 
     @Nullable
