@@ -39,12 +39,6 @@ public class KeyInputHandler {
 
 
     public static void register() {
-        debuggingKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                KEY_DEBUGGING,
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_RIGHT_CONTROL,
-                INVENTIVE_INVENTORY_CATEGORY
-        ));
         advancedOperationKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_ADVANCED_OPERATION,
                 InputUtil.Type.KEYSYM,
@@ -84,13 +78,6 @@ public class KeyInputHandler {
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::automaticRefilling);
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::saveProfile);
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::loadProfile);
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (debuggingKey.isPressed()) {
-                if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
-                    ConfigManager.AUTOMATIC_REFILLING = Mode.INVERTED;
-                } else ConfigManager.AUTOMATIC_REFILLING = Mode.STANDARD;
-            }
-        });
     }
 
     private static void automaticRefilling(MinecraftClient client) {
