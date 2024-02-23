@@ -49,6 +49,14 @@ public class AutomaticRefillingHandler {
 
         if (ITEMS_TO_CHECK.contains(currentItem) && lastSlot != null) {
             if (currentSlot != lastSlot) return;
+            List<Integer> slotsWithSameItem = PlayerSlots.getWithHotbar().stream().filter(slot -> currentItem.equals(screenHandler.getSlot(slot).getStack().getItem())).toList();
+            for (int slotWithSameItem : slotsWithSameItem) {
+                if (screenHandler.getSlot(currentSlot).getStack().getCount() < screenHandler.getSlot(currentSlot).getStack().getMaxCount()) {
+                    InteractionHandler.clickStack(slotWithSameItem);
+                    InteractionHandler.clickStack(currentSlot);
+                } else currentSlot = slotWithSameItem;
+            }
+
             Predicate<Integer> hasSameItem = StreamUtils.sameItem(lastItem, screenHandler);
             if (PlayerSlots.getHotbar().exclude(lastSlot).stream().anyMatch(hasSameItem)) {
                 Slot slot = getLowestStack(PlayerSlots.getHotbar(), screenHandler);
