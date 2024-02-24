@@ -40,6 +40,7 @@ public class ConfigScreen extends Screen {
                 ConfigManager.AUTOMATIC_REFILLING = Mode.INVERTED;
             } else ConfigManager.AUTOMATIC_REFILLING = Mode.STANDARD;
             this.REFILLING.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING.toString()));
+            ConfigManager.saveSettings();
         };
     }
 }
