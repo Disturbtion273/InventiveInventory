@@ -18,7 +18,8 @@
     "entrypoints": {
         "client": [
             "net.strobel.inventive_inventory.InventiveInventory"
-        ]
+        ],
+        "modmenu": [ "net.strobel.inventive_inventory.InventiveInventory"]
     },
     "mixins": [
         "inventive_inventory.mixins.json",
