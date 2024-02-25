@@ -23,10 +23,10 @@ public class ConfigManager {
         createFileIfNotExists(ProfileHandler.PROFILES_PATH);
         createFileIfNotExists(ConfigManager.SETTINGS_PATH);
         initializeSettings();
-        saveSettings();
+        save();
     }
 
-    public static void saveSettings() {
+    public static void save() {
         FileHandler.write(SETTINGS_PATH, "AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
     }
 
@@ -40,8 +40,8 @@ public class ConfigManager {
         Properties properties = FileHandler.getProperties(SETTINGS_PATH);
         String automaticRefillingMode = properties.getProperty("AutomaticRefillingMode");
         if (automaticRefillingMode != null) {
-            if (automaticRefillingMode.equals(Mode.STANDARD.name())) AUTOMATIC_REFILLING = Mode.STANDARD;
-            if (automaticRefillingMode.equals(Mode.INVERTED.name())) AUTOMATIC_REFILLING = Mode.INVERTED;
+            if (automaticRefillingMode.equals(Mode.STANDARD.toString())) AUTOMATIC_REFILLING = Mode.STANDARD;
+            if (automaticRefillingMode.equals(Mode.INVERTED.toString())) AUTOMATIC_REFILLING = Mode.INVERTED;
         } else {
             AUTOMATIC_REFILLING = Mode.STANDARD;
         }

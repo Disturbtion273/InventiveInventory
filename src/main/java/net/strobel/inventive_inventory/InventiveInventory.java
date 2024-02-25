@@ -1,5 +1,7 @@
 package net.strobel.inventive_inventory;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
@@ -11,6 +13,7 @@ import net.strobel.inventive_inventory.command.DeleteProfileCommand;
 import net.strobel.inventive_inventory.command.LoadProfileCommand;
 import net.strobel.inventive_inventory.command.SaveProfileCommand;
 import net.strobel.inventive_inventory.config.ConfigManager;
+import net.strobel.inventive_inventory.config.ConfigScreen;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 import org.lwjgl.glfw.GLFW;
@@ -19,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class InventiveInventory implements ClientModInitializer {
+public class InventiveInventory implements ClientModInitializer, ModMenuApi {
     public static final String MOD_ID = "inventive_inventory";
     public static final String MOD_NAME = "Inventive Inventory";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
@@ -40,6 +43,11 @@ public class InventiveInventory implements ClientModInitializer {
             LOGGER.error("Couldn't create config files", e);
             LOGGER.error(MOD_NAME + " could not be initialized correctly!");
         }
+    }
+
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return ConfigScreen::new;
     }
 
     public static MinecraftClient getClient() {
