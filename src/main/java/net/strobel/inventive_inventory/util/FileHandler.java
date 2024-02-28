@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class FileHandler {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -23,6 +24,8 @@ public class FileHandler {
     public static void write(Path filePath, JsonObject jsonObject) {
         writeToFile(filePath, jsonObject);
     }
+
+    public static void write(Path filePath, String key, String value) {writeToFile(filePath, key, value);}
 
     public static <T> List<T> get(Path filePath, String jsonKey) {
         List<T> list = new ArrayList<>();
@@ -62,6 +65,16 @@ public class FileHandler {
         return jsonObject;
     }
 
+    public static Properties getProperties(Path filePath) {
+        Properties properties = new Properties();
+        try (FileReader reader = new FileReader(filePath.toFile())) {
+            properties.load(reader);
+        } catch (IOException ignored) {
+        }
+        return properties;
+    }
+
+
 
     private static void writeToFile(Path filePath, JsonObject jsonObject) {
         try (FileWriter file = new FileWriter(filePath.toFile())) {
@@ -69,4 +82,14 @@ public class FileHandler {
         } catch (IOException ignored) {
         }
     }
+
+    private static void writeToFile(Path filePath, String key, String value) {
+        Properties properties = new Properties();
+        properties.setProperty(key, value);
+        try (FileWriter file = new FileWriter(filePath.toFile())) {
+            properties.store(file, null);
+        } catch (IOException ignored) {
+        }
+    }
+
 }

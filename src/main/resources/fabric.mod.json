@@ -10,7 +10,7 @@
     ],
     "contact": {
         "homepage": "https://modrinth.com/mod/inventiveinventory",
-        "issues": "https://github.com/strobel273/InventiveInventory/issues"
+        "issues": "https://github.com/Strobel273/InventiveInventoryIssues/issues"
     },
     "license": "All-Rights-Reserved",
     "icon": "assets/inventive_inventory/icon.png",
@@ -18,6 +18,9 @@
     "entrypoints": {
         "client": [
             "net.strobel.inventive_inventory.InventiveInventory"
+        ],
+        "modmenu": [
+            "net.strobel.inventive_inventory.compat.ModMenuIntegration"
         ]
     },
     "mixins": [
