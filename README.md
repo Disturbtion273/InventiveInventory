@@ -15,7 +15,7 @@ Furthermore, the sorting function is aware of the cursor’s position. This mean
 <br>
 <br>
 ### Locked Slots 🔒🚫
-You can lock slots in your inventory by holding the Advanced Operation Key (Default: <Alt>) and clicking on the slot. Items in such a slot will not be affected by sorting.  
+You can lock slots in your inventory by holding the Advanced Operation Key (Default: Alt) and clicking on the slot. Items in such a slot will not be affected by sorting.  
 **[Currently under development]**
 <br>
 <br>
