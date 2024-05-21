@@ -32,6 +32,7 @@ public class AutomaticRefillingHandler {
         if (client.player != null) {
             ScreenHandler screenHandler = client.player.currentScreenHandler;
             int currentSlot = getCurrentSlot(client.player);
+            if (currentSlot == -1) return;
             Item currentItem = screenHandler.getSlot(currentSlot).getStack().getItem();
             if (!ITEMS_TO_CHECK.contains(currentItem)) {
                 lastSlot = currentSlot;
