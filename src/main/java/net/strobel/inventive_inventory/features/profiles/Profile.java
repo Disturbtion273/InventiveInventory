@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
@@ -40,6 +41,8 @@ class Profile {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty()) {
                 String id = stack.getItem().toString();
+                ComponentMap map = stack.getComponents();
+                System.out.println(map);
                 NbtCompound nbt = stack.getNbt();
                 savedSlots.add(new SavedSlot(slot, id, nbt));
             }
