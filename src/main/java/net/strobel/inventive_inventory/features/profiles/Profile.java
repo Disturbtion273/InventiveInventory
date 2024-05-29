@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
@@ -14,8 +13,7 @@ import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Profile {
     private final String name;
@@ -41,10 +39,8 @@ class Profile {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty()) {
                 String id = stack.getItem().toString();
-                ComponentMap map = stack.getComponents();
-                System.out.println(map);
-                NbtCompound nbt = stack.getNbt();
-                savedSlots.add(new SavedSlot(slot, id, nbt));
+                ComponentMap componentMap = stack.getComponents();
+                savedSlots.add(new SavedSlot(slot, id, componentMap));
             }
         }
         new Profile(name, key, savedSlots).save();
