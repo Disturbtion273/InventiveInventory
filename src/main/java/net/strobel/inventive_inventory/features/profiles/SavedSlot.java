@@ -3,14 +3,22 @@ package net.strobel.inventive_inventory.features.profiles;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.trim.ArmorTrim;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 
 class SavedSlot {
     private final int slot;
     private final String id;
     private final NbtCompound nbtData;
+
 
     public SavedSlot(int slot, String id, JsonObject nbtData) {
         this.slot = slot;
@@ -24,10 +32,16 @@ class SavedSlot {
         this.nbtData = convertRawNbtToNbt(nbtData);
     }
 
+    public SavedSlot(int slot, String id, ComponentMap componentMap) {
+        this.slot = slot;
+        this.id = id;
+        this.nbtData = convertComponentsMapToNbt(componentMap);
+    }
+
     private NbtCompound convertJsonObjectToNbt(JsonObject nbtData) {
         NbtCompound nbt = new NbtCompound();
         try {
-            nbt.putString("custom_name", "\"" + nbtData.get("custom_name").getAsString() + "\"");
+            nbt.putString("custom_name", nbtData.get("custom_name").getAsString());  // "\"" + nbtData.get("custom_name").getAsString() + "\"");
         } catch (IllegalStateException | NullPointerException ignored) {}
 
         try {
@@ -37,7 +51,7 @@ class SavedSlot {
                 JsonObject enchantmentObject = enchantmentElement.getAsJsonObject();
                 NbtCompound enchantment = new NbtCompound();
                 enchantment.putString("id", enchantmentObject.get("id").getAsString());
-                enchantment.putShort("lvl", enchantmentObject.get("lvl").getAsShort());
+                enchantment.putInt("lvl", enchantmentObject.get("lvl").getAsInt()); // SHORT BEFORE
                 enchantments.add(enchantment);
             }
             nbt.put("Enchantments", enchantments);
@@ -70,7 +84,7 @@ class SavedSlot {
                 NbtCompound enchantmentCompound = (NbtCompound) enchantmentElement;
                 JsonObject enchantment = new JsonObject();
                 enchantment.addProperty("id", enchantmentCompound.getString("id"));
-                enchantment.addProperty("lvl", enchantmentCompound.getShort("lvl"));
+                enchantment.addProperty("lvl", enchantmentCompound.getInt("lvl"));
                 enchantments.add(enchantment);
             }
             jsonObject.add("Enchantments", enchantments);
@@ -116,6 +130,36 @@ class SavedSlot {
                 trim.putString("pattern", rawTrim.getString("pattern"));
                 nbt.put("Trim", trim);
             }
+        }
+        return nbt;
+    }
+
+    public static NbtCompound convertComponentsMapToNbt (ComponentMap componentMap) {
+        NbtCompound nbt = new NbtCompound();
+
+        Text customName = componentMap.get(DataComponentTypes.CUSTOM_NAME);
+        if (customName != null) {
+            nbt.putString("custom_name", customName.getString());
+        }
+
+        ItemEnchantmentsComponent enchantmentsComponent = componentMap.get(DataComponentTypes.ENCHANTMENTS);
+        if (enchantmentsComponent != null && !enchantmentsComponent.isEmpty()) {
+            NbtList enchantments = new NbtList();
+            for (RegistryEntry<Enchantment> enchantmentRegistryEntry : enchantmentsComponent.getEnchantments().stream().toList()) {
+                NbtCompound enchantmentCompound = new NbtCompound();
+                enchantmentCompound.putString("id", enchantmentRegistryEntry.getIdAsString());
+                enchantmentCompound.putInt("lvl", enchantmentsComponent.getLevel(enchantmentRegistryEntry.value()));
+                enchantments.add(enchantmentCompound);
+            }
+            nbt.put("Enchantments", enchantments);
+        }
+
+        ArmorTrim trimComponent = componentMap.get(DataComponentTypes.TRIM);
+        if (trimComponent != null) {
+            NbtCompound trim = new NbtCompound();
+            trim.putString("material", trimComponent.getMaterial().getIdAsString());
+            trim.putString("pattern", trimComponent.getPattern().getIdAsString());
+            nbt.put("Trim", trim);
         }
         return nbt;
     }
