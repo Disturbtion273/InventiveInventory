@@ -43,7 +43,7 @@ public class ConfigScreen extends GameOptionsScreen {
 
     @Override
     public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(DrawContext);
+        this.renderBackground(DrawContext, mouseX, mouseY, delta);
         super.render(DrawContext, mouseX, mouseY, delta);
         DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
     }
