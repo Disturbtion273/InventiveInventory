@@ -76,7 +76,7 @@ public class ProfileHandler {
             for (SavedSlot savedSlot : savedSlots) {
                 boolean matchFound = false;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     ComponentMap stackComponentsMap = stack.getComponents();
                     if (stack.getItem().toString().equals(savedSlot.getId())) {
@@ -92,7 +92,7 @@ public class ProfileHandler {
 
                 if (matchFound) continue;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     ComponentMap stackComponentsMap = stack.getComponents();
                     if (stack.getItem().toString().equals(savedSlot.getId())) {
@@ -106,14 +106,14 @@ public class ProfileHandler {
 
                 if (matchFound) continue;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     if (stack.getItem().toString().equals(savedSlot.getId())) {
                         InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                         break;
                     }
                 }
-            }
+          }
             text = Text.of("Loaded Profile: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         } else {
             text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));

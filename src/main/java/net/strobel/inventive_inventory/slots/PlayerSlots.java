@@ -16,7 +16,7 @@ public class PlayerSlots {
             return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
         } else {
             ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE - 1;
             to = screenHandler.slots.size();
             return new InventorySlots(from, to);
         }
@@ -30,7 +30,7 @@ public class PlayerSlots {
             return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
         } else {
             ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE - 1;
             to = screenHandler.slots.size() - PlayerInventory.getHotbarSize();
             return new InventorySlots(from, to);
         }
