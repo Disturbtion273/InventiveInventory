@@ -38,6 +38,8 @@ class SavedSlot {
         this.nbtData = convertComponentsMapToNbt(componentMap);
     }
 
+
+
     private NbtCompound convertJsonObjectToNbt(JsonObject nbtData) {
         NbtCompound nbt = new NbtCompound();
         try {
