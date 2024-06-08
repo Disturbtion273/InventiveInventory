@@ -28,4 +28,14 @@ public class MixinKeyInputHandler {
             AdvancedOperationHandler.release();
         }
     }
+
+    @Inject(method = "onMouseClick(I)V", at = @At("HEAD"))
+    private void onMouseClick(int button, CallbackInfo ci) {
+        if (KeyInputHandler.advancedOperationKey.matchesMouse(button)) {
+            AdvancedOperationHandler.press();
+        }
+        if (KeyInputHandler.sortInventoryKey.matchesMouse(button)) {
+            SortingHandler.sort();
+        }
+    }
 }
