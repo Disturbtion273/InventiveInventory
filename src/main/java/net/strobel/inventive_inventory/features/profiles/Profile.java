@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
 import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
@@ -36,6 +37,9 @@ class Profile {
     public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
+
+        Sorter.mergeItemStacks(PlayerSlots.getWithHotbar().excludeLockedSlots(), screenHandler);
+
         for (int slot : PlayerSlots.getHotbarAndEquipment()) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty()) {

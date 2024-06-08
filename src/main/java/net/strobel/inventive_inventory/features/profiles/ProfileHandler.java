@@ -74,7 +74,7 @@ public class ProfileHandler {
             for (SavedSlot savedSlot : savedSlots) {
                 boolean matchFound = false;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     NbtCompound stackNbt = stack.getNbt();
                     if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
@@ -89,7 +89,7 @@ public class ProfileHandler {
                 }
                 if (matchFound) continue;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     NbtCompound stackNbt = stack.getNbt();
                     if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
@@ -102,7 +102,7 @@ public class ProfileHandler {
                 }
                 if (matchFound) continue;
 
-                for (int i : PlayerSlots.getWithHotbarAndArmor()) {
+                for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
                     if (stack.getItem().toString().equals(savedSlot.getId())) {
                         InteractionHandler.swapStacks(savedSlot.getSlot(), i);
