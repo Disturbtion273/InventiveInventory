@@ -1,6 +1,7 @@
 package net.strobel.inventive_inventory.util;
 
 import com.google.gson.*;
+import com.sun.jna.platform.win32.ShTypes;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class FileHandler {
@@ -26,6 +28,8 @@ public class FileHandler {
     }
 
     public static void write(Path filePath, String key, String value) {writeToFile(filePath, key, value);}
+
+    public static void write(Path filePath, Map<String, String> properties) {writeToFile(filePath, properties);}
 
     public static <T> List<T> get(Path filePath, String jsonKey) {
         List<T> list = new ArrayList<>();
@@ -74,8 +78,6 @@ public class FileHandler {
         return properties;
     }
 
-
-
     private static void writeToFile(Path filePath, JsonObject jsonObject) {
         try (FileWriter file = new FileWriter(filePath.toFile())) {
             file.write(gson.toJson(jsonObject));
@@ -92,4 +94,14 @@ public class FileHandler {
         }
     }
 
+    private static void writeToFile(Path filePath, Map<String, String> properties_) {
+        Properties properties = new Properties();
+        for (String key : properties_.keySet()) {
+            properties.setProperty(key, properties_.get(key));
+        }
+        try (FileWriter file = new FileWriter(filePath.toFile())) {
+            properties.store(file, null);
+        } catch (IOException ignored) {
+        }
+    }
 }

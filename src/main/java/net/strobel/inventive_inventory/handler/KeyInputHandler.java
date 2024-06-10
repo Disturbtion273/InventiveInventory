@@ -31,7 +31,6 @@ public class KeyInputHandler {
     public static KeyBinding sortInventoryKey;
     public static KeyBinding profileSavingKey;
     public static KeyBinding profileLoadingKey;
-
     public static KeyBinding[] profileKeys = new KeyBinding[9];
     private static final boolean[] executed = new boolean[9];
 
@@ -63,10 +62,10 @@ public class KeyInputHandler {
         ));
         for (int i = 0; i < 9; i++) {
             profileKeys[i] = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                    "key.inventive_inventory.profile_" + (i + 1),
-                    InputUtil.Type.KEYSYM,
-                    GLFW.GLFW_KEY_1 + i,
-                    INVENTIVE_INVENTORY_PROFILES_CATEGORY
+                "key.inventive_inventory.profile_" + (i + 1),
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_1 + i,
+                INVENTIVE_INVENTORY_PROFILES_CATEGORY
             ));
         }
     }
@@ -111,9 +110,9 @@ public class KeyInputHandler {
     }
 
     private static void loadProfile(MinecraftClient ignored) {
-        if (profileLoadingKey.isPressed()) {
-            for (int i = 0; i < profileKeys.length; i++) {
-                if (profileKeys[i].isPressed() && !executed[i]) {
+        for (int i = 0; i < profileKeys.length; i++) {
+            if (profileKeys[i].isPressed() && !executed[i]) {
+                if (ConfigManager.PROFILE_FAST_LOADING.get(i) == Mode.FAST_LOAD) {
                     executed[i] = true;
                     JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
                     for (String profileKey : profilesFile.keySet()) {
@@ -125,9 +124,21 @@ public class KeyInputHandler {
                     }
                     Text text = Text.of("Profile for Keybind '" + profileKeys[i].getBoundKeyLocalizedText().getString() + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
                     InventiveInventory.getPlayer().sendMessage(text, true);
-                } else if (!profileKeys[i].isPressed()) {
-                    executed[i] = false;
+                } else if (ConfigManager.PROFILE_FAST_LOADING.get(i) == Mode.STANDARD && profileLoadingKey.isPressed()) {
+                    executed[i] = true;
+                    JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
+                    for (String profileKey : profilesFile.keySet()) {
+                        JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
+                        if (keybind.getAsString().equals(profileKeys[i].getBoundKeyLocalizedText().getString())) {
+                            ProfileHandler.load(profileKey);
+                            return;
+                        }
+                    }
+                    Text text = Text.of("Profile for Keybind '" + profileKeys[i].getBoundKeyLocalizedText().getString() + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+                    InventiveInventory.getPlayer().sendMessage(text, true);
                 }
+            } else if (!profileKeys[i].isPressed()) {
+                executed[i] = false;
             }
         }
     }

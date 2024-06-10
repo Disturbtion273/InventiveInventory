@@ -124,7 +124,7 @@ public class ProfileHandler {
         InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
-    public static void delete(String name) {
+    public static void delete(String name, boolean sendMessage) {
         Text text;
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
 
@@ -142,7 +142,9 @@ public class ProfileHandler {
         } else {
             text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));
         }
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        if (sendMessage) {
+            InventiveInventory.getPlayer().sendMessage(text, true);
+        }
     }
 
     public static void overwrite(String name, String key) {

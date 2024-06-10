@@ -28,7 +28,14 @@ public class ConfigManager {
     }
 
     public static void save() {
-        FileHandler.write(SETTINGS_PATH, "AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
+        Map<String, String> properties = new HashMap<>();
+        properties.put("AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
+        int i = 1;
+        for (Mode mode : PROFILE_FAST_LOADING) {
+            properties.put("ProfileLoadingMode_" + i, mode.toString());
+            i++;
+        }
+        FileHandler.write(SETTINGS_PATH, properties);
     }
 
     private static void createFileIfNotExists(Path path) throws IOException {
@@ -45,6 +52,15 @@ public class ConfigManager {
             if (automaticRefillingMode.equals(Mode.INVERTED.toString())) AUTOMATIC_REFILLING = Mode.INVERTED;
         } else {
             AUTOMATIC_REFILLING = Mode.STANDARD;
+        }
+        for (int i = 0; i < 9; i++) {
+            String mode = properties.getProperty("ProfileLoadingMode_" + (i + 1));
+            if (mode != null) {
+                if (mode.equals(Mode.STANDARD.toString())) PROFILE_FAST_LOADING.set(i, Mode.STANDARD);
+                if (mode.equals(Mode.FAST_LOAD.toString())) PROFILE_FAST_LOADING.set(i, Mode.FAST_LOAD);
+            } else {
+                PROFILE_FAST_LOADING.set(i, Mode.STANDARD);
+            }
         }
     }
 }

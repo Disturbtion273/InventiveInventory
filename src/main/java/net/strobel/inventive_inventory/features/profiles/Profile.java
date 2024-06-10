@@ -7,6 +7,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
@@ -40,6 +41,7 @@ class Profile {
     public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
+        if (screenHandler == null) return; // TODO
 
         Sorter.mergeItemStacks(PlayerSlots.getWithHotbar().excludeLockedSlots(), screenHandler);
 
@@ -76,7 +78,7 @@ class Profile {
         for (String profileName : allProfiles.keySet()) {
             String keybind = allProfiles.getAsJsonObject(profileName).get("keybind").getAsString();
             if (profileName.equals(name) || keybind.equals(key)) {
-                ProfileHandler.delete(profileName);
+                ProfileHandler.delete(profileName, false);
             }
         }
         Profile.create(name, key);
