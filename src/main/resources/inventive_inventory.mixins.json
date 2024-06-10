@@ -9,6 +9,7 @@
     "client": [
         "MixinClientPlayerInteractionManager",
         "MixinHandledScreen",
+        "MixinKeyBinding",
         "MixinKeyInputHandler"
     ]
 }

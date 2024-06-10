@@ -142,7 +142,12 @@ public class ProfileHandler {
         InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
-
+    public static void overwrite(String name, String key) {
+        JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        if (allProfiles.has(name)) {
+            Profile.overwrite(name, key);
+        }
+    }
 
     private static boolean equalNbt(NbtCompound stackNbt, NbtCompound savedSlotNbt) {
         boolean equalEnchantments = equalElements(stackNbt, savedSlotNbt, "Enchantments");

@@ -27,8 +27,6 @@ public class KeyInputHandler {
     private static final String KEY_PROFILE_SAVING = "key.inventive_inventory.profile_saving";
     private static final String KEY_PROFILE_LOADING = "key.inventive_inventory.profile_loading";
     private static final String KEY_SORT_INVENTORY = "key.inventive_inventory.sort_inventory";
-    private static final String KEY_DEBUGGING = "key.inventive_inventory.debugging";
-    public static KeyBinding debuggingKey;
     public static KeyBinding advancedOperationKey;
     public static KeyBinding sortInventoryKey;
     public static KeyBinding profileSavingKey;
@@ -120,12 +118,12 @@ public class KeyInputHandler {
                     JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
                     for (String profileKey : profilesFile.keySet()) {
                         JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                        if (keybind.getAsString().equals(String.valueOf(i + 1))) {
+                        if (keybind.getAsString().equals(profileKeys[i].getBoundKeyLocalizedText().getString())) {
                             ProfileHandler.load(profileKey);
                             return;
                         }
                     }
-                    Text text = Text.of("Profile for Keybind '" + (i + 1) + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+                    Text text = Text.of("Profile for Keybind '" + profileKeys[i].getBoundKeyLocalizedText().getString() + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
                     InventiveInventory.getPlayer().sendMessage(text, true);
                 } else if (!profileKeys[i].isPressed()) {
                     executed[i] = false;
