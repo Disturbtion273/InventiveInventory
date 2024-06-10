@@ -25,12 +25,16 @@ class Profile {
         this.name = name;
         this.key = key;
         this.savedSlots = savedSlots;
+        int i = 0;
         for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
             if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
                 ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
+                ProfileHandler.profileNames.set(i, name);
                 break;
             }
+            i++;
         }
+
     }
 
     public static void create(String name, String key) {

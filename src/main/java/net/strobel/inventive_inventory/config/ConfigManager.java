@@ -9,13 +9,14 @@ import net.strobel.inventive_inventory.util.FileHandler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
+import java.util.*;
 
 public class ConfigManager {
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve(InventiveInventory.MOD_ID);
     public static final String SETTINGS_FILE = "settings.properties";
     public static final Path SETTINGS_PATH = ConfigManager.PATH.resolve(SETTINGS_FILE);
     public static Mode AUTOMATIC_REFILLING;
+    public static List<Mode> PROFILE_FAST_LOADING = new ArrayList<>(Collections.nCopies(9, Mode.STANDARD));
 
     public static void initialize() throws IOException {
         Files.createDirectories(ConfigManager.PATH);

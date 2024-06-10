@@ -21,6 +21,7 @@ import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import java.util.Set;
 public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
+    public static List<String> profileNames = new ArrayList<>();
 
     private static final Style style = Style.EMPTY.withBold(true);
 
@@ -44,6 +46,7 @@ public class ProfileHandler {
                 }
             }
             ((IKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
+            profileNames.add(displayName);
             i++;
         }
     }

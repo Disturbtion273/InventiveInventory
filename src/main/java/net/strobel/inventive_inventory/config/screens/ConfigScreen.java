@@ -1,4 +1,4 @@
-package net.strobel.inventive_inventory.config;
+package net.strobel.inventive_inventory.config.screens;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -8,6 +8,8 @@ import net.minecraft.client.gui.widget.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.InventiveInventory;
+import net.strobel.inventive_inventory.config.ConfigManager;
+import net.strobel.inventive_inventory.config.Mode;
 
 
 public class ConfigScreen extends GameOptionsScreen {
@@ -27,6 +29,9 @@ public class ConfigScreen extends GameOptionsScreen {
         adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
         ButtonWidget automaticRefilling = this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING.toString()), this.automaticRefilling());
         adder.add(automaticRefilling);
+        adder.add(new TextWidget(Text.of("Profile Fast Loading:"), client.textRenderer));
+        ButtonWidget profileFastLoading = this.createButton(Text.of("Profiles..."), this.profileFastLoading());
+        adder.add(profileFastLoading);
         adder.add(EmptyWidget.ofHeight(150));
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
@@ -59,5 +64,9 @@ public class ConfigScreen extends GameOptionsScreen {
             } else ConfigManager.AUTOMATIC_REFILLING = Mode.STANDARD;
             button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING.toString()));
         };
+    }
+
+    private ButtonWidget.PressAction profileFastLoading() {
+        return button -> client.setScreen(new ProfileFastLoadingScreen(this.parent));
     }
 }
