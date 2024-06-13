@@ -2,7 +2,6 @@ package net.strobel.inventive_inventory.mixins;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.world.ClientWorld;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
@@ -21,7 +20,7 @@ import java.util.List;
 public class MixinMinecraftClient {
 
     @Inject(method = "joinWorld", at = @At("HEAD"))
-    private void onJoinWorld(ClientWorld world, DownloadingTerrainScreen.WorldEntryReason worldEntryReason, CallbackInfo ci) {
+    private void onJoinWorld(ClientWorld world, CallbackInfo ci) {
         ProfileHandler.initialize();
     }
 
