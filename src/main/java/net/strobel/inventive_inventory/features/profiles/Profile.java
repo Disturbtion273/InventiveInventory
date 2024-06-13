@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
@@ -48,8 +48,8 @@ class Profile {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!stack.isEmpty()) {
                 String id = stack.getItem().toString();
-                ComponentMap componentMap = stack.getComponents();
-                savedSlots.add(new SavedSlot(slot, id, componentMap));
+                NbtCompound nbt = stack.getNbt();
+                savedSlots.add(new SavedSlot(slot, id, nbt));
             }
         }
         new Profile(name, key, savedSlots).save();
