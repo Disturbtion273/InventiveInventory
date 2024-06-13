@@ -27,7 +27,7 @@ public class DeleteProfileCommand {
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
         String profile = StringArgumentType.getString(context, "profile");
-        ProfileHandler.delete(profile);
+        ProfileHandler.delete(profile, true);
         return 1;
     }
 

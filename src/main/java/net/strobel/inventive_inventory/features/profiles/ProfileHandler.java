@@ -2,6 +2,8 @@ package net.strobel.inventive_inventory.features.profiles;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -14,11 +16,12 @@ import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +29,7 @@ import java.util.Set;
 public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.PATH.resolve(PROFILES_FILE);
+    public static List<String> profileNames = new ArrayList<>();
 
     private static final Style style = Style.EMPTY.withBold(true);
 
@@ -41,7 +45,8 @@ public class ProfileHandler {
                     break;
                 }
             }
-            ((IKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
+            ((MixinIKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
+            profileNames.add(displayName);
             i++;
         }
     }
@@ -76,10 +81,10 @@ public class ProfileHandler {
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
-                    NbtCompound stackNbt = stack.getNbt();
-                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
-                        if (stackNbt.getCompound("display").getString("Name").equals(savedSlot.getNbtData().getString("custom_name"))) {
-                            if (equalNbt(stackNbt, savedSlot.getNbtData())) {
+                    ComponentMap stackComponentsMap = stack.getComponents();
+                    if (stack.getItem().toString().equals(savedSlot.getId())) {
+                        if (stackComponentsMap.get(DataComponentTypes.CUSTOM_NAME) != null && stackComponentsMap.get(DataComponentTypes.CUSTOM_NAME).getString().equals(savedSlot.getNbtData().getString("custom_name"))) {
+                            if (equalNbt(SavedSlot.convertComponentsMapToNbt(stackComponentsMap), savedSlot.getNbtData())) {   // MUSS NOCH VESCHÖNERT WERDEN. ALSO DIE CONVERT FUNCTION WO ANDERS HIN MACHEN ODER DIE EQUAL FUNCTIONS AUSTAUSCHEN
                                 InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                                 matchFound = true;
                                 break;
@@ -87,19 +92,21 @@ public class ProfileHandler {
                         }
                     }
                 }
+
                 if (matchFound) continue;
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
-                    NbtCompound stackNbt = stack.getNbt();
-                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
-                        if (equalNbt(stackNbt, savedSlot.getNbtData())) {
+                    ComponentMap stackComponentsMap = stack.getComponents();
+                    if (stack.getItem().toString().equals(savedSlot.getId())) {
+                        if (equalNbt(SavedSlot.convertComponentsMapToNbt(stackComponentsMap), savedSlot.getNbtData())) {   // MUSS NOCH VESCHÖNERT WERDEN. ALSO DIE CONVERT FUNCTION WO ANDERS HIN MACHEN ODER DIE EQUAL FUNCTIONS AUSTAUSCHEN
                             InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                             matchFound = true;
                             break;
                         }
                     }
                 }
+
                 if (matchFound) continue;
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
@@ -117,7 +124,7 @@ public class ProfileHandler {
         InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
-    public static void delete(String name) {
+    public static void delete(String name, boolean sendMessage) {
         Text text;
         JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
 
@@ -125,17 +132,30 @@ public class ProfileHandler {
             String keybind = allProfiles.getAsJsonObject(name).get("keybind").getAsString();
             for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
                 if (keyBinding.getBoundKeyLocalizedText().getString().equals(keybind)) {
-                    ((IKeyBindingDisplay) keyBinding).main$resetDisplayName();
+                    ((MixinIKeyBindingDisplay) keyBinding).main$resetDisplayName();
                     break;
                 }
             }
             allProfiles.remove(name);
             FileHandler.write(PROFILES_PATH, allProfiles);
+            int index = ProfileHandler.profileNames.indexOf(name);
+            try {
+                ProfileHandler.profileNames.set(index, "Profile " + (index + 1));
+            } catch (IndexOutOfBoundsException ignored) {}
             text = Text.of("Deleted: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         } else {
             text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));
         }
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        if (sendMessage) {
+            InventiveInventory.getPlayer().sendMessage(text, true);
+        }
+    }
+
+    public static void overwrite(String name, String key) {
+        JsonObject allProfiles = FileHandler.getJsonFile(PROFILES_PATH);
+        if (allProfiles.has(name)) {
+            Profile.overwrite(name, key);
+        }
     }
 
     private static boolean equalNbt(NbtCompound stackNbt, NbtCompound savedSlotNbt) {
