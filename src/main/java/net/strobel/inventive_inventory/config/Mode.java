@@ -1,7 +1,9 @@
 package net.strobel.inventive_inventory.config;
 
 public enum Mode implements Comparable<Mode> {
-    STANDARD("Standard"), INVERTED("Inverted");
+    STANDARD("Standard"),
+    INVERTED("Inverted"),
+    FAST_LOAD("Fast Load");
 
     private final String name;
 
