@@ -1,7 +1,6 @@
 package net.strobel.inventive_inventory.util;
 
 import com.google.gson.*;
-import com.sun.jna.platform.win32.ShTypes;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -64,8 +63,7 @@ public class FileHandler {
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = JsonParser.parseReader(new FileReader(filePath.toFile())).getAsJsonObject();
-        } catch (FileNotFoundException | IllegalStateException ignored) {
-        }
+        } catch (FileNotFoundException | IllegalStateException ignored) {}
         return jsonObject;
     }
 

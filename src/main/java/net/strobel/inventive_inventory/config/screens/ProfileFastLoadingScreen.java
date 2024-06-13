@@ -20,6 +20,7 @@ public class ProfileFastLoadingScreen extends GameOptionsScreen {
     public ProfileFastLoadingScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of("Profile Fast Loading Options"));
         this.parent = parent;
+        ProfileHandler.initialize();
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ProfileFastLoadingScreen extends GameOptionsScreen {
         OptionListWidget optionListWidget = this.addDrawableChild(new OptionListWidget(this.client, this.width, this.height, this));
 
         for (int i = 0; i < KeyInputHandler.profileKeys.length; i++) {
-            TextWidget textWidget = new TextWidget(Text.of(ProfileHandler.profileNames.get(i) + ":"), client.textRenderer);
+            TextWidget textWidget = new TextWidget(Text.of("Profile: " + ProfileHandler.profileNames.get(i)), client.textRenderer);
             textWidget.setHeight(20);
             ButtonWidget button = this.createButton(Text.of(ConfigManager.PROFILE_FAST_LOADING.get(i).toString()), this.changeState(i));
             optionListWidget.addWidgetEntry(textWidget, button);

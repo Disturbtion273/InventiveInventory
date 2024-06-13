@@ -4,11 +4,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.handler.AdvancedOperationHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
 import net.strobel.inventive_inventory.keybindfix.KeybindFixer;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 @Mixin(value = KeyBinding.class, priority = 10000)
-public abstract class MixinKeyBinding implements IKeyBindingDisplay {
+public abstract class MixinKeyBinding implements MixinIKeyBindingDisplay {
     @Unique
     private String displayName;
     @Final
@@ -29,7 +28,6 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
     private static Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS;
     @Shadow
     private InputUtil.Key boundKey;
-    @Shadow @Final private String translationKey;
     @Unique
     private static final KeybindFixer keybindFixer = new KeybindFixer();
 
@@ -88,6 +86,6 @@ public abstract class MixinKeyBinding implements IKeyBindingDisplay {
 
     @Override
     public void main$resetDisplayName() {
-        this.displayName = Text.translatable(this.translationKey).getString();
+        this.displayName = null;
     }
 }

@@ -10,6 +10,8 @@
         "MixinClientPlayerInteractionManager",
         "MixinHandledScreen",
         "MixinKeyBinding",
-        "MixinKeyInputHandler"
+        "MixinKeybindScreen",
+        "MixinKeyInputHandler",
+        "MixinMinecraftClient"
     ]
 }

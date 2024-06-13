@@ -16,7 +16,7 @@ import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -45,7 +45,7 @@ public class ProfileHandler {
                     break;
                 }
             }
-            ((IKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
+            ((MixinIKeyBindingDisplay) profileKey).main$setDisplayName(displayName);
             profileNames.add(displayName);
             i++;
         }
@@ -132,12 +132,16 @@ public class ProfileHandler {
             String keybind = allProfiles.getAsJsonObject(name).get("keybind").getAsString();
             for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
                 if (keyBinding.getBoundKeyLocalizedText().getString().equals(keybind)) {
-                    ((IKeyBindingDisplay) keyBinding).main$resetDisplayName();
+                    ((MixinIKeyBindingDisplay) keyBinding).main$resetDisplayName();
                     break;
                 }
             }
             allProfiles.remove(name);
             FileHandler.write(PROFILES_PATH, allProfiles);
+            int index = ProfileHandler.profileNames.indexOf(name);
+            try {
+                ProfileHandler.profileNames.set(index, "Profile " + (index + 1));
+            } catch (IndexOutOfBoundsException ignored) {}
             text = Text.of("Deleted: " + name).copy().setStyle(style.withColor(Formatting.GREEN));
         } else {
             text = Text.of("Profile '" + name + "' not found!").copy().setStyle(style.withColor(Formatting.RED));

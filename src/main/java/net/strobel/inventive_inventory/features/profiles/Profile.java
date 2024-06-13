@@ -7,11 +7,10 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
@@ -29,7 +28,7 @@ class Profile {
         int i = 0;
         for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
             if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
-                ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
+                ((MixinIKeyBindingDisplay) keyBinding).main$setDisplayName(name);
                 ProfileHandler.profileNames.set(i, name);
                 break;
             }
