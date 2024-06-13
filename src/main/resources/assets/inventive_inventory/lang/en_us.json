@@ -6,13 +6,13 @@
   "key.inventive_inventory.sort_inventory": "Sort Inventory",
   "key.inventive_inventory.profile_saving": "Save Profile (+ Profile Hotkey)",
   "key.inventive_inventory.profile_loading": "Load Profile (+ Profile Hotkey)",
-  "key.inventive_inventory.profile_1": "Profile 1",
-  "key.inventive_inventory.profile_2": "Profile 2",
-  "key.inventive_inventory.profile_3": "Profile 3",
-  "key.inventive_inventory.profile_4": "Profile 4",
-  "key.inventive_inventory.profile_5": "Profile 5",
-  "key.inventive_inventory.profile_6": "Profile 6",
-  "key.inventive_inventory.profile_7": "Profile 7",
-  "key.inventive_inventory.profile_8": "Profile 8",
-  "key.inventive_inventory.profile_9": "Profile 9"
+  "key.inventive_inventory.profile_1": "Profile: Profile 1",
+  "key.inventive_inventory.profile_2": "Profile: Profile 2",
+  "key.inventive_inventory.profile_3": "Profile: Profile 3",
+  "key.inventive_inventory.profile_4": "Profile: Profile 4",
+  "key.inventive_inventory.profile_5": "Profile: Profile 5",
+  "key.inventive_inventory.profile_6": "Profile: Profile 6",
+  "key.inventive_inventory.profile_7": "Profile: Profile 7",
+  "key.inventive_inventory.profile_8": "Profile: Profile 8",
+  "key.inventive_inventory.profile_9": "Profile: Profile 9"
 }

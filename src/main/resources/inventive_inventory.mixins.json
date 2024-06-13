@@ -9,6 +9,9 @@
     "client": [
         "MixinClientPlayerInteractionManager",
         "MixinHandledScreen",
-        "MixinKeyInputHandler"
+        "MixinKeyBinding",
+        "MixinKeybindScreen",
+        "MixinKeyInputHandler",
+        "MixinMinecraftClient"
     ]
 }

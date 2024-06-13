@@ -10,12 +10,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.strobel.inventive_inventory.InventiveInventory;
 import net.strobel.inventive_inventory.features.sorting.Sorter;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import net.strobel.inventive_inventory.slots.PlayerSlots;
 import net.strobel.inventive_inventory.util.FileHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Profile {
     private final String name;
@@ -26,17 +25,22 @@ class Profile {
         this.name = name;
         this.key = key;
         this.savedSlots = savedSlots;
+        int i = 0;
         for (KeyBinding keyBinding : KeyInputHandler.profileKeys) {
             if (keyBinding.getBoundKeyLocalizedText().getString().equals(key)) {
-                ((IKeyBindingDisplay) keyBinding).main$setDisplayName(name);
+                ((MixinIKeyBindingDisplay) keyBinding).main$setDisplayName(name);
+                ProfileHandler.profileNames.set(i, name);
                 break;
             }
+            i++;
         }
+
     }
 
     public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
+        if (screenHandler == null) return; // TODO
 
         Sorter.mergeItemStacks(PlayerSlots.getWithHotbar().excludeLockedSlots(), screenHandler);
 
@@ -73,7 +77,7 @@ class Profile {
         for (String profileName : allProfiles.keySet()) {
             String keybind = allProfiles.getAsJsonObject(profileName).get("keybind").getAsString();
             if (profileName.equals(name) || keybind.equals(key)) {
-                ProfileHandler.delete(profileName);
+                ProfileHandler.delete(profileName, false);
             }
         }
         Profile.create(name, key);

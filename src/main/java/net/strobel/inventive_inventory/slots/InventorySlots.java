@@ -22,9 +22,7 @@ public class InventorySlots extends ArrayList<Integer> {
         super(IntStream.concat(IntStream.range(from, to), IntStream.rangeClosed(from2, to2)).boxed().toList());
     }
 
-    public InventorySlots(List<Integer> slots) {
-        super(slots);
-    }
+    public InventorySlots(List<Integer> slots) { super(slots); }
 
     public int getLastSlot() {
         return this.get(this.size() - 1);
