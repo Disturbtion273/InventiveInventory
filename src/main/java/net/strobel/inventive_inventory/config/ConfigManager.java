@@ -9,13 +9,14 @@ import net.strobel.inventive_inventory.util.FileHandler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
+import java.util.*;
 
 public class ConfigManager {
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve(InventiveInventory.MOD_ID);
     public static final String SETTINGS_FILE = "settings.properties";
     public static final Path SETTINGS_PATH = ConfigManager.PATH.resolve(SETTINGS_FILE);
     public static Mode AUTOMATIC_REFILLING;
+    public static List<Mode> PROFILE_FAST_LOADING = new ArrayList<>(Collections.nCopies(9, Mode.STANDARD));
 
     public static void initialize() throws IOException {
         Files.createDirectories(ConfigManager.PATH);
@@ -27,7 +28,14 @@ public class ConfigManager {
     }
 
     public static void save() {
-        FileHandler.write(SETTINGS_PATH, "AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
+        Map<String, String> properties = new HashMap<>();
+        properties.put("AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
+        int i = 1;
+        for (Mode mode : PROFILE_FAST_LOADING) {
+            properties.put("ProfileLoadingMode_" + i, mode.toString());
+            i++;
+        }
+        FileHandler.write(SETTINGS_PATH, properties);
     }
 
     private static void createFileIfNotExists(Path path) throws IOException {
@@ -44,6 +52,15 @@ public class ConfigManager {
             if (automaticRefillingMode.equals(Mode.INVERTED.toString())) AUTOMATIC_REFILLING = Mode.INVERTED;
         } else {
             AUTOMATIC_REFILLING = Mode.STANDARD;
+        }
+        for (int i = 0; i < 9; i++) {
+            String mode = properties.getProperty("ProfileLoadingMode_" + (i + 1));
+            if (mode != null) {
+                if (mode.equals(Mode.STANDARD.toString())) PROFILE_FAST_LOADING.set(i, Mode.STANDARD);
+                if (mode.equals(Mode.FAST_LOAD.toString())) PROFILE_FAST_LOADING.set(i, Mode.FAST_LOAD);
+            } else {
+                PROFILE_FAST_LOADING.set(i, Mode.STANDARD);
+            }
         }
     }
 }

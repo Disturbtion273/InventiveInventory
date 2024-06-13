@@ -16,7 +16,7 @@ import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.config.Mode;
 import net.strobel.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.strobel.inventive_inventory.features.profiles.ProfileHandler;
-import net.strobel.inventive_inventory.keybindfix.IKeyBindingDisplay;
+import net.strobel.inventive_inventory.keybindfix.MixinIKeyBindingDisplay;
 import net.strobel.inventive_inventory.util.FileHandler;
 import org.lwjgl.glfw.GLFW;
 
@@ -27,13 +27,10 @@ public class KeyInputHandler {
     private static final String KEY_PROFILE_SAVING = "key.inventive_inventory.profile_saving";
     private static final String KEY_PROFILE_LOADING = "key.inventive_inventory.profile_loading";
     private static final String KEY_SORT_INVENTORY = "key.inventive_inventory.sort_inventory";
-    private static final String KEY_DEBUGGING = "key.inventive_inventory.debugging";
-    public static KeyBinding debuggingKey;
     public static KeyBinding advancedOperationKey;
     public static KeyBinding sortInventoryKey;
     public static KeyBinding profileSavingKey;
     public static KeyBinding profileLoadingKey;
-
     public static KeyBinding[] profileKeys = new KeyBinding[9];
     private static final boolean[] executed = new boolean[9];
 
@@ -65,10 +62,10 @@ public class KeyInputHandler {
         ));
         for (int i = 0; i < 9; i++) {
             profileKeys[i] = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                    "key.inventive_inventory.profile_" + (i + 1),
-                    InputUtil.Type.KEYSYM,
-                    GLFW.GLFW_KEY_1 + i,
-                    INVENTIVE_INVENTORY_PROFILES_CATEGORY
+                "key.inventive_inventory.profile_" + (i + 1),
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_1 + i,
+                INVENTIVE_INVENTORY_PROFILES_CATEGORY
             ));
         }
     }
@@ -102,7 +99,7 @@ public class KeyInputHandler {
             for (int i = 0; i < profileKeys.length; i++) {
                 if (profileKeys[i].isPressed() && !executed[i]) {
                     KeyBinding keyBinding = profileKeys[i];
-                    String name = ((IKeyBindingDisplay) keyBinding).main$getDisplayName();
+                    String name = ((MixinIKeyBindingDisplay) keyBinding).main$getDisplayName();
                     ProfileHandler.save(name, keyBinding.getBoundKeyLocalizedText().getString());
                     executed[i] = true;
                 } else if (!profileKeys[i].isPressed()) {
@@ -113,23 +110,35 @@ public class KeyInputHandler {
     }
 
     private static void loadProfile(MinecraftClient ignored) {
-        if (profileLoadingKey.isPressed()) {
-            for (int i = 0; i < profileKeys.length; i++) {
-                if (profileKeys[i].isPressed() && !executed[i]) {
+        for (int i = 0; i < profileKeys.length; i++) {
+            if (profileKeys[i].isPressed() && !executed[i]) {
+                if (ConfigManager.PROFILE_FAST_LOADING.get(i) == Mode.FAST_LOAD) {
                     executed[i] = true;
                     JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
                     for (String profileKey : profilesFile.keySet()) {
                         JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
-                        if (keybind.getAsString().equals(String.valueOf(i + 1))) {
+                        if (keybind.getAsString().equals(profileKeys[i].getBoundKeyLocalizedText().getString())) {
                             ProfileHandler.load(profileKey);
                             return;
                         }
                     }
-                    Text text = Text.of("Profile for Keybind '" + (i + 1) + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+                    Text text = Text.of("Profile for Keybind '" + profileKeys[i].getBoundKeyLocalizedText().getString() + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
                     InventiveInventory.getPlayer().sendMessage(text, true);
-                } else if (!profileKeys[i].isPressed()) {
-                    executed[i] = false;
+                } else if (ConfigManager.PROFILE_FAST_LOADING.get(i) == Mode.STANDARD && profileLoadingKey.isPressed()) {
+                    executed[i] = true;
+                    JsonObject profilesFile = FileHandler.getJsonFile(ProfileHandler.PROFILES_PATH);
+                    for (String profileKey : profilesFile.keySet()) {
+                        JsonElement keybind = FileHandler.getJsonObject(ProfileHandler.PROFILES_PATH, profileKey).get("keybind");
+                        if (keybind.getAsString().equals(profileKeys[i].getBoundKeyLocalizedText().getString())) {
+                            ProfileHandler.load(profileKey);
+                            return;
+                        }
+                    }
+                    Text text = Text.of("Profile for Keybind '" + profileKeys[i].getBoundKeyLocalizedText().getString() + "' not found!").copy().setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(true));
+                    InventiveInventory.getPlayer().sendMessage(text, true);
                 }
+            } else if (!profileKeys[i].isPressed()) {
+                executed[i] = false;
             }
         }
     }

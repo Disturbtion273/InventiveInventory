@@ -23,7 +23,7 @@ public class SaveProfileCommand {
                                 .then(ClientCommandManager.argument("keybind", StringArgumentType.word())
                                         .suggests(SaveProfileCommand::getKeyBinds)
                                         .executes(SaveProfileCommand::secondary)
-                            )
+                                )
                         )
                 )
         );
