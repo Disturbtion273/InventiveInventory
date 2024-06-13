@@ -2,8 +2,6 @@ package net.strobel.inventive_inventory.features.profiles;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -81,10 +79,10 @@ public class ProfileHandler {
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
-                    ComponentMap stackComponentsMap = stack.getComponents();
-                    if (stack.getItem().toString().equals(savedSlot.getId())) {
-                        if (stackComponentsMap.get(DataComponentTypes.CUSTOM_NAME) != null && stackComponentsMap.get(DataComponentTypes.CUSTOM_NAME).getString().equals(savedSlot.getNbtData().getString("custom_name"))) {
-                            if (equalNbt(SavedSlot.convertComponentsMapToNbt(stackComponentsMap), savedSlot.getNbtData())) {   // MUSS NOCH VESCHÖNERT WERDEN. ALSO DIE CONVERT FUNCTION WO ANDERS HIN MACHEN ODER DIE EQUAL FUNCTIONS AUSTAUSCHEN
+                    NbtCompound stackNbt = stack.getNbt();
+                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
+                        if (stackNbt.getCompound("display").getString("Name").equals(savedSlot.getNbtData().getString("custom_name"))) {
+                            if (equalNbt(stackNbt, savedSlot.getNbtData())) {
                                 InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                                 matchFound = true;
                                 break;
@@ -92,21 +90,19 @@ public class ProfileHandler {
                         }
                     }
                 }
-
                 if (matchFound) continue;
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
                     ItemStack stack = screenHandler.getSlot(i).getStack();
-                    ComponentMap stackComponentsMap = stack.getComponents();
-                    if (stack.getItem().toString().equals(savedSlot.getId())) {
-                        if (equalNbt(SavedSlot.convertComponentsMapToNbt(stackComponentsMap), savedSlot.getNbtData())) {   // MUSS NOCH VESCHÖNERT WERDEN. ALSO DIE CONVERT FUNCTION WO ANDERS HIN MACHEN ODER DIE EQUAL FUNCTIONS AUSTAUSCHEN
+                    NbtCompound stackNbt = stack.getNbt();
+                    if (stack.getItem().toString().equals(savedSlot.getId()) && stackNbt != null && savedSlot.getNbtData() != null) {
+                        if (equalNbt(stackNbt, savedSlot.getNbtData())) {
                             InteractionHandler.swapStacks(savedSlot.getSlot(), i);
                             matchFound = true;
                             break;
                         }
                     }
                 }
-
                 if (matchFound) continue;
 
                 for (int i : PlayerSlots.getWithHotbarAndArmor().excludeLockedSlots()) {
