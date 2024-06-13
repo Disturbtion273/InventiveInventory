@@ -47,6 +47,11 @@ public class ConfigScreen extends GameOptionsScreen {
     }
 
     @Override
+    protected void addOptions() {
+
+    }
+
+    @Override
     public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(DrawContext, mouseX, mouseY, delta);
         super.render(DrawContext, mouseX, mouseY, delta);
