@@ -150,7 +150,7 @@ class SavedSlot {
             for (RegistryEntry<Enchantment> enchantmentRegistryEntry : enchantmentsComponent.getEnchantments().stream().toList()) {
                 NbtCompound enchantmentCompound = new NbtCompound();
                 enchantmentCompound.putString("id", enchantmentRegistryEntry.getIdAsString());
-                enchantmentCompound.putInt("lvl", enchantmentsComponent.getLevel(enchantmentRegistryEntry.value()));
+                enchantmentCompound.putInt("lvl", enchantmentsComponent.getLevel(enchantmentRegistryEntry));
                 enchantments.add(enchantmentCompound);
             }
             nbt.put("Enchantments", enchantments);
