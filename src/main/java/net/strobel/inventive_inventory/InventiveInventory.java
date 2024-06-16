@@ -8,9 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
-import net.strobel.inventive_inventory.command.DeleteProfileCommand;
-import net.strobel.inventive_inventory.command.LoadProfileCommand;
-import net.strobel.inventive_inventory.command.SaveProfileCommand;
+import net.strobel.inventive_inventory.command.*;
 import net.strobel.inventive_inventory.compat.ModMenuIntegration;
 import net.strobel.inventive_inventory.config.ConfigManager;
 import net.strobel.inventive_inventory.handler.KeyInputHandler;
@@ -35,6 +33,8 @@ public class InventiveInventory implements ClientModInitializer {
             ClientCommandRegistrationCallback.EVENT.register(LoadProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(SaveProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(DeleteProfileCommand::register);
+            ClientCommandRegistrationCallback.EVENT.register(AutomaticRefillingConfigCommand::register);
+            ClientCommandRegistrationCallback.EVENT.register(ProfilesConfigCommand::register);
             if (FabricLoader.getInstance().isModLoaded("modmenu")) {
                 new ModMenuIntegration().getModConfigScreenFactory();
             }
