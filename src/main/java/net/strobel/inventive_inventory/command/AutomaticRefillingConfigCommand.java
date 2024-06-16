@@ -25,7 +25,7 @@ public class AutomaticRefillingConfigCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-config")
                 .then(ClientCommandManager.literal("set")
-                        .then(ClientCommandManager.literal("Automatic-Refilling-Mode")
+                        .then(ClientCommandManager.literal("AutomaticRefillingMode")
                                 .then(ClientCommandManager.argument("mode", StringArgumentType.word())
                                         .suggests(AutomaticRefillingConfigCommand::getModes)
                                         .executes(AutomaticRefillingConfigCommand::switchMode)
@@ -33,7 +33,7 @@ public class AutomaticRefillingConfigCommand {
                         )
                 )
                 .then(ClientCommandManager.literal("get")
-                        .then(ClientCommandManager.literal("Automatic-Refilling-Mode")
+                        .then(ClientCommandManager.literal("AutomaticRefillingMode")
                                 .executes(AutomaticRefillingConfigCommand::getMode)
                         )
                 )
