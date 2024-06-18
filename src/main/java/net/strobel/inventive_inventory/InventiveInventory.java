@@ -35,6 +35,7 @@ public class InventiveInventory implements ClientModInitializer {
             ClientCommandRegistrationCallback.EVENT.register(DeleteProfileCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(AutomaticRefillingConfigCommand::register);
             ClientCommandRegistrationCallback.EVENT.register(ProfilesConfigCommand::register);
+            ClientCommandRegistrationCallback.EVENT.register(SortingConfigCommand::register);
             if (FabricLoader.getInstance().isModLoaded("modmenu")) {
                 new ModMenuIntegration().getModConfigScreenFactory();
             }

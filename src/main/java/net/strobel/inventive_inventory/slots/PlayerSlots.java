@@ -22,6 +22,21 @@ public class PlayerSlots {
         }
     }
 
+    public static InventorySlots getForContainerSorting() {
+        int from, to;
+        if (ScreenCheck.isRegularInventory()) {
+            from = PlayerScreenHandler.INVENTORY_START;
+            to = PlayerScreenHandler.HOTBAR_END;
+            return new InventorySlots(from, to, PlayerScreenHandler.OFFHAND_ID);
+        } else {
+            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+            from = screenHandler.slots.size() - PlayerInventory.MAIN_SIZE;
+            to = screenHandler.slots.size();
+            return new InventorySlots(from, to);
+        }
+    }
+
+
     public static InventorySlots get() {
         int from, to;
         if (ScreenCheck.isRegularInventory()) {

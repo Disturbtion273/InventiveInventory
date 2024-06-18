@@ -26,7 +26,7 @@ public class ProfilesConfigCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-config")
                 .then(ClientCommandManager.literal("set")
-                        .then(ClientCommandManager.literal("Profile-Fast-Loading-Mode")
+                        .then(ClientCommandManager.literal("ProfileFastLoadingMode")
                                 .then(ClientCommandManager.argument("profile", StringArgumentType.word())
                                         .suggests(ProfilesConfigCommand::getProfiles)
                                         .then(ClientCommandManager.argument("mode", StringArgumentType.greedyString())
@@ -37,7 +37,7 @@ public class ProfilesConfigCommand {
                         )
                 )
                 .then(ClientCommandManager.literal("get")
-                        .then(ClientCommandManager.literal("Profile-Fast-Loading-Mode")
+                        .then(ClientCommandManager.literal("ProfileFastLoadingMode")
                                 .then(ClientCommandManager.argument("profile", StringArgumentType.word())
                                         .suggests(ProfilesConfigCommand::getProfiles)
                                         .executes(ProfilesConfigCommand::getMode)

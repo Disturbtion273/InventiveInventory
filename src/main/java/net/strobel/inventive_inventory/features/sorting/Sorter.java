@@ -1,7 +1,10 @@
 package net.strobel.inventive_inventory.features.sorting;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.strobel.inventive_inventory.config.ConfigManager;
+import net.strobel.inventive_inventory.config.Mode;
 import net.strobel.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.strobel.inventive_inventory.handler.InteractionHandler;
 import net.strobel.inventive_inventory.slots.InventorySlots;
@@ -47,11 +50,18 @@ public class Sorter {
     }
 
     private static List<Integer> getSortedSlots(InventorySlots inventorySlots, ScreenHandler screenHandler) {
-        return inventorySlots.stream()
-                .filter(slot -> !screenHandler.getSlot(slot).getStack().isEmpty())
-                .sorted(Comparator.comparing((Integer slot) -> screenHandler.getSlot(slot).getStack().getName().getString())
-                        .thenComparing(slot -> screenHandler.getSlot(slot).getStack().getCount(), Comparator.reverseOrder()))
-                .toList();
+        if (ConfigManager.SORTING == Mode.ITEM_TYPE) {
+            return inventorySlots.stream()
+                    .filter(slot -> !screenHandler.getSlot(slot).getStack().isEmpty())
+                    .sorted(Comparator.comparing((Integer slot) -> Item.getRawId(screenHandler.getSlot(slot).getStack().getItem())))
+                    .toList();
+        } else {
+            return inventorySlots.stream()
+                    .filter(slot -> !screenHandler.getSlot(slot).getStack().isEmpty())
+                    .sorted(Comparator.comparing((Integer slot) -> screenHandler.getSlot(slot).getStack().getName().getString())
+                            .thenComparing(slot -> screenHandler.getSlot(slot).getStack().getCount(), Comparator.reverseOrder()))
+                    .toList();
+        }
     }
 
     private static void clearCursor(InventorySlots inventorySlots, ScreenHandler screenHandler) {
