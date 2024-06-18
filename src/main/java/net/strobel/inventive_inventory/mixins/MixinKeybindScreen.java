@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeybindsScreen.class)
 public abstract class MixinKeybindScreen {
-    @Inject(method = "initBody", at = @At("HEAD"))
+    @Inject(method = "init", at = @At("HEAD"))
     private void init(CallbackInfo ci) {
         ProfileHandler.initialize();
     }
