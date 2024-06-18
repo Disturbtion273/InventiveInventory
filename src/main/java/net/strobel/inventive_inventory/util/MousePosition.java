@@ -15,7 +15,7 @@ public class MousePosition {
         if (ScreenCheck.isRegularInventory() || ScreenCheck.isCreativeInventory()) {
             return true;
         } else {
-            return PlayerSlots.getWithHotbar().contains(slot);
+            return PlayerSlots.getForContainerSorting().contains(slot);
         }
     }
 }

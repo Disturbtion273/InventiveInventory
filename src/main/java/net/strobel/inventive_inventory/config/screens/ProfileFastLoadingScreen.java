@@ -26,7 +26,7 @@ public class ProfileFastLoadingScreen extends GameOptionsScreen {
     @Override
     protected void init() {
         MinecraftClient client = InventiveInventory.getClient();
-        OptionListWidget optionListWidget = this.addDrawableChild(new OptionListWidget(this.client, this.width, this.height, this));
+        OptionListWidget optionListWidget = this.addDrawableChild(new OptionListWidget(this.client, this.width, this));
 
         for (int i = 0; i < KeyInputHandler.profileKeys.length; i++) {
             TextWidget textWidget = new TextWidget(Text.of("Profile: " + ProfileHandler.profileNames.get(i)), client.textRenderer);
@@ -42,6 +42,11 @@ public class ProfileFastLoadingScreen extends GameOptionsScreen {
                         }).position(this.width / 2 - 100, this.height - 27)
                         .size(200, 20)
                         .build());
+    }
+
+    @Override
+    protected void addOptions() {
+
     }
 
     @Override
