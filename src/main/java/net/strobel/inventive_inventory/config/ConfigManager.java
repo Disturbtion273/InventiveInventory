@@ -16,6 +16,7 @@ public class ConfigManager {
     public static final String SETTINGS_FILE = "settings.properties";
     public static final Path SETTINGS_PATH = ConfigManager.PATH.resolve(SETTINGS_FILE);
     public static Mode AUTOMATIC_REFILLING;
+    public static Mode SORTING;
     public static List<Mode> PROFILE_FAST_LOADING = new ArrayList<>(Collections.nCopies(9, Mode.STANDARD));
 
     public static void initialize() throws IOException {
@@ -30,6 +31,7 @@ public class ConfigManager {
     public static void save() {
         Map<String, String> properties = new HashMap<>();
         properties.put("AutomaticRefillingMode", AUTOMATIC_REFILLING.toString());
+        properties.put("SortingMode", SORTING.toString());
         int i = 1;
         for (Mode mode : PROFILE_FAST_LOADING) {
             properties.put("ProfileLoadingMode_" + i, mode.toString());
@@ -47,11 +49,18 @@ public class ConfigManager {
     private static void initializeSettings() {
         Properties properties = FileHandler.getProperties(SETTINGS_PATH);
         String automaticRefillingMode = properties.getProperty("AutomaticRefillingMode");
+        String sortingMode = properties.getProperty("SortingMode");
         if (automaticRefillingMode != null) {
             if (automaticRefillingMode.equals(Mode.STANDARD.toString())) AUTOMATIC_REFILLING = Mode.STANDARD;
             if (automaticRefillingMode.equals(Mode.INVERTED.toString())) AUTOMATIC_REFILLING = Mode.INVERTED;
         } else {
             AUTOMATIC_REFILLING = Mode.STANDARD;
+        }
+        if (sortingMode != null) {
+            if (sortingMode.equals(Mode.NAME.toString())) SORTING = Mode.ITEM_TYPE;
+            if (sortingMode.equals(Mode.ITEM_TYPE.toString())) SORTING = Mode.NAME;
+        } else {
+            SORTING = Mode.NAME;
         }
         for (int i = 0; i < 9; i++) {
             String mode = properties.getProperty("ProfileLoadingMode_" + (i + 1));
