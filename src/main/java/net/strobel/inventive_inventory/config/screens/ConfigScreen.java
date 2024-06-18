@@ -26,13 +26,16 @@ public class ConfigScreen extends GameOptionsScreen {
         GridWidget gridWidget = new GridWidget();
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter().alignVerticalCenter();
         GridWidget.Adder adder = gridWidget.createAdder(2);
+        adder.add(new TextWidget(Text.of("Sorting Mode:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.SORTING.toString()), this.sorting()));
+
         adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
-        ButtonWidget automaticRefilling = this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING.toString()), this.automaticRefilling());
-        adder.add(automaticRefilling);
+        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING.toString()), this.automaticRefilling()));
+
         adder.add(new TextWidget(Text.of("Profile Fast Loading:"), client.textRenderer));
-        ButtonWidget profileFastLoading = this.createButton(Text.of("Profiles..."), this.profileFastLoading());
-        adder.add(profileFastLoading);
+        adder.add(this.createButton(Text.of("Profiles..."), this.profileFastLoading()));
         adder.add(EmptyWidget.ofHeight(150));
+
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
@@ -55,6 +58,15 @@ public class ConfigScreen extends GameOptionsScreen {
 
     private ButtonWidget createButton(Text text, ButtonWidget.PressAction pressAction) {
         return ButtonWidget.builder(text, pressAction).build();
+    }
+
+    private ButtonWidget.PressAction sorting() {
+        return button -> {
+            if (ConfigManager.SORTING == Mode.NAME) {
+                ConfigManager.SORTING = Mode.ITEM_TYPE;
+            } else ConfigManager.SORTING = Mode.NAME;
+            button.setMessage(Text.of(ConfigManager.SORTING.toString()));
+        };
     }
 
     private ButtonWidget.PressAction automaticRefilling() {
