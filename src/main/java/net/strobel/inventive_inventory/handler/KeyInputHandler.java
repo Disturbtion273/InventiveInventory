@@ -80,13 +80,14 @@ public class KeyInputHandler {
     private static void automaticRefilling(MinecraftClient client) {
         if (client.currentScreen == null && client.player != null) {
             KeyBinding useKey = client.options.useKey;
+            KeyBinding dropKey = client.options.dropKey;
             if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
                 if (advancedOperationKey.isPressed()) {
                     AutomaticRefillingHandler.run();
                 } else AutomaticRefillingHandler.reset();
             } else if (ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED) {
                 if (!advancedOperationKey.isPressed()) {
-                    if (useKey.isPressed()) {
+                    if (useKey.isPressed() || dropKey.isPressed()) {
                         AutomaticRefillingHandler.run();
                     }
                 } else AutomaticRefillingHandler.reset();
