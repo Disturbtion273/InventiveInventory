@@ -18,6 +18,9 @@
     "entrypoints": {
         "client": [
             "net.origins.inventive_inventory.InventiveInventory"
+        ],
+        "modmenu": [
+            "net.origins.inventive_inventory.integrations.ModMenuIntegration"
         ]
     },
     "mixins": [
@@ -29,5 +32,12 @@
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
         "minecraft": "${minecraft_version}"
+    },
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.donate": "https://paypal.me/strobel273"
+            }
+        }
     }
 }

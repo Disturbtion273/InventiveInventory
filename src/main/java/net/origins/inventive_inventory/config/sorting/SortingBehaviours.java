@@ -2,6 +2,7 @@ package net.origins.inventive_inventory.config.sorting;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.origins.inventive_inventory.config.ConfigManager;
 
 public enum SortingBehaviours {
     SORT_CURSOR_STACK("Sort Cursor Stack"),
@@ -29,5 +30,9 @@ public enum SortingBehaviours {
             }
         }
         return SORT_CURSOR_STACK;
+    }
+
+    public void toggle() {
+        ConfigManager.SORTING_BEHAVIOUR = values()[(this.ordinal() + 1) % values().length];
     }
 }
