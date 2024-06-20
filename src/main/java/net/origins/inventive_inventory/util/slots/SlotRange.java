@@ -26,7 +26,15 @@ public class SlotRange extends ArrayList<Integer> {
         return this;
     }
 
-    public SlotRange exclude() {
+    public SlotRange exclude(SlotTypes type) {
         return null;
+    }
+
+    public SlotRange exclude(Integer slot) {
+        this.remove(slot);
+        return this;
+    }
+    public SlotRange copy() {
+        return (SlotRange) this.clone();
     }
 }
