@@ -57,8 +57,8 @@ public class ConfigManager {
             AUTOMATIC_REFILLING = Mode.STANDARD;
         }
         if (sortingMode != null) {
-            if (sortingMode.equals(Mode.NAME.toString())) SORTING = Mode.ITEM_TYPE;
-            if (sortingMode.equals(Mode.ITEM_TYPE.toString())) SORTING = Mode.NAME;
+            if (sortingMode.equals(Mode.NAME.toString())) SORTING = Mode.NAME;
+            if (sortingMode.equals(Mode.ITEM_TYPE.toString())) SORTING = Mode.ITEM_TYPE;
         } else {
             SORTING = Mode.NAME;
         }
