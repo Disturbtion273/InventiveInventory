@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.sorting.SortingBehaviours;
+import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
 import net.origins.inventive_inventory.util.slots.SlotRange;
 
@@ -19,6 +20,18 @@ public class Sorter {
             mergeCursorStack(slotRange, screenHandler);
         } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.KEEP_CURSOR_STACK) {
             adjustCursorStack(slotRange, screenHandler, targetStack);
+        } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT) {
+            if (AdvancedOperationHandler.isPressed()) {
+                adjustCursorStack(slotRange, screenHandler, targetStack);
+            } else {
+                mergeCursorStack(slotRange, screenHandler);
+            }
+        } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT_INVERTED) {
+            if (AdvancedOperationHandler.isPressed()) {
+                mergeCursorStack(slotRange, screenHandler);
+            } else {
+                adjustCursorStack(slotRange, screenHandler, targetStack);
+            }
         }
     }
 

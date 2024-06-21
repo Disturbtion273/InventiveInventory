@@ -7,7 +7,8 @@ import net.origins.inventive_inventory.config.ConfigManager;
 public enum SortingBehaviours {
     SORT_CURSOR_STACK("Sort Cursor Stack"),
     KEEP_CURSOR_STACK("Keep Cursor Stack"),
-    AOK_DEPENDENT("AOK-Dependent");
+    AOK_DEPENDENT("AOK-Dependent"),
+    AOK_DEPENDENT_INVERTED("AOK-Dependent Inverted");
 
     private final String name;
 
