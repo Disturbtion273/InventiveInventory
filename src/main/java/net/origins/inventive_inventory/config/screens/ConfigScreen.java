@@ -47,6 +47,7 @@ public class ConfigScreen extends GameOptionsScreen {
         return button -> {
             ConfigManager.SORTING_BEHAVIOUR.toggle();
             button.setMessage(Text.of(ConfigManager.SORTING_BEHAVIOUR.toString()));
+            ConfigManager.save();
         };
     }
 }

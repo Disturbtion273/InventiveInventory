@@ -36,5 +36,4 @@ public class ConfigManager {
         JsonObject config = FileHandler.get(CONFIG_FILE_PATH);
         SORTING_BEHAVIOUR = SortingBehaviours.get(config);
     }
-
 }

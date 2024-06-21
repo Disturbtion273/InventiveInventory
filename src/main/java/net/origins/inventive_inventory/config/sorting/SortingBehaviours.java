@@ -24,7 +24,7 @@ public enum SortingBehaviours {
         JsonElement sortingBehaviour = config.get("Sorting Behaviour");
         if (sortingBehaviour != null) {
             for (SortingBehaviours behaviour : values()) {
-                if (behaviour.name.equals(sortingBehaviour.toString())) {
+                if (behaviour.name.equals(sortingBehaviour.getAsString())) {
                     return behaviour;
                 }
             }
