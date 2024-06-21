@@ -24,7 +24,6 @@
         ]
     },
     "mixins": [
-        "inventive_inventory.mixins.json",
         "key.mixins.json",
         "mouse.mixins.json"
     ],
