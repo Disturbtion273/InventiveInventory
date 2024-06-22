@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.sorting.SortingBehaviours;
+import net.origins.inventive_inventory.config.sorting.SortingModes;
 import net.origins.inventive_inventory.util.FileHandler;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class ConfigManager {
     private static final Path CONFIG_FILE_PATH = CONFIG_PATH.resolve(CONFIG_FILE);
 
     public static SortingBehaviours SORTING_BEHAVIOUR;
+    public static SortingModes SORTING_MODE;
 
     public static void init() throws IOException {
         Files.createDirectories(CONFIG_PATH);
@@ -28,6 +30,7 @@ public class ConfigManager {
     public static void save() {
         JsonObject config = new JsonObject();
         config.addProperty("Sorting Behaviour", SORTING_BEHAVIOUR.toString());
+        config.addProperty("Sorting Mode", SORTING_MODE.toString());
 
         FileHandler.write(CONFIG_FILE_PATH, config);
     }
@@ -35,5 +38,6 @@ public class ConfigManager {
     private static void initConfig() {
         JsonObject config = FileHandler.get(CONFIG_FILE_PATH);
         SORTING_BEHAVIOUR = SortingBehaviours.get(config);
+        SORTING_MODE = SortingModes.get(config);
     }
 }

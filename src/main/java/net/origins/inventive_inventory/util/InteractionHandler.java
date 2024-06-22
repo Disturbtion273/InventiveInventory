@@ -35,9 +35,7 @@ public class InteractionHandler {
         ClientPlayerEntity player = InventiveInventory.getPlayer();
         manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
         manager.clickSlot(getSyncId(), target, LEFT_CLICK, SlotActionType.PICKUP, player);
-        if (!isCursorEmpty()) {
-            manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
-        }
+        manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
     }
 
     private static int getSyncId() {

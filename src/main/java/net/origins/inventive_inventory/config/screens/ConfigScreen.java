@@ -21,6 +21,9 @@ public class ConfigScreen extends GameOptionsScreen {
         GridWidget gridWidget = initializeGridWidget();
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
+        adder.add(new TextWidget(Text.of("Sorting Mode:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.SORTING_MODE.toString()), this.sortingMode()));
+
         adder.add(new TextWidget(Text.of("Sorting Behaviour:"), client.textRenderer));
         adder.add(this.createButton(Text.of(ConfigManager.SORTING_BEHAVIOUR.toString()), this.sortingBehaviour()));
 
@@ -43,6 +46,15 @@ public class ConfigScreen extends GameOptionsScreen {
         return ButtonWidget.builder(text, pressAction).build();
     }
 
+
+    private ButtonWidget.PressAction sortingMode() {
+        return button -> {
+            ConfigManager.SORTING_MODE.toggle();
+            button.setMessage(Text.of(ConfigManager.SORTING_MODE.toString()));
+            ConfigManager.save();
+        };
+    }
+
     private ButtonWidget.PressAction sortingBehaviour() {
         return button -> {
             ConfigManager.SORTING_BEHAVIOUR.toggle();
@@ -50,4 +62,5 @@ public class ConfigScreen extends GameOptionsScreen {
             ConfigManager.save();
         };
     }
+
 }
