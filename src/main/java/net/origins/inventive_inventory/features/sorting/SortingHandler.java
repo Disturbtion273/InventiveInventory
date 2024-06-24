@@ -16,7 +16,6 @@ public class SortingHandler {
         ItemStack targetStack = InteractionHandler.getCursorStack().copy();
 
         Merger.mergeItemStacks(slotRange, screenHandler);
-        // TODO: Sorting Algorithm
-        Sorter.sortItemStacks(slotRange, screenHandler, targetStack);
+        Sorter.sortItemStacks(slotRange, targetStack);
     }
 }

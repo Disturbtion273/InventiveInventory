@@ -2,9 +2,6 @@ package net.origins.inventive_inventory.features.sorting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.sorting.SortingBehaviours;
-import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
 import net.origins.inventive_inventory.util.slots.SlotRange;
 
@@ -74,7 +71,7 @@ public class Merger {
         }
     }
 
-    private static void decreaseCursorStack(SlotRange slotRange, ScreenHandler screenHandler, ItemStack targetStack) {
+    public static void decreaseCursorStack(SlotRange slotRange, ScreenHandler screenHandler, ItemStack targetStack) {
         Integer emptySlot = null;
 
         for (int slot : slotRange) {
@@ -95,7 +92,7 @@ public class Merger {
         }
     }
 
-    private static void increaseCursorStack(SlotRange slotRange, ScreenHandler screenHandler, ItemStack targetStack) {
+    public static void increaseCursorStack(SlotRange slotRange, ScreenHandler screenHandler, ItemStack targetStack) {
         for (int slot : slotRange) {
             ItemStack stack = screenHandler.getSlot(slot).getStack();
             if (!ItemStack.areItemsEqual(stack, InteractionHandler.getCursorStack())) {

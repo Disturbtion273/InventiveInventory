@@ -3,6 +3,7 @@ package net.origins.inventive_inventory.util;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.origins.inventive_inventory.InventiveInventory;
 
@@ -18,6 +19,11 @@ public class InteractionHandler {
         return getCursorStack().isEmpty();
     }
 
+    public static ItemStack getStackFromSlot(int slot) {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        return screenHandler.getSlot(slot).getStack();
+    }
+
     public static void leftClickStack(int slot) {
         ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
         ClientPlayerEntity player = InventiveInventory.getPlayer();
@@ -31,6 +37,23 @@ public class InteractionHandler {
     }
 
     public static void swapStacks(int slot, int target) {
+        ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
+        ClientPlayerEntity player = InventiveInventory.getPlayer();
+        manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
+        manager.clickSlot(getSyncId(), target, LEFT_CLICK, SlotActionType.PICKUP, player);
+        if (!isCursorEmpty()) {
+            manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
+        }
+    }
+
+    public static void swapStacksTwoClicks(int slot, int target) {
+        ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
+        ClientPlayerEntity player = InventiveInventory.getPlayer();
+        manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
+        manager.clickSlot(getSyncId(), target, LEFT_CLICK, SlotActionType.PICKUP, player);
+    }
+
+    public static void swapStacksThreeClicks(int slot, int target) {
         ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
         ClientPlayerEntity player = InventiveInventory.getPlayer();
         manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
