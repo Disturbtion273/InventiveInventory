@@ -79,7 +79,7 @@ public class Sorter {
                 break;
             }
         }
-        rearrangeEmptySlots(slotRange);
+        rearrangeSlots(slotRange);
     }
 
     private static void handleEmptyCursorStack(SlotRange slotRange, ItemStack targetStack) {
@@ -125,7 +125,7 @@ public class Sorter {
         }
     }
 
-    private static void rearrangeEmptySlots(SlotRange slotRange) {
+    private static void rearrangeSlots(SlotRange slotRange) {
         List<Integer> slotsBefore = new ArrayList<>();
         for (int slot : slotRange) {
             if (InteractionHandler.getStackFromSlot(slot).isEmpty()) {
