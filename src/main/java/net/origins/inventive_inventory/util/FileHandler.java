@@ -19,19 +19,19 @@ public class FileHandler {
         }
     }
 
-    public static JsonObject get(Path path) {
-        JsonObject jsonObject = new JsonObject();
+    public static JsonElement get(Path path) {
+        JsonElement jsonElement = new JsonObject();
         try {
-            jsonObject = JsonParser.parseReader(new FileReader(path.toFile())).getAsJsonObject();
+            jsonElement = JsonParser.parseReader(new FileReader(path.toFile()));
         } catch (FileNotFoundException | IllegalStateException ignored) {}
-        return jsonObject;
+        return jsonElement;
     }
 
-    public static void write(Path path, JsonObject jsonObject) {
+    public static void write(Path path, JsonElement jsonElement) {
         try (FileWriter file = new FileWriter(path.toFile())) {
-            file.write(gson.toJson(jsonObject));
+            file.write(gson.toJson(jsonElement));
         } catch (IOException e) {
-            InventiveInventory.LOGGER.error("Could not write configurations to config file!");
+            InventiveInventory.LOGGER.error("Could not write configurations to file!");
         }
     }
 }

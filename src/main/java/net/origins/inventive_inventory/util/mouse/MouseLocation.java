@@ -12,6 +12,10 @@ public class MouseLocation {
         hoveredSlot = slot;
     }
 
+    public static Slot getHoveredSlot() {
+        return hoveredSlot;
+    }
+
     public static boolean isOverInventory() {
         if (ScreenCheck.isPlayerInventory()) return true;
         else if (hoveredSlot != null) return PlayerSlots.get().append(SlotTypes.HOTBAR).contains(hoveredSlot.id);
