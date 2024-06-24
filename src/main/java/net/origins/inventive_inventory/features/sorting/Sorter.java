@@ -138,6 +138,7 @@ public class Sorter {
                         InteractionHandler.swapStacksThreeClicks(tempSlot + 1, tempSlot);
                     }
                 }
+                return;
             } else {
                 slotsBefore.add(slot);
             }
