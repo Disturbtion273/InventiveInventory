@@ -9,6 +9,7 @@ import net.origins.inventive_inventory.util.slots.SlotRange;
 import net.origins.inventive_inventory.util.slots.SlotTypes;
 
 public class SortingHandler {
+
     public static void sort() {
         SlotRange slotRange = MouseLocation.isOverInventory() ? PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT) : ContainerSlots.get();
         ItemStack targetStack = InteractionHandler.getCursorStack().copy();

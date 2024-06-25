@@ -7,6 +7,7 @@ import net.origins.inventive_inventory.keys.mixins.MixinIKeyBindingAccessor;
 import org.lwjgl.glfw.GLFW;
 
 public class AdvancedOperationHandler {
+    public static AdvancedOperationMode MODE = AdvancedOperationMode.INIT;
     private static boolean pressed = false;
 
     public static void setPressed(boolean state) {

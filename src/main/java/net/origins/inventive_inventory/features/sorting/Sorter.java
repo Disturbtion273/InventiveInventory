@@ -30,13 +30,13 @@ public class Sorter {
                 }
             } else {
                 InteractionHandler.swapStacks(sortedSlots.get(i), slotRange.get(i));
-
             }
             if (sortedSlots.contains(slotRange.get(i))) {
                 sortedSlots.set(sortedSlots.indexOf(slotRange.get(i)), sortedSlots.get(i));
             }
             sortedSlots.set(i, slotRange.get(i));
         }
+
         if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.KEEP_CURSOR_STACK) {
             adjustCursorStack(slotRange, targetStack);
         } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT && AdvancedOperationHandler.isPressed()) {
@@ -97,11 +97,12 @@ public class Sorter {
                     InteractionHandler.rightClickStack(lastSlot);
                 }
             } else if (InteractionHandler.getCursorStack().getCount() < targetStack.getCount()) {
-                InteractionHandler.swapStacksTwoClicks(lastSlot, lastSlot - 1);
+                int secondLastSlot = sameStacks.get(sameStacks.indexOf(lastSlot) - 1);
+                InteractionHandler.swapStacksTwoClicks(lastSlot, secondLastSlot);
                 while (targetStack.getCount() > InteractionHandler.getStackFromSlot(lastSlot).getCount()) {
                     InteractionHandler.rightClickStack(lastSlot);
                 }
-                InteractionHandler.swapStacksTwoClicks(lastSlot - 1, lastSlot);
+                InteractionHandler.swapStacksTwoClicks(secondLastSlot, lastSlot);
             }
         }
     }
@@ -126,21 +127,18 @@ public class Sorter {
     }
 
     private static void rearrangeSlots(SlotRange slotRange) {
-        List<Integer> slotsBefore = new ArrayList<>();
+        SlotRange followingSlots = slotRange.copy();
         for (int slot : slotRange) {
+            followingSlots.exclude(slot);
             if (InteractionHandler.getStackFromSlot(slot).isEmpty()) {
-                SlotRange newSlotRange = slotRange.copy();
-                for (int tempSlot : slotsBefore) {
-                    newSlotRange.exclude(tempSlot);
-                }
-                for (int tempSlot : newSlotRange) {
-                    if (tempSlot + 1 <= newSlotRange.getLast()) {
-                        InteractionHandler.swapStacksThreeClicks(tempSlot + 1, tempSlot);
+                int tempSlot = slot;
+                for (int followingSlot : followingSlots) {
+                    if (followingSlot != followingSlots.getLast()) {
+                        InteractionHandler.swapStacksThreeClicks(followingSlot, tempSlot);
+                        tempSlot = followingSlot;
                     }
                 }
                 return;
-            } else {
-                slotsBefore.add(slot);
             }
         }
     }

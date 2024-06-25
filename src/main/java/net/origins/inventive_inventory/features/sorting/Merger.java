@@ -13,12 +13,15 @@ public class Merger {
     }
 
     private static void generalMerge(SlotRange slotRange) {
+        SlotRange followingSlots = slotRange.copy();
         for (int slot : slotRange) {
+            followingSlots.exclude(slot);
             ItemStack stack = InteractionHandler.getStackFromSlot(slot);
             if (!stack.isEmpty() && stack.getCount() < stack.getMaxCount()) {
                 InteractionHandler.leftClickStack(slot);
-                for (int tempSlot = slot + 1; InteractionHandler.getCursorStack().getCount() < InteractionHandler.getCursorStack().getMaxCount()
-                        && tempSlot <= slotRange.getLast() && !InteractionHandler.getCursorStack().isEmpty(); tempSlot++) {
+                for (int tempSlot : followingSlots) {
+                    if (InteractionHandler.getCursorStack().getCount() == InteractionHandler.getCursorStack().getMaxCount() && InteractionHandler.getCursorStack().isEmpty())
+                        break;
                     if (ItemStack.areItemsEqual(InteractionHandler.getCursorStack(), InteractionHandler.getStackFromSlot(tempSlot))) {
                         InteractionHandler.leftClickStack(tempSlot);
                     }
