@@ -2,6 +2,7 @@ package net.origins.inventive_inventory.features.locked_slots;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import net.minecraft.screen.slot.Slot;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.util.FileHandler;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
@@ -16,13 +17,14 @@ public class LockedSlotsHandler {
     public static final Path LOCKED_SLOTS_PATH = ConfigManager.CONFIG_PATH.resolve(LOCKED_SLOTS_FILE);
 
     public static void toggle() {
-        int slot = MouseLocation.getHoveredSlot().getIndex();
+        Slot slot = MouseLocation.getHoveredSlot();
+        if (slot == null) return;
         LockedSlots lockedSlots = getLockedSlots();
 
-        if (PlayerSlots.get().contains(slot)) {
-            if (lockedSlots.contains(slot)) {
-                lockedSlots.remove(slot);
-            } else lockedSlots.add(slot);
+        if (PlayerSlots.get().contains(slot.getIndex())) {
+            if (lockedSlots.contains(slot.getIndex())) {
+                lockedSlots.remove(Integer.valueOf(slot.getIndex()));
+            } else lockedSlots.add(slot.getIndex());
             JsonArray lockedSlotsJson = new JsonArray();
             for (int lockedSlot : lockedSlots) {
                 lockedSlotsJson.add(lockedSlot);

@@ -38,7 +38,7 @@ public class ConfigManager {
     }
 
     private static void initConfig() {
-        JsonObject config = FileHandler.get(CONFIG_FILE_PATH).getAsJsonObject();
+        JsonObject config = FileHandler.get(CONFIG_FILE_PATH).isJsonObject() ? FileHandler.get(CONFIG_FILE_PATH).getAsJsonObject() : new JsonObject();
         SORTING_BEHAVIOUR = SortingBehaviours.get(config);
         SORTING_MODE = SortingModes.get(config);
     }

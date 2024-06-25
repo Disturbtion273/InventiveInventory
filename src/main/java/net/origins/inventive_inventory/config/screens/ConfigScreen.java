@@ -32,7 +32,7 @@ public class ConfigScreen extends GameOptionsScreen {
 
     private GridWidget initializeGridWidget() {
         GridWidget gridWidget = new GridWidget();
-        gridWidget.getMainPositioner().marginX(10).alignHorizontalCenter().alignVerticalCenter();
+        gridWidget.getMainPositioner().marginX(10).marginY(1).alignHorizontalCenter().alignVerticalCenter();
         return gridWidget;
     }
 

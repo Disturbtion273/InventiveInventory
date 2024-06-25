@@ -2,6 +2,7 @@ package net.origins.inventive_inventory.util.slots;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.origins.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.origins.inventive_inventory.util.ScreenCheck;
 
 import java.util.ArrayList;
@@ -27,12 +28,14 @@ public class SlotRange extends ArrayList<Integer> {
     }
 
     public SlotRange exclude(SlotTypes type) {
-        return null;
+        if (type == SlotTypes.LOCKED_SLOT) {
+            LockedSlotsHandler.getLockedSlots().adjust().forEach(this::remove);
+        }
+        return this;
     }
 
-    public SlotRange exclude(Integer slot) {
+    public void exclude(Integer slot) {
         this.remove(slot);
-        return this;
     }
     public SlotRange copy() {
         return (SlotRange) this.clone();
