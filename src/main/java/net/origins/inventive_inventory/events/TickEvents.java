@@ -11,13 +11,13 @@ import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 
 public class TickEvents {
     public static void register() {
-        ClientTickEvents.START_CLIENT_TICK.register(TickEvents::captureSelectedItem);
+        ClientTickEvents.START_CLIENT_TICK.register(TickEvents::captureMainHandItem);
         ClientTickEvents.START_CLIENT_TICK.register(TickEvents::checkKeys);
 
         ClientTickEvents.END_CLIENT_TICK.register(TickEvents::automaticRefilling);
     }
 
-    private static void captureSelectedItem(MinecraftClient client) {
+    private static void captureMainHandItem(MinecraftClient client) {
         if (client.currentScreen == null) {
             if ((ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.STANDARD && AdvancedOperationHandler.isPressed())
                     || ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.INVERTED) {
@@ -34,7 +34,7 @@ public class TickEvents {
     }
 
     private static void automaticRefilling(MinecraftClient client) {
-        if (client.currentScreen == null) {
+        if (client.currentScreen == null && client.options.useKey.isPressed() || client.options.dropKey.isPressed()) {
             if (ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.STANDARD) {
                 if (AdvancedOperationHandler.isPressed()) {
                     AutomaticRefillingHandler.run();
