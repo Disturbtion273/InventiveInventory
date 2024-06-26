@@ -7,6 +7,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.ScreenHandler;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.events.TickEvents;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.ScreenCheck;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class InventiveInventory implements ClientModInitializer {
         try {
             ConfigManager.init();
             KeyRegistry.register();
+            TickEvents.register();
             LOGGER.info(MOD_NAME + " initialized successfully!");
         } catch (IOException e) {
             LOGGER.error("Couldn't create config files", e);

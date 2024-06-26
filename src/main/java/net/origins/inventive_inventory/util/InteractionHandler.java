@@ -4,6 +4,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.origins.inventive_inventory.InventiveInventory;
 
@@ -22,6 +23,12 @@ public class InteractionHandler {
     public static ItemStack getStackFromSlot(int slot) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         return screenHandler.getSlot(slot).getStack();
+    }
+
+    public static int getSelectedSlot() {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        ClientPlayerEntity player = InventiveInventory.getPlayer();
+        return screenHandler.getSlotIndex(player.getInventory(), player.getInventory().selectedSlot).orElse(-1);
     }
 
     public static void leftClickStack(int slot) {

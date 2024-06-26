@@ -30,6 +30,8 @@ public class SlotRange extends ArrayList<Integer> {
     public SlotRange exclude(SlotTypes type) {
         if (type == SlotTypes.LOCKED_SLOT) {
             LockedSlotsHandler.getLockedSlots().adjust().forEach(this::remove);
+        } else if (type == SlotTypes.INVENTORY) {
+            PlayerSlots.get().forEach(this::remove);
         }
         return this;
     }
