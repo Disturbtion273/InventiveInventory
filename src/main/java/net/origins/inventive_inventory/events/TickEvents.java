@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.automatic_refilling.AutomaticRefillingModes;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;

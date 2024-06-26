@@ -22,16 +22,16 @@ public class ConfigScreen extends GameOptionsScreen {
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
         adder.add(new TextWidget(Text.of("Sorting Mode:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.SORTING_MODE.toString()), this.sortingMode()));
+        adder.add(this.createButton(Text.of(ConfigManager.SORTING_MODE.getName()), this.sortingMode()));
 
         adder.add(new TextWidget(Text.of("Sorting Behaviour:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.SORTING_BEHAVIOUR.toString()), this.sortingBehaviour()));
+        adder.add(this.createButton(Text.of(ConfigManager.SORTING_BEHAVIOUR.getName()), this.sortingBehaviour()));
 
         adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING_MODE.toString()), this.automaticRefillingMode()));
+        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING_MODE.getName()), this.automaticRefillingMode()));
 
         adder.add(new TextWidget(Text.of("Automatic Refilling Behaviour:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR.toString()), this.automaticRefillingBehaviour()));
+        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR.getName()), this.automaticRefillingBehaviour()));
 
         finalizeGridWidget(gridWidget);
     }
@@ -56,7 +56,7 @@ public class ConfigScreen extends GameOptionsScreen {
     private ButtonWidget.PressAction sortingMode() {
         return button -> {
             ConfigManager.SORTING_MODE.toggle();
-            button.setMessage(Text.of(ConfigManager.SORTING_MODE.toString()));
+            button.setMessage(Text.of(ConfigManager.SORTING_MODE.getName()));
             ConfigManager.save();
         };
     }
@@ -64,7 +64,7 @@ public class ConfigScreen extends GameOptionsScreen {
     private ButtonWidget.PressAction sortingBehaviour() {
         return button -> {
             ConfigManager.SORTING_BEHAVIOUR.toggle();
-            button.setMessage(Text.of(ConfigManager.SORTING_BEHAVIOUR.toString()));
+            button.setMessage(Text.of(ConfigManager.SORTING_BEHAVIOUR.getName()));
             ConfigManager.save();
         };
     }
@@ -72,7 +72,7 @@ public class ConfigScreen extends GameOptionsScreen {
     private ButtonWidget.PressAction automaticRefillingMode() {
         return button -> {
             ConfigManager.AUTOMATIC_REFILLING_MODE.toggle();
-            button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING_MODE.toString()));
+            button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING_MODE.getName()));
             ConfigManager.save();
         };
     }
@@ -80,7 +80,7 @@ public class ConfigScreen extends GameOptionsScreen {
     private ButtonWidget.PressAction automaticRefillingBehaviour() {
         return button -> {
             ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR.toggle();
-            button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR.toString()));
+            button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR.getName()));
             ConfigManager.save();
         };
     }
