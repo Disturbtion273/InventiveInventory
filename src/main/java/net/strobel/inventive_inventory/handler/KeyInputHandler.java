@@ -79,10 +79,7 @@ public class KeyInputHandler {
 
     private static void captureMainHandItem(MinecraftClient client) {
         if (client.currentScreen == null) {
-            if ((ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD && AdvancedOperationHandler.isPressed())
-                    || ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED) {
-                AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
-            }
+            AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
         }
     }
 
