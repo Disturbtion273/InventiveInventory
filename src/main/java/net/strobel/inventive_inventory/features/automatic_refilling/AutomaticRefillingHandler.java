@@ -30,9 +30,9 @@ public class AutomaticRefillingHandler {
                 .toList();
 
         if (slotsWithSameItemHotbar.isEmpty() && !slotsWithSameItemInventory.isEmpty()) {
-            InteractionHandler.swapStacks(slotsWithSameItemInventory.getFirst(), InteractionHandler.getSelectedSlot());
+            InteractionHandler.swapStacks(slotsWithSameItemInventory.get(0), InteractionHandler.getSelectedSlot());
         } else if (!slotsWithSameItemHotbar.isEmpty()) {
-            InventiveInventory.getPlayer().getInventory().selectedSlot = slotsWithSameItemHotbar.getFirst() - PlayerInventory.MAIN_SIZE;
+            InventiveInventory.getPlayer().getInventory().selectedSlot = slotsWithSameItemHotbar.get(0) - PlayerInventory.MAIN_SIZE;
         }
         selectedItem = null;
     }
