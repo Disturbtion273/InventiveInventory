@@ -18,7 +18,8 @@ public class AutomaticRefillingHandler {
     }
 
     public static void run() {
-        if (selectedItem == null || selectedItem.equals(Items.AIR)) return;
+        if (selectedItem == null || selectedItem.equals(Items.AIR) || !InventiveInventory.getPlayer().getMainHandStack().isEmpty()) return;
+
         List<Integer> slotsWithSameItemHotbar = PlayerSlots.getHotbar().stream()
                 .filter(slot -> selectedItem.equals(InteractionHandler.getStackFromSlot(slot).getItem()))
                 .sorted(Comparator.comparing(slot -> InteractionHandler.getStackFromSlot(slot).getCount()))
