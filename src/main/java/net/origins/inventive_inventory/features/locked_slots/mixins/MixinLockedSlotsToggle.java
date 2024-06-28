@@ -17,7 +17,7 @@ public abstract class MixinLockedSlotsToggle {
 
     @Inject(method = "clickSlot", at = @At("HEAD"), cancellable = true)
     private void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
-        if (AdvancedOperationHandler.isPressed() && AdvancedOperationHandler.MODE == AdvancedOperationMode.INIT && actionType == SlotActionType.PICKUP) {
+        if (AdvancedOperationHandler.isPressed() && button == 0 && AdvancedOperationHandler.MODE == AdvancedOperationMode.INIT && actionType == SlotActionType.PICKUP) {
             if (ScreenCheck.isPlayerInventory()) {
                 LockedSlotsHandler.toggle();
                 ci.cancel();

@@ -9,5 +9,8 @@
     "client": [
         "MixinLockedSlotsDrawer",
         "MixinLockedSlotsToggle"
-  ]
+    ],
+    "mixins": [
+        "MixinItemPickup"
+    ]
 }

@@ -17,7 +17,7 @@ public class LockedSlots extends ArrayList<Integer> {
 
     public LockedSlots adjust() {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        if (!ScreenCheck.isPlayerInventory()) {
+        if (!ScreenCheck.isPlayerHandler()) {
             this.replaceAll(slot -> slot + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE) - PlayerScreenHandler.EQUIPMENT_END);
         }
         return this;

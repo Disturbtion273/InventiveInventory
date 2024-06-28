@@ -11,20 +11,10 @@ import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 
 public class TickEvents {
     public static void register() {
-        ClientTickEvents.START_CLIENT_TICK.register(TickEvents::captureMainHandItem);
         ClientTickEvents.START_CLIENT_TICK.register(TickEvents::checkKeys);
+        ClientTickEvents.START_CLIENT_TICK.register(TickEvents::captureMainHandItem);
 
         ClientTickEvents.END_CLIENT_TICK.register(TickEvents::automaticRefilling);
-    }
-
-    private static void captureMainHandItem(MinecraftClient client) {
-        if (client.currentScreen == null) {
-            if ((ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.STANDARD && AdvancedOperationHandler.isPressed())
-                    || ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.INVERTED) {
-                AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
-            }
-        }
-
     }
 
     private static void checkKeys(MinecraftClient client) {
@@ -33,10 +23,20 @@ public class TickEvents {
         }
     }
 
+    private static void captureMainHandItem(MinecraftClient client) {
+        if (client.currentScreen == null) {
+            AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
+        }
+    }
+
     private static void automaticRefilling(MinecraftClient client) {
-        if (client.currentScreen == null && client.options.useKey.isPressed() || client.options.dropKey.isPressed()) {
+        if (client.currentScreen == null && (client.options.useKey.isPressed() || client.options.dropKey.isPressed())) {
             if (ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.STANDARD) {
                 if (AdvancedOperationHandler.isPressed()) {
+                    AutomaticRefillingHandler.run();
+                }
+            } else if (ConfigManager.AUTOMATIC_REFILLING_MODE == AutomaticRefillingModes.INVERTED) {
+                if (!AdvancedOperationHandler.isPressed()) {
                     AutomaticRefillingHandler.run();
                 }
             }
