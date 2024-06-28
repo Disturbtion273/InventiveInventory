@@ -78,7 +78,7 @@ public class KeyInputHandler {
     }
 
     private static void captureMainHandItem(MinecraftClient client) {
-        if (client.currentScreen == null) {
+        if (client.currentScreen == null && client.player != null) {
             AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
         }
     }
