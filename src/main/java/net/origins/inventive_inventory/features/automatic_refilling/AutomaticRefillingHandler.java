@@ -23,7 +23,7 @@ public class AutomaticRefillingHandler {
     }
 
     public static void run() {
-        if (selectedItem == null || selectedItem.equals(Items.AIR)) return;
+        if (selectedItem == null || selectedItem.equals(Items.AIR) || !InventiveInventory.getPlayer().getMainHandStack().isEmpty()) return;
         // TODO: evtl. noch leere Eimer usw. wieder aufeinander stacken
         SlotRange slotRange = ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT) : PlayerSlots.get();
         List<Integer> sameItemSlotsHotbar = slotRange.copy().append(SlotTypes.HOTBAR).exclude(SlotTypes.INVENTORY).stream()
