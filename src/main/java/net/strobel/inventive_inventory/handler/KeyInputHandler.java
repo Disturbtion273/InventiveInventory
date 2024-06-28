@@ -71,26 +71,28 @@ public class KeyInputHandler {
     }
 
     public static void registerKeyInputs() {
-        ClientTickEvents.START_CLIENT_TICK.register(AutomaticRefillingHandler::captureCurrentState);
+        ClientTickEvents.START_CLIENT_TICK.register(KeyInputHandler::captureMainHandItem);
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::automaticRefilling);
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::saveProfile);
         ClientTickEvents.END_CLIENT_TICK.register(KeyInputHandler::loadProfile);
     }
 
+    private static void captureMainHandItem(MinecraftClient client) {
+        if (client.currentScreen == null) {
+            AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
+        }
+    }
+
     private static void automaticRefilling(MinecraftClient client) {
-        if (client.currentScreen == null && client.player != null) {
-            KeyBinding useKey = client.options.useKey;
-            KeyBinding dropKey = client.options.dropKey;
+        if (client.currentScreen == null && client.options.useKey.isPressed() || client.options.dropKey.isPressed()) {
             if (ConfigManager.AUTOMATIC_REFILLING == Mode.STANDARD) {
                 if (advancedOperationKey.isPressed()) {
                     AutomaticRefillingHandler.run();
-                } else AutomaticRefillingHandler.reset();
+                }
             } else if (ConfigManager.AUTOMATIC_REFILLING == Mode.INVERTED) {
                 if (!advancedOperationKey.isPressed()) {
-                    if (useKey.isPressed() || dropKey.isPressed()) {
-                        AutomaticRefillingHandler.run();
-                    }
-                } else AutomaticRefillingHandler.reset();
+                    AutomaticRefillingHandler.run();
+                }
             }
         }
     }
