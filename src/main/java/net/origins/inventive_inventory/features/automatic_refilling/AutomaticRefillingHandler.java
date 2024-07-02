@@ -16,14 +16,17 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AutomaticRefillingHandler {
-    private static Item selectedItem;
+    private static Item selectedItem = Items.AIR;
 
     public static void setSelectedItem(ItemStack itemStack) {
         selectedItem = itemStack.getItem();
     }
 
     public static void run() {
-        if (selectedItem == null || selectedItem.equals(Items.AIR) || !InventiveInventory.getPlayer().getMainHandStack().isEmpty()) return;
+        boolean selectedItemAndMainHandItemIsStackable = selectedItem.getDefaultStack().isStackable() && InventiveInventory.getPlayer().getMainHandStack().isStackable();
+        boolean mainHandItemIsFull_And_selectedItemAndMainHandItemIsStackable = !InventiveInventory.getPlayer().getMainHandStack().isEmpty() && selectedItemAndMainHandItemIsStackable;
+        if (selectedItem.equals(Items.AIR) || mainHandItemIsFull_And_selectedItemAndMainHandItemIsStackable) return;
+
         // TODO: evtl. noch leere Eimer usw. wieder aufeinander stacken
         SlotRange slotRange = ConfigManager.AUTOMATIC_REFILLING_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT) : PlayerSlots.get();
         List<Integer> sameItemSlotsHotbar = slotRange.copy().append(SlotTypes.HOTBAR).exclude(SlotTypes.INVENTORY).stream()

@@ -42,7 +42,7 @@ public class MixinLockedSlotsDrawer {
             for (Integer lockedSlot : lockedSlots) {
                 Slot slot = InventiveInventory.getScreenHandler().getSlot(lockedSlot);
                 Drawer.drawSlotBackground(context, slot.x, slot.y, 0xFF4D4D4D, 0);
-                context.drawTexture(TEXTURE, slot.x + 11, slot.y - 2, 1, 0, 0, 8, 8, 8, 8);
+                context.drawTexture(TEXTURE, slot.x + 11, slot.y - 2, 300, 0, 0, 8, 8, 8, 8);
             }
 
             context.getMatrices().pop();
