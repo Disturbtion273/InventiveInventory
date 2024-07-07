@@ -30,6 +30,10 @@ public class InteractionHandler {
         return screenHandler.getSlotIndex(player.getInventory(), player.getInventory().selectedSlot).orElse(-1);
     }
 
+    public static ItemStack getMainHandStack() {
+        return InventiveInventory.getPlayer().getMainHandStack();
+    }
+
     public static void leftClickStack(int slot) {
         ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
         ClientPlayerEntity player = InventiveInventory.getPlayer();
@@ -65,6 +69,10 @@ public class InteractionHandler {
         manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
         manager.clickSlot(getSyncId(), target, LEFT_CLICK, SlotActionType.PICKUP, player);
         manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
+    }
+
+    public static void setSelectedSlot(int slot) {
+        InventiveInventory.getPlayer().getInventory().selectedSlot = slot;
     }
 
     private static int getSyncId() {

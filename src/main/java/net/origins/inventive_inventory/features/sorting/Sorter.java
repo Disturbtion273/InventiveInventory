@@ -37,17 +37,17 @@ public class Sorter {
             sortedSlots.set(i, slotRange.get(i));
         }
 
-        if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.KEEP_CURSOR_STACK) {
+        if (ConfigManager.S_BEHAVIOUR == SortingBehaviours.KEEP_CURSOR_STACK) {
             adjustCursorStack(slotRange, targetStack);
-        } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT && AdvancedOperationHandler.isPressed()) {
+        } else if (ConfigManager.S_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT && AdvancedOperationHandler.isPressed()) {
             adjustCursorStack(slotRange, targetStack);
-        } else if (ConfigManager.SORTING_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT_INVERTED) {
+        } else if (ConfigManager.S_BEHAVIOUR == SortingBehaviours.AOK_DEPENDENT_INVERTED) {
             adjustCursorStack(slotRange, targetStack);
         }
     }
 
     private static List<Integer> getSortedSlots(SlotRange slotRange) {
-        if (ConfigManager.SORTING_MODE == SortingModes.NAME) {
+        if (ConfigManager.S_MODE == SortingModes.NAME) {
             return slotRange.stream()
                     .filter(slot -> !InteractionHandler.getStackFromSlot(slot).isEmpty())
                     .sorted(Comparator.comparing((Integer slot) -> InteractionHandler.getStackFromSlot(slot).getName().getString())

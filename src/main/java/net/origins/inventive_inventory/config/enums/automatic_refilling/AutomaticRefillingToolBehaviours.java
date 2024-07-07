@@ -5,14 +5,14 @@ import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.Configurable;
 
-public enum AutomaticRefillingBehaviours implements Configurable {
-    IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
-    REFILL_FROM_LOCKED_SLOTS("Refill From Locked Slots");
+public enum AutomaticRefillingToolBehaviours implements Configurable {
+    MATERIAL("Material"),
+    HEALTH("Health");
 
-    private static final String configKey = "Automatic Refilling Behaviour";
+    private static final String configKey = "Automatic Refilling Mode";
     private final String name;
 
-    AutomaticRefillingBehaviours(String name) {
+    AutomaticRefillingToolBehaviours(String name) {
         this.name = name;
     }
 
@@ -23,7 +23,7 @@ public enum AutomaticRefillingBehaviours implements Configurable {
 
     @Override
     public void toggle() {
-        ConfigManager.AR_LS_BEHAVIOUR = values()[(this.ordinal() + 1) % values().length];
+        ConfigManager.AR_MODE = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {
@@ -36,3 +36,4 @@ public enum AutomaticRefillingBehaviours implements Configurable {
         return values()[0];
     }
 }
+

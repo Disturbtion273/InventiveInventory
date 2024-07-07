@@ -6,8 +6,8 @@ import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.Configurable;
 
 public enum AutomaticRefillingModes implements Configurable {
-    STANDARD("Standard"),
-    INVERTED("Inverted");
+    AUTOMATIC("Automatic"),
+    SEMI_AUTOMATIC("Semi-Automatic");
 
     private static final String configKey = "Automatic Refilling Mode";
     private final String name;
@@ -23,7 +23,7 @@ public enum AutomaticRefillingModes implements Configurable {
 
     @Override
     public void toggle() {
-        ConfigManager.AUTOMATIC_REFILLING_MODE = values()[(this.ordinal() + 1) % values().length];
+        ConfigManager.AR_MODE = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {

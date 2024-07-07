@@ -23,7 +23,7 @@ public enum SortingModes implements Configurable {
 
     @Override
     public void toggle() {
-        ConfigManager.SORTING_MODE = values()[(this.ordinal() + 1) % values().length];
+        ConfigManager.S_MODE = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {
