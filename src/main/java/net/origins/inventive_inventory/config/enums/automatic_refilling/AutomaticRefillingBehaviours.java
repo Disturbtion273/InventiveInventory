@@ -7,7 +7,7 @@ import net.origins.inventive_inventory.config.Configurable;
 
 public enum AutomaticRefillingBehaviours implements Configurable {
     IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
-    REFILL_FROM_LOCKED_SLOTS("Refill From Locked Slots");
+    USE_LOCKED_SLOTS("Use Locked Slots");
 
     private static final String configKey = "Automatic Refilling Behaviour";
     private final String name;

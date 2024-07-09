@@ -15,8 +15,12 @@ public class SlotRange extends ArrayList<Integer> {
         super(IntStream.range(start, stop).boxed().toList());
     }
 
-    public SlotRange(List<Integer> list) {
+    private SlotRange(List<Integer> list) {
         super(list);
+    }
+
+    public static SlotRange of(List<Integer> list) {
+        return new SlotRange(list);
     }
 
     public SlotRange append(SlotTypes type) {
@@ -31,7 +35,7 @@ public class SlotRange extends ArrayList<Integer> {
     public SlotRange exclude(SlotTypes type) {
         if (type == SlotTypes.LOCKED_SLOT) LockedSlotsHandler.getLockedSlots().adjust().forEach(this::remove);
         else if (type == SlotTypes.INVENTORY) PlayerSlots.get().forEach(this::remove);
-        else if (type == SlotTypes.HOTBAR) List.of(36, 37, 38, 39, 40, 41, 42, 43, 44).forEach(this::remove); // !DOES ONLY WORK WHEN HOTBAR SLOTS ARE FROM 36 TO 44!
+        else if (type == SlotTypes.HOTBAR) PlayerSlots.get(SlotTypes.HOTBAR).forEach(this::remove);
         return this;
     }
 
@@ -39,6 +43,7 @@ public class SlotRange extends ArrayList<Integer> {
         this.remove(slot);
         return this;
     }
+
     public SlotRange copy() {
         return (SlotRange) this.clone();
     }

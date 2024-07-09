@@ -31,9 +31,14 @@ public class TickEvents {
 
     private static void captureMainHandItem(MinecraftClient client) {
         if (client.currentScreen == null) {
-            if (AutomaticRefillingHandler.ATTACK_KEY_PRESSED) {
+            boolean validMode = AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC
+                    || !AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC;
+            if (AutomaticRefillingHandler.ATTACK_KEY_PRESSED && validMode) {
                 AutomaticRefillingHandler.run();
                 AutomaticRefillingHandler.ATTACK_KEY_PRESSED = false;
+            } else if (AutomaticRefillingHandler.IS_USING_ITEM && validMode) {
+                AutomaticRefillingHandler.run();
+                AutomaticRefillingHandler.IS_USING_ITEM = false;
             }
             AutomaticRefillingHandler.setSelectedItem(InventiveInventory.getPlayer().getMainHandStack());
         }
@@ -41,17 +46,13 @@ public class TickEvents {
 
     private static void automaticRefilling(MinecraftClient client) {
         if (client.currentScreen == null && (client.options.useKey.isPressed() || client.options.dropKey.isPressed() || client.options.attackKey.isPressed())) {
-            if (ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC) {
-                if (!AdvancedOperationHandler.isPressed()) {
-                    AutomaticRefillingHandler.run();
-                }
-            } else if (ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC) {
-                if (AdvancedOperationHandler.isPressed()) {
-                    AutomaticRefillingHandler.run();
-                }
-            }
+            boolean validMode = AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC
+                    || !AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC;
+
+            if (validMode) AutomaticRefillingHandler.run();
+
             if (client.options.attackKey.isPressed()) AutomaticRefillingHandler.ATTACK_KEY_PRESSED = true;
+            if (InventiveInventory.getPlayer().isUsingItem()) AutomaticRefillingHandler.IS_USING_ITEM = true;
         }
     }
-
 }

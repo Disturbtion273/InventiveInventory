@@ -16,7 +16,9 @@ import java.util.stream.Stream;
 
 public class AutomaticRefillingHandler {
     public static boolean ATTACK_KEY_PRESSED = false;
+    public static boolean IS_USING_ITEM = false;
     private static Item selectedItem = Items.AIR;
+    private static final List<Item> EMPTIES = List.of(Items.BUCKET, Items.GLASS_BOTTLE, Items.BOWL);
     private static final List<Class<? extends Item>> TOOL_CLASSES = List.of(SwordItem.class, PickaxeItem.class, AxeItem.class, ShovelItem.class, HoeItem.class, BowItem.class, CrossbowItem.class, TridentItem.class, MaceItem.class);
 
     public static void setSelectedItem(ItemStack itemStack) {
@@ -24,13 +26,7 @@ public class AutomaticRefillingHandler {
     }
 
     public static void run() {
-        boolean selectedItemAndMainHandItemIsStackable = selectedItem.getDefaultStack().isStackable() && InteractionHandler.getMainHandStack().isStackable();
-        boolean mainHandItemIsFull_And_selectedItemAndMainHandItemIsStackable = !InteractionHandler.getMainHandStack().isEmpty() && selectedItemAndMainHandItemIsStackable;
-        boolean mainHandItemIsNotBroken = InteractionHandler.getMainHandStack().getDamage() < InteractionHandler.getMainHandStack().getMaxDamage();
-        boolean mainHandIsSelectedItem = InteractionHandler.getMainHandStack().getItem().equals(selectedItem);
-        if (selectedItem.equals(Items.AIR) || mainHandItemIsFull_And_selectedItemAndMainHandItemIsStackable || mainHandItemIsNotBroken || mainHandIsSelectedItem) return;
-        // TODO: evtl. noch leere Eimer usw. wieder aufeinander stacken
-        // TODO: Wenn man Potions drinkt, wird nicht auf die nächste volle Potion geswitched. Vermutlich bei allen KonsumItems ein Problem, da es bei Essen auch nicht funktioniert
+        if (selectedItem.equals(Items.AIR) || selectedItem.equals(InteractionHandler.getMainHandStack().getItem())) return;
         SlotRange slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT) : PlayerSlots.get();
         Stream<Integer> sameItemSlotsStream = slotRange.append(SlotTypes.HOTBAR).exclude(InteractionHandler.getSelectedSlot()).stream()
                 .filter(slot -> {
@@ -52,16 +48,34 @@ public class AutomaticRefillingHandler {
         }
 
         List<Integer> sameItemSlots = sameItemSlotsStream.collect(Collectors.toList());
-        SlotRange hotbarSlotRange = new SlotRange(sameItemSlots).exclude(SlotTypes.INVENTORY);
-        SlotRange inventorySlotRange = new SlotRange(sameItemSlots).exclude(SlotTypes.HOTBAR);
+        SlotRange hotbarSlotRange = SlotRange.of(sameItemSlots).exclude(SlotTypes.INVENTORY);
+        SlotRange inventorySlotRange = SlotRange.of(sameItemSlots).exclude(SlotTypes.HOTBAR);
         boolean hotBarSwap = !hotbarSlotRange.isEmpty();
-
         sameItemSlots.removeAll(hotBarSwap ? inventorySlotRange : hotbarSlotRange);
-        if (sameItemSlots.isEmpty()) return;
 
-        if (hotBarSwap) InteractionHandler.setSelectedSlot(sameItemSlots.getFirst() - PlayerInventory.MAIN_SIZE);
-        else InteractionHandler.swapStacks(sameItemSlots.getFirst(), InteractionHandler.getSelectedSlot());
+        int emptiesSlot = InteractionHandler.getSelectedSlot();
+        if (!sameItemSlots.isEmpty()) {
+            if (hotBarSwap) InteractionHandler.setSelectedSlot(sameItemSlots.getFirst() - PlayerInventory.MAIN_SIZE);
+            else {
+                InteractionHandler.swapStacks(sameItemSlots.getFirst(), InteractionHandler.getSelectedSlot());
+                emptiesSlot = sameItemSlots.getFirst();
+            }
+            selectedItem = Items.AIR;
+        }
 
-        selectedItem = Items.AIR;
+        if (EMPTIES.contains(InteractionHandler.getStackFromSlot(emptiesSlot).getItem())) mergeEmpties(emptiesSlot);
+    }
+
+    private static void mergeEmpties(int itemSlot) {
+        SlotRange slotRange = PlayerSlots.get().append(SlotTypes.HOTBAR).exclude(itemSlot);
+        slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
+        List<Integer> sameItemSlots = slotRange.stream()
+                .filter(slot -> InteractionHandler.getStackFromSlot(slot).getItem().equals(InteractionHandler.getStackFromSlot(itemSlot).getItem()))
+                .filter(slot -> InteractionHandler.getStackFromSlot(slot).getCount() < InteractionHandler.getStackFromSlot(slot).getMaxCount())
+                .sorted(Comparator.comparing(slot -> InteractionHandler.getStackFromSlot(slot).getCount(), Comparator.reverseOrder()))
+                .toList();
+        if (!sameItemSlots.isEmpty()) {
+            InteractionHandler.swapStacksTwoClicks(itemSlot, sameItemSlots.getFirst());
+        }
     }
 }
