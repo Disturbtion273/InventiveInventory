@@ -33,7 +33,10 @@ public class TickEvents {
         if (client.currentScreen == null) {
             boolean validMode = AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC
                     || !AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC;
-            if (AutomaticRefillingHandler.ATTACK_KEY_PRESSED && validMode) {
+            if ( AutomaticRefillingHandler.USE_KEY_PRESSED && validMode) {
+                AutomaticRefillingHandler.run();
+                AutomaticRefillingHandler.USE_KEY_PRESSED = false;
+            } else if (AutomaticRefillingHandler.ATTACK_KEY_PRESSED && validMode) {
                 AutomaticRefillingHandler.run();
                 AutomaticRefillingHandler.ATTACK_KEY_PRESSED = false;
             } else if (AutomaticRefillingHandler.IS_USING_ITEM && validMode) {
@@ -51,6 +54,7 @@ public class TickEvents {
 
             if (validMode) AutomaticRefillingHandler.run();
 
+            if (client.options.useKey.isPressed()) AutomaticRefillingHandler.USE_KEY_PRESSED = true;
             if (client.options.attackKey.isPressed()) AutomaticRefillingHandler.ATTACK_KEY_PRESSED = true;
             if (InventiveInventory.getPlayer().isUsingItem()) AutomaticRefillingHandler.IS_USING_ITEM = true;
         }

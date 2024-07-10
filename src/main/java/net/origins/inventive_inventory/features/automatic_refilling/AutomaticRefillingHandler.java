@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingBehaviours;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
 import net.origins.inventive_inventory.util.InteractionHandler;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class AutomaticRefillingHandler {
+    public static boolean USE_KEY_PRESSED = false;
     public static boolean ATTACK_KEY_PRESSED = false;
     public static boolean IS_USING_ITEM = false;
     private static Item selectedItem = Items.AIR;
@@ -26,6 +28,7 @@ public class AutomaticRefillingHandler {
     }
 
     public static void run() {
+        if (ConfigManager.AUTOMATIC_REFILLING == AutomaticRefillingStatus.DISABLED) return;
         if (selectedItem.equals(Items.AIR) || selectedItem.equals(InteractionHandler.getMainHandStack().getItem())) return;
         SlotRange slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT) : PlayerSlots.get();
         Stream<Integer> sameItemSlotsStream = slotRange.append(SlotTypes.HOTBAR).exclude(InteractionHandler.getSelectedSlot()).stream()

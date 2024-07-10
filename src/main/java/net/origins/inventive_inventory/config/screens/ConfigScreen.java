@@ -1,6 +1,5 @@
 package net.origins.inventive_inventory.config.screens;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.*;
@@ -17,21 +16,12 @@ public class ConfigScreen extends GameOptionsScreen {
 
     @Override
     protected void addOptions() {
-        MinecraftClient client = InventiveInventory.getClient();
         GridWidget gridWidget = initializeGridWidget();
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
-        adder.add(new TextWidget(Text.of("Sorting Mode:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.S_MODE.getName()), this.sortingMode()));
-
-        adder.add(new TextWidget(Text.of("Sorting Behaviour:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.S_BEHAVIOUR.getName()), this.sortingBehaviour()));
-
-        adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.AR_MODE.getName()), this.automaticRefillingMode()));
-
-        adder.add(new TextWidget(Text.of("Automatic Refilling Behaviour:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.AR_LS_BEHAVIOUR.getName()), this.automaticRefillingBehaviour()));
+        addSortingConfig(adder);
+        adder.add(new EmptyWidget(1, 10), 2);
+        addAutomaticRefillingConfig(adder);
 
         finalizeGridWidget(gridWidget);
     }
@@ -52,6 +42,43 @@ public class ConfigScreen extends GameOptionsScreen {
         return ButtonWidget.builder(text, pressAction).build();
     }
 
+    private void addSortingConfig(GridWidget.Adder adder) {
+        if (client == null) return;
+        adder.add(new TextWidget(Text.of("Sorting"), client.textRenderer), 2);
+        adder.add(new EmptyWidget(1, 1), 2);
+
+        adder.add(new TextWidget(Text.of("Sorting:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.SORTING.getName()).copy().setStyle(ConfigManager.SORTING.getStyle()), this.sorting()));
+
+        adder.add(new TextWidget(Text.of("Sorting Mode:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.S_MODE.getName()), this.sortingMode()));
+
+        adder.add(new TextWidget(Text.of("Sorting Behaviour:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.S_BEHAVIOUR.getName()), this.sortingBehaviour()));
+    }
+
+    private void addAutomaticRefillingConfig(GridWidget.Adder adder) {
+        if (client == null) return;
+        adder.add(new TextWidget(Text.of("Automatic Refilling"), client.textRenderer), 2);
+        adder.add(new EmptyWidget(1, 1), 2);
+
+        adder.add(new TextWidget(Text.of("Automatic Refilling:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.AUTOMATIC_REFILLING.getName()).copy().setStyle(ConfigManager.AUTOMATIC_REFILLING.getStyle()), this.automaticRefilling()));
+
+        adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.AR_MODE.getName()), this.automaticRefillingMode()));
+
+        adder.add(new TextWidget(Text.of("Automatic Refilling Behaviour:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.AR_LS_BEHAVIOUR.getName()), this.automaticRefillingBehaviour()));
+    }
+
+    private ButtonWidget.PressAction sorting() {
+        return button -> {
+            ConfigManager.SORTING.toggle();
+            button.setMessage(Text.of(ConfigManager.SORTING.getName()).copy().setStyle(ConfigManager.SORTING.getStyle()));
+            ConfigManager.save();
+        };
+    }
 
     private ButtonWidget.PressAction sortingMode() {
         return button -> {
@@ -65,6 +92,14 @@ public class ConfigScreen extends GameOptionsScreen {
         return button -> {
             ConfigManager.S_BEHAVIOUR.toggle();
             button.setMessage(Text.of(ConfigManager.S_BEHAVIOUR.getName()));
+            ConfigManager.save();
+        };
+    }
+
+    private ButtonWidget.PressAction automaticRefilling() {
+        return button -> {
+            ConfigManager.AUTOMATIC_REFILLING.toggle();
+            button.setMessage(Text.of(ConfigManager.AUTOMATIC_REFILLING.getName()).copy().setStyle(ConfigManager.AUTOMATIC_REFILLING.getStyle()));
             ConfigManager.save();
         };
     }
