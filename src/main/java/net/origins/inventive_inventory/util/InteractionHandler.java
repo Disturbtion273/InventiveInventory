@@ -34,6 +34,8 @@ public class InteractionHandler {
         return InventiveInventory.getPlayer().getMainHandStack();
     }
 
+    public static ItemStack getOffHandStack() { return InventiveInventory.getPlayer().getOffHandStack(); }
+
     public static void leftClickStack(int slot) {
         ClientPlayerInteractionManager manager = InventiveInventory.getInteractionManager();
         ClientPlayerEntity player = InventiveInventory.getPlayer();
