@@ -23,6 +23,10 @@ public class SlotRange extends ArrayList<Integer> {
         return new SlotRange(list);
     }
 
+    public static boolean slotIn(SlotTypes type, int slot) {
+        return PlayerSlots.get(type).contains(slot);
+    }
+
     public SlotRange append(SlotTypes type) {
         if (type == SlotTypes.HOTBAR) {
             int lastSlot = (this.getLast() == PlayerScreenHandler.OFFHAND_ID ? this.get(this.size() - 2) : this.getLast()) + PlayerInventory.getHotbarSize();
