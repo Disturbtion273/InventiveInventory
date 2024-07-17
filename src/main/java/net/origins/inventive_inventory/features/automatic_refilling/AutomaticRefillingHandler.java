@@ -47,6 +47,7 @@ public class AutomaticRefillingHandler {
                 emptiesSlot = sameItemSlots.getFirst();
             }
             RUN_OFFHAND = false;
+            offHandStack = ItemStack.EMPTY;
         }
 
         mainHandStack = ItemStack.EMPTY;

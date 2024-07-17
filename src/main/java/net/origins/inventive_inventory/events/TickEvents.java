@@ -35,7 +35,7 @@ public class TickEvents {
             AutomaticRefillingHandler.runMainHand();
             if (client.options.useKey.isPressed() || client.options.dropKey.isPressed() || client.options.attackKey.isPressed()) {
                 AutomaticRefillingHandler.setMainHandStack(InteractionHandler.getMainHandStack());
-            }
+            } else AutomaticRefillingHandler.reset();
         } else AutomaticRefillingHandler.reset();
     }
 
@@ -59,7 +59,7 @@ public class TickEvents {
                 if (AutomaticRefillingHandler.RUN_OFFHAND) {
                     AutomaticRefillingHandler.runOffHand();
                 }
-            }
+            } else AutomaticRefillingHandler.reset();
         }
     }
 }
