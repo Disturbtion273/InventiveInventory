@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.origins.inventive_inventory.InventiveInventory;
-import net.origins.inventive_inventory.features.profiles.ProfilesScreen;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesScreen;
 
 public class ScreenCheck {
     public static boolean isSurvivalInventory() {

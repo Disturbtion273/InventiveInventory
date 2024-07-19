@@ -4,8 +4,9 @@ import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingBehaviours;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
+import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.sorting.SortingBehaviours;
 import net.origins.inventive_inventory.config.enums.sorting.SortingModes;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
@@ -31,6 +32,7 @@ public class ConfigManager {
     public static Configurable AR_MODE;
     public static Configurable AR_LS_BEHAVIOUR;
     public static Configurable AR_TOOL_BEHAVIOUR;
+    public static Configurable P_LS_BEHAVIOUR;
 
     public static void init() throws IOException {
         Files.createDirectories(CONFIG_PATH);
@@ -44,12 +46,13 @@ public class ConfigManager {
     public static void save() {
         JsonObject config = new JsonObject();
         config.addProperty("Sorting", SORTING.getName());
-        config.addProperty("Sorting Mode", S_MODE.getName());
+        config.addProperty("Sorting Modes", S_MODE.getName());
         config.addProperty("Sorting Behaviour", S_BEHAVIOUR.getName());
         config.addProperty("Automatic Refilling", AUTOMATIC_REFILLING.getName());
         config.addProperty("Automatic Refilling Mode", AR_MODE.getName());
-        config.addProperty("Automatic Refilling Behaviour", AR_LS_BEHAVIOUR.getName());
+        config.addProperty("Automatic Refilling Locked Slots Behaviour", AR_LS_BEHAVIOUR.getName());
         config.addProperty("Automatic Refilling Tool Behaviour", AR_TOOL_BEHAVIOUR.getName());
+        config.addProperty("Profiles Locked Slots Behaviour", P_LS_BEHAVIOUR.getName());
 
         FileHandler.write(CONFIG_FILE_PATH, config);
     }
@@ -61,7 +64,8 @@ public class ConfigManager {
         S_BEHAVIOUR = SortingBehaviours.get(config);
         AUTOMATIC_REFILLING = AutomaticRefillingStatus.get(config);
         AR_MODE = AutomaticRefillingModes.get(config);
-        AR_LS_BEHAVIOUR = AutomaticRefillingBehaviours.get(config);
+        AR_LS_BEHAVIOUR = AutomaticRefillingLockedSlotsBehaviours.get(config);
         AR_TOOL_BEHAVIOUR = AutomaticRefillingToolBehaviours.get(config);
+        P_LS_BEHAVIOUR = ProfilesLockedSlotsBehaviours.get(config);
     }
 }

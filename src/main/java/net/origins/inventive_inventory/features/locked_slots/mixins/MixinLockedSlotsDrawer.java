@@ -3,18 +3,17 @@ package net.origins.inventive_inventory.features.locked_slots.mixins;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.Drawer;
 import net.origins.inventive_inventory.util.ScreenCheck;
+import net.origins.inventive_inventory.util.Textures;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
 import net.origins.inventive_inventory.util.slots.SlotTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,9 +22,6 @@ import java.util.List;
 
 @Mixin(HandledScreen.class)
 public class MixinLockedSlotsDrawer {
-    @Unique
-    private static final Identifier TEXTURE = Identifier.of(InventiveInventory.MOD_ID, "textures/gui/lock.png");
-
     @Shadow
     protected int x;
 
@@ -42,7 +38,7 @@ public class MixinLockedSlotsDrawer {
             for (Integer lockedSlot : lockedSlots) {
                 Slot slot = InventiveInventory.getScreenHandler().getSlot(lockedSlot);
                 Drawer.drawSlotBackground(context, slot.x, slot.y, 0xFF4D4D4D, 0);
-                context.drawTexture(TEXTURE, slot.x + 11, slot.y - 2, 300, 0, 0, 8, 8, 8, 8);
+                context.drawTexture(Textures.LOCK, slot.x + 11, slot.y - 2, 300, 0, 0, 8, 8, 8, 8);
             }
 
             context.getMatrices().pop();

@@ -2,41 +2,40 @@ package net.origins.inventive_inventory.features.profiles;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 
 public class SavedSlot {
     private final int slot;
-    private final String itemID;
-    private final ComponentMap components;
+    private final ItemStack stack;
 
-    public SavedSlot(int slot, String itemID, ComponentMap components) {
+    public SavedSlot(int slot, ItemStack stack) {
         this.slot = slot;
-        this.itemID = itemID;
-        this.components = components;
+        this.stack = stack;
     }
 
     public int getSlot() {
         return slot;
     }
 
-    public String getItemID() {
-        return itemID;
+    public ItemStack getStack() {
+        return stack;
     }
 
-    public JsonObject getComponentsAsJsonObject() {
-        JsonObject components = new JsonObject();
+    public JsonObject getItemStackAsJsonObject() {
+        JsonObject stackJson = new JsonObject();
+        stackJson.addProperty("id", Item.getRawId(this.stack.getItem()));
 
-        Text customName = this.components.get(DataComponentTypes.CUSTOM_NAME);
-        if (customName != null) {
-            components.addProperty("custom_name", customName.getString());
-        }
+        JsonObject componentsJson = new JsonObject();
+        Text customName = this.stack.get(DataComponentTypes.CUSTOM_NAME);
+        if (customName != null) componentsJson.addProperty("custom_name", customName.getString());
 
-        ItemEnchantmentsComponent enchantmentsComponent = this.components.get(DataComponentTypes.ENCHANTMENTS);
+        ItemEnchantmentsComponent enchantmentsComponent = this.stack.get(DataComponentTypes.ENCHANTMENTS);
         if (enchantmentsComponent != null && !enchantmentsComponent.isEmpty()) {
             JsonArray enchantmentsList = new JsonArray();
             for (RegistryEntry<Enchantment> enchantmentRegistryEntry : enchantmentsComponent.getEnchantments().stream().toList()) {
@@ -45,9 +44,9 @@ public class SavedSlot {
                 enchantmentComponent.addProperty("lvl", enchantmentsComponent.getLevel(enchantmentRegistryEntry));
                 enchantmentsList.add(enchantmentComponent);
             }
-            components.add("enchantments", enchantmentsList);
+            componentsJson.add("enchantments", enchantmentsList);
         }
-
-        return components;
+        stackJson.add("components", componentsJson);
+        return stackJson;
     }
 }

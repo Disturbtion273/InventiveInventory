@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingBehaviours;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
 import net.origins.inventive_inventory.util.ComponentsHelper;
@@ -72,7 +72,7 @@ public class AutomaticRefillingHandler {
 
     private static List<Integer> getSameItemSlots(ItemStack handStack) {
         SlotRange slotRange = PlayerSlots.get();
-        slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
+        slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingLockedSlotsBehaviours.IGNORE_LOCKED_SLOTS ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
         Stream<Integer> sameItemSlotsStream =  slotRange.append(SlotTypes.HOTBAR).exclude(InteractionHandler.getSelectedSlot()).stream()
                 .filter(slot -> {
                     ItemStack itemStack = InteractionHandler.getStackFromSlot(slot);
@@ -103,7 +103,7 @@ public class AutomaticRefillingHandler {
 
     private static void mergeEmpties(int itemSlot) {
         SlotRange slotRange = PlayerSlots.get().append(SlotTypes.HOTBAR).exclude(itemSlot);
-        slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingBehaviours.IGNORE_LOCKED_SLOTS ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
+        slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingLockedSlotsBehaviours.IGNORE_LOCKED_SLOTS ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
         List<Integer> sameItemSlots = slotRange.stream()
                 .filter(slot -> InteractionHandler.getStackFromSlot(slot).getItem().equals(InteractionHandler.getStackFromSlot(itemSlot).getItem()))
                 .filter(slot -> InteractionHandler.getStackFromSlot(slot).getCount() < InteractionHandler.getStackFromSlot(slot).getMaxCount())

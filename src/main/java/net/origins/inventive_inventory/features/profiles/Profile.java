@@ -9,11 +9,11 @@ import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.util.InteractionHandler;
 
 import java.util.ArrayList;
@@ -95,19 +95,27 @@ public class Profile {
         return displayStackJson;
     }
 
-    private static ItemStack convertJsonToItemStack(JsonObject displayStack) {
+    public static ItemStack convertJsonToItemStack(JsonObject displayStack) {
+        if (displayStack.get("id") == null) return null;
         ItemStack item = new ItemStack(RegistryEntry.of(Item.byRawId(displayStack.get("id").getAsInt())));
-        ComponentMap.Builder components = ComponentMap.builder();
-        if (!displayStack.get("custom_name").getAsString().isEmpty()) {
-            components.add(DataComponentTypes.CUSTOM_NAME, Text.of(displayStack.get("custom_name").getAsString()));
-        }
-        for (JsonElement enchantmentElement : displayStack.get("enchantments").getAsJsonArray()) {
-            JsonObject enchantmentObject = enchantmentElement.getAsJsonObject();
+        ComponentMap.Builder componentBuilder = ComponentMap.builder();
 
-            ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
-            RegistryKey<Enchantment> registerKey = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(enchantmentObject.get("id").getAsString()));
-            builder.add(RegistryEntry.of(registerKey), 3);
+        if (displayStack.getAsJsonObject("components").has("custom_name")) {
+            componentBuilder.add(DataComponentTypes.CUSTOM_NAME, Text.of(displayStack.getAsJsonObject("components").get("custom_name").getAsString()));
         }
+
+        if (displayStack.getAsJsonObject("components").has("enchantments")) {
+            ItemEnchantmentsComponent.Builder enchantmentBuilder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
+            Registry<Enchantment> enchantmentRegistry = InventiveInventory.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+            for (JsonElement enchantmentElement : displayStack.getAsJsonObject("components").get("enchantments").getAsJsonArray()) {
+                JsonObject enchantmentObject = enchantmentElement.getAsJsonObject();
+                enchantmentBuilder.add(RegistryEntry.of(enchantmentRegistry.get(Identifier.of(enchantmentObject.get("id").getAsString()))), enchantmentObject.get("lvl").getAsInt());
+            }
+            componentBuilder.add(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder.build());
+        }
+
+        item.applyComponentsFrom(componentBuilder.build());
+        return item;
     }
 
     private static List<SavedSlot> convertJsonToSavedSlots(JsonArray savedSlotsJson) {
@@ -115,13 +123,8 @@ public class Profile {
         for (JsonElement savedSlotElement : savedSlotsJson) {
             JsonObject savedSlotObject = savedSlotElement.getAsJsonObject();
             int slot = savedSlotObject.get("slot").getAsInt();
-            String id = savedSlotObject.get("id").getAsString();
-            JsonObject components = savedSlotObject.getAsJsonObject("components");
-            ComponentMap.Builder componentBuilder = ComponentMap.builder();
-            ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
-            RegistryKey<Enchantment> registryKey = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(components.get("id").getAsString()));
-            RegistryEntry.of(registryKey);
-
+            ItemStack stack = convertJsonToItemStack(savedSlotObject.getAsJsonObject("stack"));
+            savedSlotList.add(new SavedSlot(slot, stack));
         }
         return savedSlotList;
     }

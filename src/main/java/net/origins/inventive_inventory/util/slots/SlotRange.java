@@ -1,7 +1,8 @@
 package net.origins.inventive_inventory.util.slots;
 
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
+import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.origins.inventive_inventory.util.ScreenCheck;
 
@@ -29,8 +30,12 @@ public class SlotRange extends ArrayList<Integer> {
 
     public SlotRange append(SlotTypes type) {
         if (type == SlotTypes.HOTBAR) {
-            int lastSlot = (this.getLast() == PlayerScreenHandler.OFFHAND_ID ? this.get(this.size() - 2) : this.getLast()) + PlayerInventory.getHotbarSize();
-            IntStream.rangeClosed(this.getLast() + 1, lastSlot).forEach(this::add);
+            ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+            int start = screenHandler.slots.size() - PlayerSlots.HOTBAR_SIZE - (screenHandler instanceof PlayerScreenHandler ? PlayerSlots.OFFHAND_SIZE : 0);
+            int stop = screenHandler.slots.size() - (screenHandler instanceof PlayerScreenHandler ? PlayerSlots.OFFHAND_SIZE : 0);
+            IntStream.range(start, stop).forEach(this::add);
+        } else if (type == SlotTypes.INVENTORY) {
+            this.addAll(PlayerSlots.get());
         } else if (type == SlotTypes.OFFHAND) {
             if (ScreenCheck.isPlayerHandler()) this.add(PlayerScreenHandler.OFFHAND_ID);
         } return this;

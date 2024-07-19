@@ -2,13 +2,11 @@ package net.origins.inventive_inventory.events;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
-import net.origins.inventive_inventory.features.profiles.ProfilesScreen;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesScreen;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
@@ -28,7 +26,7 @@ public class TickEvents {
             AdvancedOperationHandler.setPressed(KeyRegistry.advancedOperationKey.isPressed());
         }
         if (KeyRegistry.openProfilesScreenKey.isPressed()) {
-            InventiveInventory.getClient().setScreen(new ProfilesScreen(1));
+            InventiveInventory.getClient().setScreen(new ProfilesScreen());
         }
     }
 

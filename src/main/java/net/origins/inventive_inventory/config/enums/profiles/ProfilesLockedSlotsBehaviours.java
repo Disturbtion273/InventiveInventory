@@ -1,18 +1,18 @@
-package net.origins.inventive_inventory.config.enums.automatic_refilling;
+package net.origins.inventive_inventory.config.enums.profiles;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.Configurable;
 
-public enum AutomaticRefillingBehaviours implements Configurable {
+public enum ProfilesLockedSlotsBehaviours implements Configurable {
     IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
     USE_LOCKED_SLOTS("Use Locked Slots");
 
-    private static final String configKey = "Automatic Refilling Behaviour";
+    private static final String configKey = "Profile Locked Slots Behaviour";
     private final String name;
 
-    AutomaticRefillingBehaviours(String name) {
+    ProfilesLockedSlotsBehaviours(String name) {
         this.name = name;
     }
 
@@ -23,7 +23,7 @@ public enum AutomaticRefillingBehaviours implements Configurable {
 
     @Override
     public void toggle() {
-        ConfigManager.AR_LS_BEHAVIOUR = values()[(this.ordinal() + 1) % values().length];
+        ConfigManager.P_LS_BEHAVIOUR = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {
