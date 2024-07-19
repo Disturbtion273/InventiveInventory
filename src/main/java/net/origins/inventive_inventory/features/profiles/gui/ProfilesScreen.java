@@ -5,9 +5,11 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
+import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
 import net.origins.inventive_inventory.keys.KeyRegistry;
+import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 
 import java.util.ArrayList;
@@ -17,7 +19,10 @@ public class ProfilesScreen extends Screen {
     public static int RADIUS = 60;
     public static final int COLOR = 0x7F000000;
     public static final int HOVER_COLOR = 0x3FFFFFFF;
+    public static final int DELETE_COLOR = 0x7FE4080A;
+    public static final int OVERWRITE_COLOR = 0x7FFFDE59;
     private static final int MAX_PROFILES = 6;
+    public static boolean OVERWRITE_KEY_PRESSED;
     private static final List<Section> sections = new ArrayList<>();
 
     private int mouseX;
@@ -31,6 +36,7 @@ public class ProfilesScreen extends Screen {
             if (sections.size() <= MAX_PROFILES) sections.add(new Section(sections.size(), profile));
         }
         if (sections.size() < MAX_PROFILES) sections.add(new Section(sections.size(), null));
+        OVERWRITE_KEY_PRESSED = InventiveInventory.getClient().options.sneakKey.isPressed();
     }
 
     public static List<Section> getSections() {
@@ -73,6 +79,14 @@ public class ProfilesScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (KeyRegistry.advancedOperationKey.matchesKey(keyCode, scanCode)) {
+            AdvancedOperationHandler.setPressed(true);
+            return true;
+        }
+        if (InventiveInventory.getClient().options.sneakKey.matchesKey(keyCode, scanCode)) {
+            OVERWRITE_KEY_PRESSED = true;
+            return true;
+        }
         return false;
     }
 
@@ -81,15 +95,28 @@ public class ProfilesScreen extends Screen {
         if (KeyRegistry.openProfilesScreenKey.matchesKey(keyCode, scanCode)) {
             int section = MouseLocation.getHoveredProfileSection(this.mouseX, this.mouseY);
             if (section != -1) {
-                if (sections.get(section).getProfile() == null) {
+                Profile profile = sections.get(section).getProfile();
+                if (profile == null) {
                     ProfileHandler.create("");
+                } else if (AdvancedOperationHandler.isPressed()) {
+                    ProfileHandler.delete(profile);
+                } else if (OVERWRITE_KEY_PRESSED) {
+                    ProfileHandler.overwrite(profile);
                 } else {
-                    // TODO: LOAD OR OVERWRITE
-                    ProfileHandler.load(ProfileHandler.getProfiles().get(section));
+                    ProfileHandler.load(profile);
                 }
             }
             this.close();
             return true;
-        } return false;
+        }
+        if (KeyRegistry.advancedOperationKey.matchesKey(keyCode, scanCode)) {
+            AdvancedOperationHandler.setPressed(false);
+            return true;
+        }
+        if (InventiveInventory.getClient().options.sneakKey.matchesKey(keyCode, scanCode)) {
+            OVERWRITE_KEY_PRESSED = false;
+            return true;
+        }
+        return false;
     }
 }

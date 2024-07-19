@@ -4,6 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
+import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.Textures;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 
@@ -49,6 +50,9 @@ public class Section {
             float nextPosInnerY = centerY - (float) Math.cos(nextAngle) * innerRadius;
 
             int color = hovered ? ProfilesScreen.HOVER_COLOR : ProfilesScreen.COLOR;
+            color = AdvancedOperationHandler.isPressed() && hovered && this.profile != null ? ProfilesScreen.DELETE_COLOR : color;
+            color = ProfilesScreen.OVERWRITE_KEY_PRESSED && hovered && this.profile != null ? ProfilesScreen.OVERWRITE_COLOR : color;
+
             builder.vertex(posX, posY, 0).color(color)
                     .vertex(posInnerX, posInnerY, 0).color(color)
                     .vertex(nextPosInnerX, nextPosInnerY, 0).color(color)

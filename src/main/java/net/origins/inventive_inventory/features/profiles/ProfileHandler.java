@@ -43,7 +43,9 @@ public class ProfileHandler {
             for (int slot : slotRange) {
                 ItemStack slotStack = InteractionHandler.getStackFromSlot(slot);
                 if (!ItemStack.areItemsEqual(slotStack, savedSlot.getStack())) continue;
+                System.out.println("ITEMS EQUAL");
                 if (!ComponentsHelper.areCustomNamesEqual(slotStack, savedSlot.getStack())) continue;
+                System.out.println("CUSTOM NAME EQUAL");
                 if (!ComponentsHelper.areEnchantmentsEqual(slotStack, savedSlot.getStack())) continue;
                 System.out.println("ENCHANTMENTS EQUAL");
                 InteractionHandler.swapStacks(slot, savedSlot.getSlot());
@@ -52,12 +54,15 @@ public class ProfileHandler {
         }
     }
 
-    public static void overwrite() {
-
+    public static void overwrite(Profile profile) {
+        delete(profile);
+        create("");
     }
 
-    public static void delete() {
-
+    public static void delete(Profile profile) {
+        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        profilesJson.remove(Integer.toString(profile.getID()));
+        FileHandler.write(PROFILES_PATH, profilesJson);
     }
 
     public static List<Profile> getProfiles() {
