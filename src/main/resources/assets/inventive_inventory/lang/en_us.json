@@ -1,5 +1,9 @@
 {
     "key.inventive_inventory.category.inventive_inventory": "Inventive Inventory",
+    "key.inventive_inventory.category.inventive_inventory_profiles": "Inventive Profiles",
     "key.inventive_inventory.sort": "Sort Inventory",
-    "key.inventive_inventory.advanced_operation": "Advanced Operation"
+    "key.inventive_inventory.advanced_operation": "Advanced Operation",
+    "key.inventive_inventory.profile_0": "Profile 1",
+    "key.inventive_inventory.profile_1": "Profile 2",
+    "key.inventive_inventory.profile_2": "Profile 3"
 }

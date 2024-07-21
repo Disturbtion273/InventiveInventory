@@ -6,9 +6,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
@@ -91,27 +94,42 @@ public class Profile {
             }
             components.add("enchantments", enchantmentsList);
         }
+
+        PotionContentsComponent potionComponent = this.displayStack.get(DataComponentTypes.POTION_CONTENTS);
+        if (potionComponent != null) {
+            if (potionComponent.potion().isPresent()) {
+                components.addProperty("potion", potionComponent.potion().get().getIdAsString());
+            }
+        }
+
         displayStackJson.add("components", components);
         return displayStackJson;
     }
 
-    public static ItemStack convertJsonToItemStack(JsonObject displayStack) {
-        if (displayStack.get("id") == null) return null;
-        ItemStack item = new ItemStack(RegistryEntry.of(Item.byRawId(displayStack.get("id").getAsInt())));
+    public static ItemStack convertJsonToItemStack(JsonObject stackJson) {
+        if (stackJson.get("id") == null) return null;
+        ItemStack item = new ItemStack(RegistryEntry.of(Item.byRawId(stackJson.get("id").getAsInt())));
         ComponentMap.Builder componentBuilder = ComponentMap.builder();
 
-        if (displayStack.getAsJsonObject("components").has("custom_name")) {
-            componentBuilder.add(DataComponentTypes.CUSTOM_NAME, Text.of(displayStack.getAsJsonObject("components").get("custom_name").getAsString()));
+        if (stackJson.getAsJsonObject("components").has("custom_name")) {
+            componentBuilder.add(DataComponentTypes.CUSTOM_NAME, Text.of(stackJson.getAsJsonObject("components").get("custom_name").getAsString()));
         }
 
-        if (displayStack.getAsJsonObject("components").has("enchantments")) {
+        if (stackJson.getAsJsonObject("components").has("enchantments")) {
             ItemEnchantmentsComponent.Builder enchantmentBuilder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
             Registry<Enchantment> enchantmentRegistry = InventiveInventory.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
-            for (JsonElement enchantmentElement : displayStack.getAsJsonObject("components").get("enchantments").getAsJsonArray()) {
+            for (JsonElement enchantmentElement : stackJson.getAsJsonObject("components").get("enchantments").getAsJsonArray()) {
                 JsonObject enchantmentObject = enchantmentElement.getAsJsonObject();
-                enchantmentBuilder.add(RegistryEntry.of(enchantmentRegistry.get(Identifier.of(enchantmentObject.get("id").getAsString()))), enchantmentObject.get("lvl").getAsInt());
+                Enchantment enchantment = enchantmentRegistry.get(Identifier.of(enchantmentObject.get("id").getAsString()));
+                enchantmentBuilder.add(enchantmentRegistry.getEntry(enchantment), enchantmentObject.get("lvl").getAsInt());
             }
             componentBuilder.add(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder.build());
+        }
+
+        if (stackJson.getAsJsonObject("components").has("potion")) {
+            Registry<Potion> potionRegistry = InventiveInventory.getRegistryManager().get(RegistryKeys.POTION);
+            Potion potion = potionRegistry.get(Identifier.of(stackJson.getAsJsonObject("components").get("potion").getAsString()));
+            item = PotionContentsComponent.createStack(Items.POTION, potionRegistry.getEntry(potion));
         }
 
         item.applyComponentsFrom(componentBuilder.build());

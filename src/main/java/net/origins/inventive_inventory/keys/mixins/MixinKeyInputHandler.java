@@ -4,7 +4,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.origins.inventive_inventory.features.sorting.SortingHandler;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
-import net.origins.inventive_inventory.keys.handler.AdvancedOperationMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,9 +18,7 @@ public class MixinKeyInputHandler {
             AdvancedOperationHandler.setPressed(true);
         }
         if (KeyRegistry.sortKey.matchesKey(keyCode, scanCode)) {
-            AdvancedOperationHandler.MODE = AdvancedOperationMode.SORT;
             SortingHandler.sort();
-            AdvancedOperationHandler.MODE = AdvancedOperationMode.INIT;
         }
     }
 
@@ -31,9 +28,7 @@ public class MixinKeyInputHandler {
             AdvancedOperationHandler.setPressed(true);
         }
         if (KeyRegistry.sortKey.matchesMouse(button)) {
-            AdvancedOperationHandler.MODE = AdvancedOperationMode.SORT;
             SortingHandler.sort();
-            AdvancedOperationHandler.MODE = AdvancedOperationMode.INIT;
         }
     }
 

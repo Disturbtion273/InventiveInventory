@@ -4,13 +4,14 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
-import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.Textures;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 
 public class Section {
     private final int ID;
     private final Profile profile;
+    private int iconX;
+    private int iconY;
 
     public Section(int ID, Profile profile) {
         this.ID = ID;
@@ -33,6 +34,15 @@ public class Section {
 
         int innerRadius = ProfilesScreen.RADIUS / 2;
 
+        int color = hovered ? ProfilesScreen.HOVER_COLOR : ProfilesScreen.COLOR;
+        if (this.profile != null && hovered) {
+            if (ProfilesScreen.DELETE_KEY_PRESSED) {
+                color = ProfilesScreen.DELETE_COLOR;
+            } else if (ProfilesScreen.OVERWRITE_KEY_PRESSED) {
+                color = ProfilesScreen.OVERWRITE_COLOR;
+            }
+        }
+
         for (; startAngle < limit; startAngle++) {
             double angle = (startAngle * Math.PI) / 180;
             double nextAngle = ((startAngle + 1) * Math.PI) / 180;
@@ -48,10 +58,6 @@ public class Section {
 
             float nextPosInnerX = centerX + (float) Math.sin(nextAngle) * innerRadius;
             float nextPosInnerY = centerY - (float) Math.cos(nextAngle) * innerRadius;
-
-            int color = hovered ? ProfilesScreen.HOVER_COLOR : ProfilesScreen.COLOR;
-            color = AdvancedOperationHandler.isPressed() && hovered && this.profile != null ? ProfilesScreen.DELETE_COLOR : color;
-            color = ProfilesScreen.OVERWRITE_KEY_PRESSED && hovered && this.profile != null ? ProfilesScreen.OVERWRITE_COLOR : color;
 
             builder.vertex(posX, posY, 0).color(color)
                     .vertex(posInnerX, posInnerY, 0).color(color)
@@ -74,10 +80,47 @@ public class Section {
         int middleX = (int) (centerX + Math.sin(middleRadian) * (ProfilesScreen.RADIUS - ((double) (ProfilesScreen.RADIUS - innerRadius) / 2)));
         int middleY = (int) (centerY - Math.cos(middleRadian) * (ProfilesScreen.RADIUS - ((double) (ProfilesScreen.RADIUS - innerRadius) / 2)));
 
+        this.iconX = middleX - 8;
+        this.iconY = middleY - 8;
+
         if (this.profile == null) {
-            context.drawTexture(Textures.PLUS, middleX - 8, middleY - 8, 0, 0, 0, 16, 16, 16, 16);
+            context.drawTexture(Textures.PLUS, iconX, iconY, 0, 0, 0, 16, 16, 16, 16);
         } else if (this.profile.getDisplayStack() == null) {
-            context.drawTexture(Textures.TOOLS, middleX - 8, middleY - 8, 0, 0, 0, 16, 16, 16, 16);
-        } else context.drawItem(this.profile.getDisplayStack(), middleX - 8, middleY - 8);
+            context.drawTexture(Textures.TOOLS, iconX, iconY, 0, 0, 0, 16, 16, 16, 16);
+        } else context.drawItem(this.profile.getDisplayStack(), iconX, iconY);
+    }
+
+    public void drawTooltips(DrawContext context, int mouseX, int mouseY) {
+        boolean inX = this.iconX < mouseX && mouseX < this.iconX + 16;
+        boolean inY = this.iconY < mouseY && mouseY < this.iconY + 16;
+        boolean isMouseOverIcon = inX && inY;
+        if (isMouseOverIcon && this.profile != null) {
+            if (!this.profile.getName().isEmpty()) {
+                //TODO: Profile name tooltip
+            } else if (this.profile.getDisplayStack() != null) {
+                context.drawItemTooltip(InventiveInventory.getClient().textRenderer, this.profile.getDisplayStack(), this.iconX, this.iconY);
+            } else {
+                //TODO: Unknown Tooltip
+            }
+        }
     }
 }
+
+/*
+PROFILE NAME TOOLTIP
+NAME
+KEYBIND (wenns ein gibt)
+ */
+
+/*
+ITEM TOOLTIP
+CUSTOM NAME
+KEYBIND
+ENCHANTMENTS
+POTION DINGER (evtl.)
+ */
+
+/*
+UNKNOWN TOOLTIP
+KEYBIND (falls gibt)
+ */

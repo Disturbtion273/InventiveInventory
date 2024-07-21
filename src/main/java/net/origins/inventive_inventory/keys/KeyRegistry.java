@@ -6,6 +6,7 @@ import net.minecraft.client.util.InputUtil;
 
 public class KeyRegistry {
     public static final String INVENTIVE_INVENTORY_CATEGORY = "key.inventive_inventory.category.inventive_inventory";
+    public static final String INVENTIVE_INVENTORY_PROFILES_CATEGORY = "key.inventive_inventory.category.inventive_inventory_profiles";
     private static final String KEY_SORT = "key.inventive_inventory.sort";
     private static final String KEY_ADVANCED_OPERATION = "key.inventive_inventory.advanced_operation";
     private static final String OPEN_PROFILES_SCREEN = "key.inventive_inventory.open_profiles_screen";
@@ -13,6 +14,7 @@ public class KeyRegistry {
     public static KeyBinding sortKey;
     public static KeyBinding advancedOperationKey;
     public static KeyBinding openProfilesScreenKey;
+    public static KeyBinding[] profileKeys = new KeyBinding[3];
 
     public static void register() {
         sortKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -33,5 +35,13 @@ public class KeyRegistry {
                 InputUtil.GLFW_KEY_V,
                 INVENTIVE_INVENTORY_CATEGORY
         ));
+        for (int i = 0; i < profileKeys.length; i++) {
+            profileKeys[i] = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                    "key.inventive_inventory.profile_" + i,
+                    InputUtil.Type.KEYSYM,
+                    InputUtil.GLFW_KEY_1 + i,
+                    INVENTIVE_INVENTORY_PROFILES_CATEGORY
+            ));
+        }
     }
 }

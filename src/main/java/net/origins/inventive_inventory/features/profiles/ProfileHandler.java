@@ -39,16 +39,13 @@ public class ProfileHandler {
         SlotRange slotRange = PlayerSlots.get(SlotTypes.INVENTORY, SlotTypes.HOTBAR, SlotTypes.OFFHAND);
         slotRange = ConfigManager.P_LS_BEHAVIOUR == ProfilesLockedSlotsBehaviours.IGNORE_LOCKED_SLOTS ? slotRange : slotRange.append(SlotTypes.LOCKED_SLOT);
         for (SavedSlot savedSlot : profile.getSavedSlots()) {
-            System.out.println(savedSlot.getStack());
             for (int slot : slotRange) {
                 ItemStack slotStack = InteractionHandler.getStackFromSlot(slot);
-                if (!ItemStack.areItemsEqual(slotStack, savedSlot.getStack())) continue;
-                System.out.println("ITEMS EQUAL");
-                if (!ComponentsHelper.areCustomNamesEqual(slotStack, savedSlot.getStack())) continue;
-                System.out.println("CUSTOM NAME EQUAL");
-                if (!ComponentsHelper.areEnchantmentsEqual(slotStack, savedSlot.getStack())) continue;
-                System.out.println("ENCHANTMENTS EQUAL");
-                InteractionHandler.swapStacks(slot, savedSlot.getSlot());
+                if (!ItemStack.areItemsEqual(slotStack, savedSlot.stack())) continue;
+                if (!ComponentsHelper.areCustomNamesEqual(slotStack, savedSlot.stack())) continue;
+                if (!ComponentsHelper.areEnchantmentsEqual(slotStack, savedSlot.stack())) continue;
+                if (!ComponentsHelper.arePotionsEqual(slotStack, savedSlot.stack())) continue;
+                InteractionHandler.swapStacks(slot, savedSlot.slot());
                 break;
             }
         }
@@ -84,7 +81,7 @@ public class ProfileHandler {
         JsonArray jsonArray = new JsonArray();
         for (SavedSlot savedSlot : profile.getSavedSlots()) {
             JsonObject savedSlotMap = new JsonObject();
-            savedSlotMap.addProperty("slot", savedSlot.getSlot());
+            savedSlotMap.addProperty("slot", savedSlot.slot());
             savedSlotMap.add("stack", savedSlot.getItemStackAsJsonObject());
             jsonArray.add(savedSlotMap);
         }

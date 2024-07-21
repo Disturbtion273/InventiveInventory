@@ -4,28 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 
-public class SavedSlot {
-    private final int slot;
-    private final ItemStack stack;
-
-    public SavedSlot(int slot, ItemStack stack) {
-        this.slot = slot;
-        this.stack = stack;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
+public record SavedSlot(int slot, ItemStack stack) {
 
     public JsonObject getItemStackAsJsonObject() {
         JsonObject stackJson = new JsonObject();
@@ -46,6 +32,14 @@ public class SavedSlot {
             }
             componentsJson.add("enchantments", enchantmentsList);
         }
+
+        PotionContentsComponent potionComponent = this.stack.get(DataComponentTypes.POTION_CONTENTS);
+        if (potionComponent != null) {
+            if (potionComponent.potion().isPresent()) {
+                componentsJson.addProperty("potion", potionComponent.potion().get().getIdAsString());
+            }
+        }
+
         stackJson.add("components", componentsJson);
         return stackJson;
     }
