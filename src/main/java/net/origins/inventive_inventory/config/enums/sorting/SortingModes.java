@@ -9,7 +9,7 @@ public enum SortingModes implements Configurable {
     NAME("Name"),
     ITEM_TYPE("Item Type");
 
-    static private final String configKey = "Sorting Mode";
+    public static final String CONFIG_KEY = "Sorting Mode";
     private final String name;
 
     SortingModes(String name) {
@@ -27,7 +27,7 @@ public enum SortingModes implements Configurable {
     }
 
     public static Configurable get(JsonObject config) {
-        JsonElement element = config.get(configKey);
+        JsonElement element = config.get(CONFIG_KEY);
         if (element != null) {
             for (Configurable configurable : values()) {
                 if (configurable.getName().equals(element.getAsString())) return configurable;

@@ -9,7 +9,7 @@ public enum AutomaticRefillingModes implements Configurable {
     AUTOMATIC("Automatic"),
     SEMI_AUTOMATIC("Semi-Automatic");
 
-    private static final String configKey = "Automatic Refilling Mode";
+    public static final String CONFIG_KEY = "Automatic Refilling Mode";
     private final String name;
 
     AutomaticRefillingModes(String name) {
@@ -27,7 +27,7 @@ public enum AutomaticRefillingModes implements Configurable {
     }
 
     public static Configurable get(JsonObject config) {
-        JsonElement element = config.get(configKey);
+        JsonElement element = config.get(CONFIG_KEY);
         if (element != null) {
             for (Configurable configurable : values()) {
                 if (configurable.getName().equals(element.getAsString())) return configurable;

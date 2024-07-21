@@ -9,11 +9,13 @@ public class KeyRegistry {
     public static final String INVENTIVE_INVENTORY_PROFILES_CATEGORY = "key.inventive_inventory.category.inventive_inventory_profiles";
     private static final String KEY_SORT = "key.inventive_inventory.sort";
     private static final String KEY_ADVANCED_OPERATION = "key.inventive_inventory.advanced_operation";
-    private static final String OPEN_PROFILES_SCREEN = "key.inventive_inventory.open_profiles_screen";
+    private static final String KEY_OPEN_PROFILES_SCREEN = "key.inventive_inventory.open_profiles_screen";
+    private static final String KEY_LOAD_PROFILE = "key.inventive_inventory.load_profile";
 
     public static KeyBinding sortKey;
     public static KeyBinding advancedOperationKey;
     public static KeyBinding openProfilesScreenKey;
+    public static KeyBinding loadProfileKey;
     public static KeyBinding[] profileKeys = new KeyBinding[3];
 
     public static void register() {
@@ -30,10 +32,16 @@ public class KeyRegistry {
                 INVENTIVE_INVENTORY_CATEGORY
         ));
         openProfilesScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                OPEN_PROFILES_SCREEN,
+                KEY_OPEN_PROFILES_SCREEN,
                 InputUtil.Type.KEYSYM,
                 InputUtil.GLFW_KEY_V,
-                INVENTIVE_INVENTORY_CATEGORY
+                INVENTIVE_INVENTORY_PROFILES_CATEGORY
+        ));
+        loadProfileKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_LOAD_PROFILE,
+                InputUtil.Type.KEYSYM,
+                InputUtil.GLFW_KEY_LEFT_ALT,
+                INVENTIVE_INVENTORY_PROFILES_CATEGORY
         ));
         for (int i = 0; i < profileKeys.length; i++) {
             profileKeys[i] = KeyBindingHelper.registerKeyBinding(new KeyBinding(

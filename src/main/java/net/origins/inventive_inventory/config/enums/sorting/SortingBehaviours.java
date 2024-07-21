@@ -11,7 +11,7 @@ public enum SortingBehaviours implements Configurable {
     AOK_DEPENDENT("AOK-Dependent"),
     AOK_DEPENDENT_INVERTED("AOK-Dependent Inverted");
 
-    static private final String configKey = "Sorting Behaviour";
+    public static final String CONFIG_KEY = "Sorting Behaviour";
     private final String name;
 
     SortingBehaviours(String name) {
@@ -29,7 +29,7 @@ public enum SortingBehaviours implements Configurable {
     }
 
     public static Configurable get(JsonObject config) {
-        JsonElement element = config.get(configKey);
+        JsonElement element = config.get(CONFIG_KEY);
         if (element != null) {
             for (Configurable configurable : values()) {
                 if (configurable.getName().equals(element.getAsString())) return configurable;

@@ -24,9 +24,10 @@
         ]
     },
     "mixins": [
-        "key.mixins.json",
-        "mouse.mixins.json",
-        "locked_slots.mixins.json"
+        "keys.mixins.json",
+        "util.mouse.mixins.json",
+        "locked_slots.mixins.json",
+        "keys.keybindfix.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",

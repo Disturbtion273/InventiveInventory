@@ -9,7 +9,7 @@ public enum AutomaticRefillingToolBehaviours implements Configurable {
     MATERIAL("Material"),
     HEALTH("Health");
 
-    private static final String configKey = "Automatic Refilling Mode";
+    public static final String CONFIG_KEY = "Automatic Refilling Mode";
     private final String name;
 
     AutomaticRefillingToolBehaviours(String name) {
@@ -27,7 +27,7 @@ public enum AutomaticRefillingToolBehaviours implements Configurable {
     }
 
     public static Configurable get(JsonObject config) {
-        JsonElement element = config.get(configKey);
+        JsonElement element = config.get(CONFIG_KEY);
         if (element != null) {
             for (Configurable configurable : values()) {
                 if (configurable.getName().equals(element.getAsString())) return configurable;

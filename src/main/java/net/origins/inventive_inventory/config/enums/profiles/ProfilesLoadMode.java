@@ -5,14 +5,14 @@ import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.Configurable;
 
-public enum ProfilesLockedSlotsBehaviours implements Configurable {
-    IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
-    USE_LOCKED_SLOTS("Use Locked Slots");
+public enum ProfilesLoadMode implements Configurable {
+    NORMAL("Normal"),
+    FAST_LOAD("Fast Load");
 
-    public static final String CONFIG_KEY = "Profile Locked Slots Behaviour";
+    public static final String CONFIG_KEY = "Profile Load Mode";
     private final String name;
 
-    ProfilesLockedSlotsBehaviours(String name) {
+    ProfilesLoadMode(String name) {
         this.name = name;
     }
 

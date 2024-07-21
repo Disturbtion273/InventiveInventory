@@ -9,7 +9,7 @@ public enum AutomaticRefillingLockedSlotsBehaviours implements Configurable {
     IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
     USE_LOCKED_SLOTS("Use Locked Slots");
 
-    private static final String configKey = "Automatic Refilling Behaviour";
+    public static final String CONFIG_KEY = "Automatic Refilling Locked Slots Behaviour";
     private final String name;
 
     AutomaticRefillingLockedSlotsBehaviours(String name) {
@@ -27,7 +27,7 @@ public enum AutomaticRefillingLockedSlotsBehaviours implements Configurable {
     }
 
     public static Configurable get(JsonObject config) {
-        JsonElement element = config.get(configKey);
+        JsonElement element = config.get(CONFIG_KEY);
         if (element != null) {
             for (Configurable configurable : values()) {
                 if (configurable.getName().equals(element.getAsString())) return configurable;

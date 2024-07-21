@@ -2,11 +2,13 @@ package net.origins.inventive_inventory.features.profiles;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
+import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.ComponentsHelper;
 import net.origins.inventive_inventory.util.FileHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
@@ -16,14 +18,16 @@ import net.origins.inventive_inventory.util.slots.SlotTypes;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.CONFIG_PATH.resolve(PROFILES_FILE);
+    public static List<KeyBinding> availableProfileKeys;
 
-    public static void create(String name) {
+    public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
         for (int slot : PlayerSlots.get(SlotTypes.HOTBAR, SlotTypes.OFFHAND)) {
@@ -32,7 +36,8 @@ public class ProfileHandler {
                 savedSlots.add(new SavedSlot(slot, stack));
             }
         }
-        save(new Profile(getId(), name, savedSlots));
+        save(new Profile(getId(), name, key, savedSlots));
+        availableProfileKeys = getAvailableProfileKeys();
     }
 
     public static void load(Profile profile) {
@@ -53,13 +58,14 @@ public class ProfileHandler {
 
     public static void overwrite(Profile profile) {
         delete(profile);
-        create("");
+        create("", profile.getKey());
     }
 
     public static void delete(Profile profile) {
         JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
         profilesJson.remove(Integer.toString(profile.getID()));
         FileHandler.write(PROFILES_PATH, profilesJson);
+        availableProfileKeys = getAvailableProfileKeys();
     }
 
     public static List<Profile> getProfiles() {
@@ -98,10 +104,25 @@ public class ProfileHandler {
         } return false;
     }
 
+    public static String getAvailableProfileKey() {
+        availableProfileKeys = getAvailableProfileKeys();
+        if (availableProfileKeys.isEmpty()) return "";
+        else return availableProfileKeys.getFirst().getTranslationKey();
+    }
+
+    public static List<KeyBinding> getAvailableProfileKeys() {
+        List<KeyBinding> availableProfileKeys = new ArrayList<>(Arrays.asList(KeyRegistry.profileKeys));
+        for (Profile profile : getProfiles()) {
+            for (KeyBinding profileKey : KeyRegistry.profileKeys) {
+                if (profileKey.getTranslationKey().equals(profile.getKey())) availableProfileKeys.remove(profileKey);
+            }
+        }
+        return availableProfileKeys;
+    }
+
     private static int getId() {
         JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
         if (jsonObject.isEmpty()) return 0;
         return Integer.parseInt(jsonObject.keySet().stream().sorted(Comparator.comparing(Integer::valueOf)).toList().getLast()) + 1;
     }
-    
 }

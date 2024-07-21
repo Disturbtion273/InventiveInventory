@@ -102,7 +102,7 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
             if (section != -1) {
                 Profile profile = sections.get(section).getProfile();
                 if (profile == null) {
-                    ProfileHandler.create("");
+                    ProfileHandler.create("", ProfileHandler.getAvailableProfileKey());
                 } else if (DELETE_KEY_PRESSED) {
                     ProfileHandler.delete(profile);
                 } else if (OVERWRITE_KEY_PRESSED) {

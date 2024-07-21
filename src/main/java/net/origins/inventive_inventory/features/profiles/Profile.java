@@ -29,19 +29,12 @@ public class Profile {
     private final ItemStack displayStack;
     private final List<SavedSlot> savedSlots;
 
-    public Profile(int id, String name, List<SavedSlot> savedSlots) {
-        this(id, name, "", savedSlots);
-    }
-
     public Profile(int id, String name, String key, List<SavedSlot> savedSlots) {
         this.ID = id;
         this.name = name;
         this.key = key;
         this.savedSlots = savedSlots;
-        ItemStack stack = InteractionHandler.getMainHandStack();
-        if (stack.isEmpty()) stack = InteractionHandler.getOffHandStack();
-        if (stack.isEmpty()) stack = null;
-        this.displayStack = stack;
+        this.displayStack = InteractionHandler.getAnyHandStack();
     }
 
     public Profile(int id, String name, String key, JsonObject displayStack, JsonArray savedSlots) {

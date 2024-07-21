@@ -10,10 +10,11 @@
 
 ## Features
 
+- ### Automatic Refilling
+    - 
+
 - ### Sorting
-    
-    - When holding the Advanced Operation Key it is possible
-        to keep the cursor stack but still sort
+    - When holding the Advanced Operation Key it is possible to keep the cursor stack
 
 - ### Locked Slots
     - Prettified the displaying of Locked Slots in the inventory
@@ -23,7 +24,7 @@
 - ### Profiles
     - Profile selection, creation and deletion is now easy through a radial menu
     - There are still 3 fast loading keybinds provided
-    - [comment]: <> (TODO:You can create, load and delete profiles with commands and give them names)
+    - [comment]: <> (TODO: You can create, load and delete profiles with commands and give them names)
 
 ## Configuration
 - A new and improved Config Screen (available through [ModMenu](https://modrinth.com/mod/modmenu))

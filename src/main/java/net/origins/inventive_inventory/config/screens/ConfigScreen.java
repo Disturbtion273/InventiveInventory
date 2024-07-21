@@ -22,6 +22,8 @@ public class ConfigScreen extends GameOptionsScreen {
         addSortingConfig(adder);
         adder.add(new EmptyWidget(1, 10), 2);
         addAutomaticRefillingConfig(adder);
+        adder.add(new EmptyWidget(1, 10), 2);
+        addProfilesConfig(adder);
 
         finalizeGridWidget(gridWidget);
     }
@@ -68,8 +70,26 @@ public class ConfigScreen extends GameOptionsScreen {
         adder.add(new TextWidget(Text.of("Automatic Refilling Mode:"), client.textRenderer));
         adder.add(this.createButton(Text.of(ConfigManager.AR_MODE.getName()), this.automaticRefillingMode()));
 
-        adder.add(new TextWidget(Text.of("Automatic Refilling Behaviour:"), client.textRenderer));
-        adder.add(this.createButton(Text.of(ConfigManager.AR_LS_BEHAVIOUR.getName()), this.automaticRefillingBehaviour()));
+        adder.add(new TextWidget(Text.of("Automatic Refilling Locked Slots Behaviour:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.AR_LS_BEHAVIOUR.getName()), this.automaticRefillingLockedSlotsBehaviour()));
+
+        adder.add(new TextWidget(Text.of("Automatic Refilling Tool Behaviour:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.AR_TOOL_BEHAVIOUR.getName()), this.automaticRefillingToolBehaviour()));
+    }
+
+    private void addProfilesConfig(GridWidget.Adder adder) {
+        if (client == null) return;
+        adder.add(new TextWidget(Text.of("Profiles"), client.textRenderer), 2);
+        adder.add(new EmptyWidget(1, 1), 2);
+
+        adder.add(new TextWidget(Text.of("Profiles:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.PROFILES.getName()).copy().setStyle(ConfigManager.PROFILES.getStyle()), this.profiles()));
+
+        adder.add(new TextWidget(Text.of("Profiles Load Mode:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.P_LOAD_MODE.getName()), this.profilesLoadMode()));
+
+        adder.add(new TextWidget(Text.of("Profiles Locked Slots Behaviour:"), client.textRenderer));
+        adder.add(this.createButton(Text.of(ConfigManager.P_LS_BEHAVIOUR.getName()), this.profilesLockedSlotsBehaviour()));
     }
 
     private ButtonWidget.PressAction sorting() {
@@ -112,7 +132,7 @@ public class ConfigScreen extends GameOptionsScreen {
         };
     }
 
-    private ButtonWidget.PressAction automaticRefillingBehaviour() {
+    private ButtonWidget.PressAction automaticRefillingLockedSlotsBehaviour() {
         return button -> {
             ConfigManager.AR_LS_BEHAVIOUR.toggle();
             button.setMessage(Text.of(ConfigManager.AR_LS_BEHAVIOUR.getName()));
@@ -120,4 +140,35 @@ public class ConfigScreen extends GameOptionsScreen {
         };
     }
 
+    private ButtonWidget.PressAction automaticRefillingToolBehaviour() {
+        return button -> {
+            ConfigManager.AR_TOOL_BEHAVIOUR.toggle();
+            button.setMessage(Text.of(ConfigManager.AR_TOOL_BEHAVIOUR.getName()));
+            ConfigManager.save();
+        };
+    }
+
+    private ButtonWidget.PressAction profiles() {
+        return button -> {
+            ConfigManager.PROFILES.toggle();
+            button.setMessage(Text.of(ConfigManager.PROFILES.getName()));
+            ConfigManager.save();
+        };
+    }
+
+    private ButtonWidget.PressAction profilesLoadMode() {
+        return button -> {
+            ConfigManager.P_LOAD_MODE.toggle();
+            button.setMessage(Text.of(ConfigManager.P_LOAD_MODE.getName()));
+            ConfigManager.save();
+        };
+    }
+
+    private ButtonWidget.PressAction profilesLockedSlotsBehaviour() {
+        return button -> {
+            ConfigManager.P_LS_BEHAVIOUR.toggle();
+            button.setMessage(Text.of(ConfigManager.P_LS_BEHAVIOUR.getName()));
+            ConfigManager.save();
+        };
+    }
 }

@@ -2,14 +2,20 @@ package net.origins.inventive_inventory.events;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
+import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
+import net.origins.inventive_inventory.features.profiles.Profile;
+import net.origins.inventive_inventory.features.profiles.ProfileHandler;
 import net.origins.inventive_inventory.features.profiles.gui.ProfilesScreen;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
+
+import java.util.List;
 
 public class TickEvents {
 
@@ -19,6 +25,7 @@ public class TickEvents {
         ClientTickEvents.START_CLIENT_TICK.register(TickEvents::captureOffHand);
 
         ClientTickEvents.END_CLIENT_TICK.register(TickEvents::automaticRefilling);
+        ClientTickEvents.END_CLIENT_TICK.register(TickEvents::loadProfile);
     }
 
     private static void checkKeys(MinecraftClient client) {
@@ -60,6 +67,20 @@ public class TickEvents {
                     AutomaticRefillingHandler.runOffHand();
                 }
             } else AutomaticRefillingHandler.reset();
+        }
+    }
+
+    private static void loadProfile(MinecraftClient ignored) {
+        for (KeyBinding profileKey : KeyRegistry.profileKeys) {
+            if (profileKey.isPressed()) {
+                boolean validMode = ConfigManager.P_LOAD_MODE == ProfilesLoadMode.FAST_LOAD || (ConfigManager.P_LOAD_MODE == ProfilesLoadMode.NORMAL && KeyRegistry.loadProfileKey.isPressed());
+                if (validMode) {
+                    List<Profile> profiles = ProfileHandler.getProfiles();
+                    profiles.forEach(profile -> {
+                        if (profileKey.getTranslationKey().equals(profile.getKey())) ProfileHandler.load(profile);
+                    });
+                }
+            }
         }
     }
 }

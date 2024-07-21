@@ -2,18 +2,22 @@ package net.origins.inventive_inventory.config.enums.profiles;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.text.Style;
+import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.Configurable;
 
-public enum ProfilesLockedSlotsBehaviours implements Configurable {
-    IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
-    USE_LOCKED_SLOTS("Use Locked Slots");
+public enum ProfilesStatus implements Configurable {
+    ENABLED("Enabled", Formatting.GREEN),
+    DISABLED("Disabled", Formatting.RED);
 
-    public static final String CONFIG_KEY = "Profile Locked Slots Behaviour";
+    public static final String CONFIG_KEY = "Profiles";
     private final String name;
+    private final Style style;
 
-    ProfilesLockedSlotsBehaviours(String name) {
+    ProfilesStatus(String name, Formatting color) {
         this.name = name;
+        this.style = Style.EMPTY.withColor(color);
     }
 
     @Override
@@ -22,8 +26,13 @@ public enum ProfilesLockedSlotsBehaviours implements Configurable {
     }
 
     @Override
+    public Style getStyle() {
+        return this.style;
+    }
+
+    @Override
     public void toggle() {
-        ConfigManager.P_LS_BEHAVIOUR = values()[(this.ordinal() + 1) % values().length];
+        ConfigManager.SORTING = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {
@@ -36,3 +45,4 @@ public enum ProfilesLockedSlotsBehaviours implements Configurable {
         return values()[0];
     }
 }
+
