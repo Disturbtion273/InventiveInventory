@@ -5,13 +5,14 @@ import com.google.gson.JsonObject;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum ProfilesStatus implements Configurable {
     ENABLED("Enabled", Formatting.GREEN),
     DISABLED("Disabled", Formatting.RED);
 
     public static final String CONFIG_KEY = "Profiles";
+    public static final String DISPLAY_NAME = "Profiles";
     private final String name;
     private final Style style;
 
@@ -23,6 +24,11 @@ public enum ProfilesStatus implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

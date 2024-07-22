@@ -3,13 +3,14 @@ package net.origins.inventive_inventory.config.enums.profiles;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum ProfilesLoadMode implements Configurable {
     NORMAL("Normal"),
     FAST_LOAD("Fast Load");
 
     public static final String CONFIG_KEY = "Profile Load Mode";
+    public static final String DISPLAY_NAME = "Load Mode";
     private final String name;
 
     ProfilesLoadMode(String name) {
@@ -19,6 +20,11 @@ public enum ProfilesLoadMode implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

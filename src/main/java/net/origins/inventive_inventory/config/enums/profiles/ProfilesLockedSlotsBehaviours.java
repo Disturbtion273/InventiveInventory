@@ -3,13 +3,14 @@ package net.origins.inventive_inventory.config.enums.profiles;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum ProfilesLockedSlotsBehaviours implements Configurable {
     IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
     USE_LOCKED_SLOTS("Use Locked Slots");
 
     public static final String CONFIG_KEY = "Profile Locked Slots Behaviour";
+    public static final String DISPLAY_NAME = "Locked Slots Behaviour";
     private final String name;
 
     ProfilesLockedSlotsBehaviours(String name) {
@@ -19,6 +20,11 @@ public enum ProfilesLockedSlotsBehaviours implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

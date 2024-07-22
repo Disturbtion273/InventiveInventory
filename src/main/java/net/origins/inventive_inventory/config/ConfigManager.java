@@ -3,6 +3,7 @@ package net.origins.inventive_inventory.config;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 import net.origins.inventive_inventory.InventiveInventory;
+import net.origins.inventive_inventory.config.enums.Configurable;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
@@ -47,6 +48,21 @@ public class ConfigManager {
         save();
     }
 
+    public static void onConfigChange(Configurable config) {
+        if (config instanceof SortingStatus) SORTING = config;
+        if (config instanceof SortingModes) S_MODE = config;
+        if (config instanceof SortingBehaviours) S_BEHAVIOUR = config;
+        if (config instanceof AutomaticRefillingStatus) AUTOMATIC_REFILLING = config;
+        if (config instanceof AutomaticRefillingModes) AR_MODE = config;
+        if (config instanceof AutomaticRefillingLockedSlotsBehaviours) AR_LS_BEHAVIOUR = config;
+        if (config instanceof AutomaticRefillingToolBehaviours) AR_TOOL_BEHAVIOUR = config;
+        if (config instanceof ProfilesStatus) PROFILES = config;
+        if (config instanceof ProfilesLoadMode) P_LOAD_MODE = config;
+        if (config instanceof ProfilesLockedSlotsBehaviours) P_LS_BEHAVIOUR = config;
+        save();
+    }
+
+
     public static void save() {
         JsonObject config = new JsonObject();
         config.addProperty(SortingStatus.CONFIG_KEY, SORTING.getName());
@@ -54,8 +70,8 @@ public class ConfigManager {
         config.addProperty(SortingBehaviours.CONFIG_KEY, S_BEHAVIOUR.getName());
         config.addProperty(AutomaticRefillingStatus.CONFIG_KEY, AUTOMATIC_REFILLING.getName());
         config.addProperty(AutomaticRefillingModes.CONFIG_KEY, AR_MODE.getName());
-        config.addProperty(AutomaticRefillingLockedSlotsBehaviours.CONFIG_KEY, AR_LS_BEHAVIOUR.getName());
         config.addProperty(AutomaticRefillingToolBehaviours.CONFIG_KEY, AR_TOOL_BEHAVIOUR.getName());
+        config.addProperty(AutomaticRefillingLockedSlotsBehaviours.CONFIG_KEY, AR_LS_BEHAVIOUR.getName());
         config.addProperty(ProfilesStatus.CONFIG_KEY, PROFILES.getName());
         config.addProperty(ProfilesLoadMode.CONFIG_KEY, P_LOAD_MODE.getName());
         config.addProperty(ProfilesLockedSlotsBehaviours.CONFIG_KEY, P_LS_BEHAVIOUR.getName());
@@ -63,15 +79,19 @@ public class ConfigManager {
         FileHandler.write(CONFIG_FILE_PATH, config);
     }
 
+    public static JsonObject getConfigFile() {
+        return FileHandler.get(CONFIG_FILE_PATH).isJsonObject() ? FileHandler.get(CONFIG_FILE_PATH).getAsJsonObject() : new JsonObject();
+    }
+
     private static void initConfig() {
-        JsonObject config = FileHandler.get(CONFIG_FILE_PATH).isJsonObject() ? FileHandler.get(CONFIG_FILE_PATH).getAsJsonObject() : new JsonObject();
+        JsonObject config = getConfigFile();
         SORTING = SortingStatus.get(config);
         S_MODE = SortingModes.get(config);
         S_BEHAVIOUR = SortingBehaviours.get(config);
         AUTOMATIC_REFILLING = AutomaticRefillingStatus.get(config);
         AR_MODE = AutomaticRefillingModes.get(config);
-        AR_LS_BEHAVIOUR = AutomaticRefillingLockedSlotsBehaviours.get(config);
         AR_TOOL_BEHAVIOUR = AutomaticRefillingToolBehaviours.get(config);
+        AR_LS_BEHAVIOUR = AutomaticRefillingLockedSlotsBehaviours.get(config);
         PROFILES = ProfilesStatus.get(config);
         P_LOAD_MODE = ProfilesLoadMode.get(config);
         P_LS_BEHAVIOUR = ProfilesLockedSlotsBehaviours.get(config);

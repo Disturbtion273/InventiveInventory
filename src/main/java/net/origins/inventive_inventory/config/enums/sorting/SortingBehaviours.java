@@ -3,7 +3,7 @@ package net.origins.inventive_inventory.config.enums.sorting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum SortingBehaviours implements Configurable {
     SORT_CURSOR_STACK("Sort Cursor Stack"),
@@ -12,6 +12,7 @@ public enum SortingBehaviours implements Configurable {
     AOK_DEPENDENT_INVERTED("AOK-Dependent Inverted");
 
     public static final String CONFIG_KEY = "Sorting Behaviour";
+    public static final String DISPLAY_NAME = "Behaviour";
     private final String name;
 
     SortingBehaviours(String name) {
@@ -21,6 +22,11 @@ public enum SortingBehaviours implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

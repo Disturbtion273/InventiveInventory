@@ -3,13 +3,14 @@ package net.origins.inventive_inventory.config.enums.sorting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum SortingModes implements Configurable {
     NAME("Name"),
     ITEM_TYPE("Item Type");
 
     public static final String CONFIG_KEY = "Sorting Mode";
+    public static final String DISPLAY_NAME = "Mode";
     private final String name;
 
     SortingModes(String name) {
@@ -19,6 +20,11 @@ public enum SortingModes implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

@@ -3,13 +3,14 @@ package net.origins.inventive_inventory.config.enums.automatic_refilling;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.origins.inventive_inventory.config.ConfigManager;
-import net.origins.inventive_inventory.config.Configurable;
+import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum AutomaticRefillingModes implements Configurable {
     AUTOMATIC("Automatic"),
     SEMI_AUTOMATIC("Semi-Automatic");
 
     public static final String CONFIG_KEY = "Automatic Refilling Mode";
+    public static final String DISPLAY_NAME = "Mode";
     private final String name;
 
     AutomaticRefillingModes(String name) {
@@ -19,6 +20,11 @@ public enum AutomaticRefillingModes implements Configurable {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override
