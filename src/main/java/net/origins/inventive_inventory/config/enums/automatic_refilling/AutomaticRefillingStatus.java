@@ -3,8 +3,10 @@ package net.origins.inventive_inventory.config.enums.automatic_refilling;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum AutomaticRefillingStatus implements Configurable {
@@ -34,6 +36,11 @@ public enum AutomaticRefillingStatus implements Configurable {
     @Override
     public Style getStyle() {
         return this.style;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return Tooltips.STATUS;
     }
 
     @Override

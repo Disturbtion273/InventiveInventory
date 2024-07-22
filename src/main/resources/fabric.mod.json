@@ -30,6 +30,7 @@
         "keys.keybindfix.mixins.json",
         "config.screens.mixins.json"
     ],
+    "accessWidener": "inventive_inventory.accesswidener",
     "depends": {
         "fabricloader": ">=${loader_version}",
         "fabric": "*",

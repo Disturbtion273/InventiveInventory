@@ -3,11 +3,12 @@ package net.origins.inventive_inventory.config.screens;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
@@ -29,6 +30,7 @@ public class ConfigScreen extends GameOptionsScreen {
 
     public ConfigScreen(Screen parent) {
         super(parent, InventiveInventory.getClient().options, Text.of("Inventive Inventory Options"));
+        Tooltips.init();
     }
 
     @Override
@@ -52,22 +54,24 @@ public class ConfigScreen extends GameOptionsScreen {
 
     private void addTitle(String title) {
         if (this.body == null || client == null) return;
-        TextWidget text = new CustomTextWidget(Text.of(title).copy().setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD)), client.textRenderer);
+        TextWidget text = new CustomTextWidget(Text.of(title).copy().setStyle(Style.EMPTY.withBold(true)), client.textRenderer);
         text.setWidth(310);
         this.body.addWidgetEntry(text, null);
     }
 
-    private <E extends Enum<E> & Configurable> void addWidget(Class<E> enumClass, Configurable configurable) {
+    private <E extends Enum<E> & Configurable> void addWidget(Class<E> enumClass, Configurable config) {
         if (this.body == null || client == null) return;
-        this.body.addWidgetEntry(createTextWidget(configurable), createButton(enumClass, configurable));
+        CyclingButtonWidget<Configurable> button = createButton(enumClass, config);
+        this.body.addWidgetEntry(createTextWidget(config), button);
     }
 
-    private TextWidget createTextWidget(Configurable configurable) {
-        return new CustomTextWidget(Text.of(configurable.getDisplayName() + ":"), Objects.requireNonNull(client).textRenderer).alignCenter();
+    private TextWidget createTextWidget(Configurable config) {
+        return new CustomTextWidget(Text.of(config.getDisplayName() + ":"), Objects.requireNonNull(client).textRenderer).alignCenter();
     }
 
     private <E extends Enum<E> & Configurable> CyclingButtonWidget<Configurable> createButton(Class<E> enumClass, Configurable config) {
         return CyclingButtonWidget.builder((Function<Configurable, Text>) configurable -> Text.of(configurable.getName()).copy().setStyle(configurable.getStyle()))
+                .tooltip(SimpleOption.constantTooltip(config.getTooltip()))
                 .omitKeyText()
                 .values(enumClass.getEnumConstants()).initially(config)
                 .build(Text.empty(), (button, value) -> ConfigManager.onConfigChange(value));

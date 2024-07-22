@@ -2,11 +2,13 @@ package net.origins.inventive_inventory.config.enums.profiles;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.text.Text;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum ProfilesLoadMode implements Configurable {
-    NORMAL("Normal"),
+    STANDARD_LOAD("Standard Load"),
     FAST_LOAD("Fast Load");
 
     public static final String CONFIG_KEY = "Profile Load Mode";
@@ -25,6 +27,11 @@ public enum ProfilesLoadMode implements Configurable {
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return Tooltips.P_LOAD_MODE;
     }
 
     @Override

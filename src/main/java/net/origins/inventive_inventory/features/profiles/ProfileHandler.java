@@ -42,7 +42,7 @@ public class ProfileHandler {
 
     public static void load(Profile profile) {
         SlotRange slotRange = PlayerSlots.get(SlotTypes.INVENTORY, SlotTypes.HOTBAR, SlotTypes.OFFHAND);
-        slotRange = ConfigManager.P_LS_BEHAVIOUR == ProfilesLockedSlotsBehaviours.IGNORE_LOCKED_SLOTS ? slotRange : slotRange.append(SlotTypes.LOCKED_SLOT);
+        slotRange = ConfigManager.P_LS_BEHAVIOUR == ProfilesLockedSlotsBehaviours.IGNORE ? slotRange : slotRange.append(SlotTypes.LOCKED_SLOT);
         for (SavedSlot savedSlot : profile.getSavedSlots()) {
             for (int slot : slotRange) {
                 ItemStack slotStack = InteractionHandler.getStackFromSlot(slot);

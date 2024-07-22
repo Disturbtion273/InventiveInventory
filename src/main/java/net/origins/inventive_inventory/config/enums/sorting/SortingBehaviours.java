@@ -2,7 +2,9 @@ package net.origins.inventive_inventory.config.enums.sorting;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.text.Text;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum SortingBehaviours implements Configurable {
@@ -27,6 +29,11 @@ public enum SortingBehaviours implements Configurable {
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return Tooltips.S_BEHAVIOUR;
     }
 
     @Override

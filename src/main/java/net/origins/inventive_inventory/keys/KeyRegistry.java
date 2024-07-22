@@ -3,6 +3,8 @@ package net.origins.inventive_inventory.keys;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.origins.inventive_inventory.InventiveInventory;
+import org.jetbrains.annotations.Nullable;
 
 public class KeyRegistry {
     public static final String INVENTIVE_INVENTORY_CATEGORY = "key.inventive_inventory.category.inventive_inventory";
@@ -51,5 +53,13 @@ public class KeyRegistry {
                     INVENTIVE_INVENTORY_PROFILES_CATEGORY
             ));
         }
+    }
+
+    @Nullable
+    public static KeyBinding getByTranslationKey(String translationKey) {
+        for (KeyBinding keyBinding : InventiveInventory.getClient().options.allKeys) {
+            if (keyBinding.getTranslationKey().equals(translationKey)) return keyBinding;
+        }
+        return null;
     }
 }

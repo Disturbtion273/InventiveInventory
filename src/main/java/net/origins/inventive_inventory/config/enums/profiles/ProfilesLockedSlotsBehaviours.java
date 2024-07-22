@@ -2,12 +2,14 @@ package net.origins.inventive_inventory.config.enums.profiles;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.text.Text;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum ProfilesLockedSlotsBehaviours implements Configurable {
-    IGNORE_LOCKED_SLOTS("Ignore Locked Slots"),
-    USE_LOCKED_SLOTS("Use Locked Slots");
+    IGNORE("Ignore"),
+    INCLUDE("Include");
 
     public static final String CONFIG_KEY = "Profile Locked Slots Behaviour";
     public static final String DISPLAY_NAME = "Locked Slots Behaviour";
@@ -25,6 +27,11 @@ public enum ProfilesLockedSlotsBehaviours implements Configurable {
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return Tooltips.LOCKED_SLOTS_BEHAVIOUR;
     }
 
     @Override

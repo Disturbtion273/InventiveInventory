@@ -37,8 +37,8 @@ public class InteractionHandler {
     public static ItemStack getOffHandStack() { return InventiveInventory.getPlayer().getOffHandStack(); }
 
     public static ItemStack getAnyHandStack() {
-        if (getMainHandStack() != null) return getMainHandStack();
-        else if (getOffHandStack() != null) return getOffHandStack();
+        if (getMainHandStack() != ItemStack.EMPTY) return getMainHandStack();
+        else if (getOffHandStack() != ItemStack.EMPTY) return getOffHandStack();
         else return null;
     }
 

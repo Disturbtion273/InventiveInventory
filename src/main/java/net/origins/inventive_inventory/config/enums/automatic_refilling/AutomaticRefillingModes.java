@@ -2,7 +2,9 @@ package net.origins.inventive_inventory.config.enums.automatic_refilling;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.text.Text;
 import net.origins.inventive_inventory.config.ConfigManager;
+import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
 public enum AutomaticRefillingModes implements Configurable {
@@ -25,6 +27,11 @@ public enum AutomaticRefillingModes implements Configurable {
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return Tooltips.AR_MODE;
     }
 
     @Override

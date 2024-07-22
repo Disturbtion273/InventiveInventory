@@ -73,7 +73,7 @@ public class TickEvents {
     private static void loadProfile(MinecraftClient ignored) {
         for (KeyBinding profileKey : KeyRegistry.profileKeys) {
             if (profileKey.isPressed()) {
-                boolean validMode = ConfigManager.P_LOAD_MODE == ProfilesLoadMode.FAST_LOAD || (ConfigManager.P_LOAD_MODE == ProfilesLoadMode.NORMAL && KeyRegistry.loadProfileKey.isPressed());
+                boolean validMode = ConfigManager.P_LOAD_MODE == ProfilesLoadMode.FAST_LOAD || (ConfigManager.P_LOAD_MODE == ProfilesLoadMode.STANDARD_LOAD && KeyRegistry.loadProfileKey.isPressed());
                 if (validMode) {
                     List<Profile> profiles = ProfileHandler.getProfiles();
                     profiles.forEach(profile -> {

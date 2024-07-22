@@ -2,10 +2,15 @@ package net.origins.inventive_inventory.features.profiles.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.text.Text;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.util.Textures;
+import net.origins.inventive_inventory.util.tooltips.TooltipBuilder;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
+import net.origins.inventive_inventory.util.tooltips.TooltipType;
+
+import java.util.List;
 
 public class Section {
     private final int ID;
@@ -95,32 +100,13 @@ public class Section {
         boolean inY = this.iconY < mouseY && mouseY < this.iconY + 16;
         boolean isMouseOverIcon = inX && inY;
         if (isMouseOverIcon && this.profile != null) {
+            List<Text> textList;
             if (!this.profile.getName().isEmpty()) {
-                //TODO: Profile name tooltip
+                textList = TooltipBuilder.of(TooltipType.NAME, profile);
             } else if (this.profile.getDisplayStack() != null) {
-                context.drawItemTooltip(InventiveInventory.getClient().textRenderer, this.profile.getDisplayStack(), this.iconX, this.iconY);
-            } else {
-                //TODO: Unknown Tooltip
-            }
+                textList = TooltipBuilder.of(TooltipType.ITEM, profile);
+            } else textList = TooltipBuilder.of(TooltipType.UNKNOWN, profile);
+            context.drawTooltip(InventiveInventory.getClient().textRenderer, textList, mouseX, mouseY);
         }
     }
 }
-
-/*
-PROFILE NAME TOOLTIP
-NAME
-KEYBIND (wenns ein gibt)
- */
-
-/*
-ITEM TOOLTIP
-CUSTOM NAME
-KEYBIND
-ENCHANTMENTS
-POTION DINGER (evtl.)
- */
-
-/*
-UNKNOWN TOOLTIP
-KEYBIND (falls gibt)
- */
