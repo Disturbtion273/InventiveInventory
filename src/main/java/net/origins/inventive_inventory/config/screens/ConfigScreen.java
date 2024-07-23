@@ -10,10 +10,7 @@ import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
-import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.*;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
@@ -43,6 +40,7 @@ public class ConfigScreen extends GameOptionsScreen {
         this.addTitle("Automatic Refilling");
         this.addWidget(AutomaticRefillingStatus.class, ConfigManager.AUTOMATIC_REFILLING);
         this.addWidget(AutomaticRefillingModes.class, ConfigManager.AR_MODE);
+        this.addWidget(AutomaticRefillingToolBreakingBehaviour.class, ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR);
         this.addWidget(AutomaticRefillingToolBehaviours.class, ConfigManager.AR_TOOL_BEHAVIOUR);
         this.addWidget(AutomaticRefillingLockedSlotsBehaviours.class, ConfigManager.AR_LS_BEHAVIOUR);
 

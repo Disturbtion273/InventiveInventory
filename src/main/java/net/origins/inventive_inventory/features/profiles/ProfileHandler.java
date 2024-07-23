@@ -63,14 +63,17 @@ public class ProfileHandler {
     }
 
     public static void delete(Profile profile) {
-        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
         profilesJson.remove(Integer.toString(profile.getID()));
-        FileHandler.write(PROFILES_PATH, profilesJson);
+        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        jsonObject.remove(InventiveInventory.getWorldName());
+        jsonObject.add(InventiveInventory.getWorldName(), profilesJson);
+        FileHandler.write(PROFILES_PATH, jsonObject);
         availableProfileKeys = getAvailableProfileKeys();
     }
 
     public static List<Profile> getProfiles() {
-        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
         List<Profile> profiles = new ArrayList<>();
         for (String id : profilesJson.keySet()) {
             JsonObject jsonProfile = profilesJson.getAsJsonObject(id);
@@ -94,9 +97,12 @@ public class ProfileHandler {
         }
         jsonProfile.add("saved_slots", jsonArray);
 
-        JsonObject profiles = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
-        profiles.add(Integer.toString(profile.getID()), jsonProfile);
-        FileHandler.write(ProfileHandler.PROFILES_PATH, profiles);
+        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
+        profilesJson.add(Integer.toString(profile.getID()), jsonProfile);
+        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        jsonObject.remove(InventiveInventory.getWorldName());
+        jsonObject.add(InventiveInventory.getWorldName(), profilesJson);
+        FileHandler.write(ProfileHandler.PROFILES_PATH, jsonObject);
     }
     
     public static boolean profileExists(String name) {
@@ -122,7 +128,7 @@ public class ProfileHandler {
     }
 
     private static int getId() {
-        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
         if (jsonObject.isEmpty()) return 0;
         return Integer.parseInt(jsonObject.keySet().stream().sorted(Comparator.comparing(Integer::valueOf)).toList().getLast()) + 1;
     }

@@ -20,6 +20,7 @@ public class Tooltips {
     public static Text S_MODE = Text.empty();
     public static Text S_BEHAVIOUR = Text.empty();
     public static Text AR_MODE = Text.empty();
+    public static Text AR_TOOL_BREAKING_BEHAVIOUR = Text.empty();
     public static Text AR_TOOL_BEHAVIOUR = Text.empty();
     public static Text P_LOAD_MODE = Text.empty();
 
@@ -34,6 +35,7 @@ public class Tooltips {
             S_MODE = Text.of(jsonObject.get("S_MODE").getAsString());
             S_BEHAVIOUR = Text.of(jsonObject.get("S_BEHAVIOUR").getAsString());
             AR_MODE = Text.of(jsonObject.get("AR_MODE").getAsString());
+            AR_TOOL_BREAKING_BEHAVIOUR = Text.of(jsonObject.get("AR_TOOL_BREAKING_BEHAVIOUR").getAsString());
             AR_TOOL_BEHAVIOUR = Text.of(jsonObject.get("AR_TOOL_BEHAVIOUR").getAsString());
             P_LOAD_MODE = Text.of(jsonObject.get("P_LOAD_MODE").getAsString());
         } catch (IOException ignored) {}

@@ -26,6 +26,7 @@ import java.util.List;
 public class Converter {
     public static JsonObject itemStackToJson(ItemStack stack) {
         JsonObject stackJson = new JsonObject();
+        if (stack == null) return stackJson;
         stackJson.addProperty("id", Item.getRawId(stack.getItem()));
 
         JsonObject componentsJson = new JsonObject();

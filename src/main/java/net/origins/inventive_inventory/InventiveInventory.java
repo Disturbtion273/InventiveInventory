@@ -65,5 +65,16 @@ public class InventiveInventory implements ClientModInitializer {
         } return getPlayer().currentScreenHandler;
     }
 
+    public static String getWorldName() {
+        String worldName = "";
+        if (InventiveInventory.getClient().isInSingleplayer() && InventiveInventory.getClient().getServer() != null) {
+            worldName = InventiveInventory.getClient().getServer().getSaveProperties().getLevelName();
+        } else {
+            if (InventiveInventory.getClient().getNetworkHandler() != null){
+                worldName = InventiveInventory.getClient().getNetworkHandler().getConnection().getAddress().toString();
+            }
+        }
+        return worldName;
+    }
 
 }

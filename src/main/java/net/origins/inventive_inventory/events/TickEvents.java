@@ -6,6 +6,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
+import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBreakingBehaviour;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.origins.inventive_inventory.features.profiles.Profile;
@@ -41,7 +42,9 @@ public class TickEvents {
         if (client.currentScreen == null) {
             AutomaticRefillingHandler.runMainHand();
             if (client.options.useKey.isPressed() || client.options.dropKey.isPressed() || client.options.attackKey.isPressed()) {
-                AutomaticRefillingHandler.setMainHandStack(InteractionHandler.getMainHandStack());
+                if (!(ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR == AutomaticRefillingToolBreakingBehaviour.KEEP_TOOL && AutomaticRefillingHandler.TOOL_CLASSES.contains(InteractionHandler.getMainHandStack().getItem().getClass()) && InteractionHandler.getMainHandStack().getMaxDamage() - InteractionHandler.getMainHandStack().getDamage() == 1)) {
+                    AutomaticRefillingHandler.setMainHandStack(InteractionHandler.getMainHandStack());
+                }
             } else AutomaticRefillingHandler.reset();
         } else AutomaticRefillingHandler.reset();
     }
@@ -51,7 +54,9 @@ public class TickEvents {
             if (AutomaticRefillingHandler.RUN_OFFHAND) AutomaticRefillingHandler.runOffHand();
             else AutomaticRefillingHandler.RUN_OFFHAND = true;
             if (client.options.useKey.isPressed()) {
-                AutomaticRefillingHandler.setOffHandStack(InteractionHandler.getOffHandStack());
+                if (!(ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR == AutomaticRefillingToolBreakingBehaviour.KEEP_TOOL && AutomaticRefillingHandler.TOOL_CLASSES.contains(InteractionHandler.getOffHandStack().getItem().getClass()) && InteractionHandler.getOffHandStack().getMaxDamage() - InteractionHandler.getOffHandStack().getDamage() == 1)) {
+                    AutomaticRefillingHandler.setOffHandStack(InteractionHandler.getOffHandStack());
+                }
             }
         } else AutomaticRefillingHandler.reset();
     }

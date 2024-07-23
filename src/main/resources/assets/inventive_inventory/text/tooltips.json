@@ -4,6 +4,7 @@
     "S_MODE": "Specify the sorting rule.\nName is alphabetical and\nItem Type contextual.",
     "S_BEHAVIOUR": "Sort Cursor Stack: The stack in your cursor will be sorted.\n\nKeep Cursor Stack: The stack in your cursor will be kept.\n\nAOK-Dependent: When pressing the Advanced Operation Key the stack in your cursor will be kept.\n\nAOK-Dependent Inverted: When pressing the Advanced Operation Key the stack in your cursor will be sorted.",
     "AR_MODE": "Automatic: Stack will get refilled automatically.\n\nSemi-Automatic: Stack will only get refilled when pressing the Advanced Operation Key.",
+    "AR_TOOL_BREAKING_BEHAVIOUR": "Keep Tool: Before your tool breaks it will be replaced.\n\nBreak Tool: Your tool will be replaced after it broke.",
     "AR_TOOL_BEHAVIOUR": "Material: The tool with the best material will get refilled\n\nHealth: The tool with the least durability will get refilled.",
     "P_LOAD_MODE": "Standard Load: The Load Profile Key and the Profile Key have to be pressed.\n\nFast Load: Only the Profile Key has to be pressed."
 }
