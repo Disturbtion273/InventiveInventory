@@ -10,5 +10,4 @@ public interface Configurable {
     default Style getStyle() {
         return Style.EMPTY;
     }
-    void toggle();
 }

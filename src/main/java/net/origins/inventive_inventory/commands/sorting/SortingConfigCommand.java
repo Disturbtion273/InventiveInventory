@@ -61,17 +61,17 @@ public class SortingConfigCommand {
         );
     }
 
-    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(SortingStatus.values()).forEach(status -> builder.suggest(status.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getModes(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getModes(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(SortingModes.values()).forEach(mode -> builder.suggest(mode.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getBehaviours(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getBehaviours(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(SortingBehaviours.values()).forEach(behaviour -> builder.suggest(behaviour.getName()));
         return builder.buildFuture();
     }
@@ -112,19 +112,19 @@ public class SortingConfigCommand {
         return 1;
     }
 
-    private static int getStatus(CommandContext<FabricClientCommandSource> context) {
+    private static int getStatus(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Status: " + ConfigManager.SORTING.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getMode(CommandContext<FabricClientCommandSource> context) {
+    private static int getMode(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Mode: " + ConfigManager.S_MODE.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getBehaviour(CommandContext<FabricClientCommandSource> context) {
+    private static int getBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Behaviour: " + ConfigManager.S_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;

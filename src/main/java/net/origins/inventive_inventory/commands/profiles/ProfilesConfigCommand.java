@@ -61,17 +61,17 @@ public class ProfilesConfigCommand {
         );
     }
 
-    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(ProfilesStatus.values()).forEach(status -> builder.suggest(status.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getLoadModes(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getLoadModes(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(ProfilesLoadMode.values()).forEach(mode -> builder.suggest(mode.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getLockedSlotsBehaviours(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getLockedSlotsBehaviours(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(ProfilesLockedSlotsBehaviours.values()).forEach(behaviour -> builder.suggest(behaviour.getName()));
         return builder.buildFuture();
     }
@@ -112,18 +112,18 @@ public class ProfilesConfigCommand {
         return 1;
     }
 
-    private static int getStatus(CommandContext<FabricClientCommandSource> context) {
+    private static int getStatus(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Status: " + ConfigManager.PROFILES.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
-    private static int getLoadMode(CommandContext<FabricClientCommandSource> context) {
+    private static int getLoadMode(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Load Mode: " + ConfigManager.P_LOAD_MODE.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> context) {
+    private static int getLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Locked Slots Behaviour: " + ConfigManager.P_LS_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;

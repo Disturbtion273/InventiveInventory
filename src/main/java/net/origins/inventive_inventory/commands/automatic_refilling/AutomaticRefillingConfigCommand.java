@@ -77,27 +77,27 @@ public class AutomaticRefillingConfigCommand {
         );
     }
 
-    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getStatuses(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(AutomaticRefillingStatus.values()).forEach(status -> builder.suggest(status.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getModes(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getModes(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(AutomaticRefillingModes.values()).forEach(mode -> builder.suggest(mode.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getToolBreakingBehaviours(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getToolBreakingBehaviours(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(AutomaticRefillingToolBreakingBehaviour.values()).forEach(behaviour -> builder.suggest(behaviour.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getToolBehaviours(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getToolBehaviours(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(AutomaticRefillingToolBehaviours.values()).forEach(behaviour -> builder.suggest(behaviour.getName()));
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> getLockedSlotsBehaviours(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getLockedSlotsBehaviours(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         Arrays.asList(AutomaticRefillingLockedSlotsBehaviours.values()).forEach(behaviour -> builder.suggest(behaviour.getName()));
         return builder.buildFuture();
     }
@@ -162,31 +162,31 @@ public class AutomaticRefillingConfigCommand {
         return 1;
     }
 
-    private static int getStatus(CommandContext<FabricClientCommandSource> context) {
+    private static int getStatus(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Status: " + ConfigManager.AUTOMATIC_REFILLING.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getMode(CommandContext<FabricClientCommandSource> context) {
+    private static int getMode(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Mode: " + ConfigManager.AR_MODE.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getToolBreakingBehaviour(CommandContext<FabricClientCommandSource> context) {
+    private static int getToolBreakingBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Tool Breaking Behaviour: " + ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getToolBehaviour(CommandContext<FabricClientCommandSource> context) {
+    private static int getToolBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Tool Behaviour: " + ConfigManager.AR_TOOL_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
 
-    private static int getLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> context) {
+    private static int getLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
         Text text = Text.of("Locked Slots Behaviour: " + ConfigManager.AR_LS_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;

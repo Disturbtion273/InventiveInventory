@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
@@ -41,11 +40,6 @@ public enum SortingStatus implements Configurable {
     @Override
     public Style getStyle() {
         return this.style;
-    }
-
-    @Override
-    public void toggle() {
-        ConfigManager.SORTING = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {

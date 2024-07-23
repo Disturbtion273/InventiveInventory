@@ -36,7 +36,7 @@ public class ProfilesCreateCommand {
 
     private static int create(CommandContext<FabricClientCommandSource> context) {
         String name = StringArgumentType.getString(context, "name");
-        if (!name.isEmpty() && !ProfileHandler.profileExists(name)) {
+        if (!name.isEmpty() && ProfileHandler.isNoProfile(name)) {
             ProfileHandler.create(name, "");
             return 1;
         }
@@ -48,7 +48,7 @@ public class ProfilesCreateCommand {
     private static int createWithKeyBinding(CommandContext<FabricClientCommandSource> context) {
         String name = StringArgumentType.getString(context, "name");
         String keyBinding = StringArgumentType.getString(context, "keybinding");
-        if (!name.isEmpty() && !ProfileHandler.profileExists(name)) {
+        if (!name.isEmpty() && ProfileHandler.isNoProfile(name)) {
             for (KeyBinding key : ProfileHandler.getAvailableProfileKeys()) {
                 if (key.getBoundKeyLocalizedText().getString().equals(keyBinding)) {
                     ProfileHandler.create(name, key.getTranslationKey());
@@ -64,7 +64,7 @@ public class ProfilesCreateCommand {
         return -1;
     }
 
-    private static CompletableFuture<Suggestions> getKeyBinds(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getKeyBinds(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         ProfileHandler.getAvailableProfileKeys().forEach(keyBinding -> builder.suggest(keyBinding.getBoundKeyLocalizedText().getString()));
         return builder.buildFuture();
     }

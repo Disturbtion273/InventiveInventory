@@ -42,6 +42,6 @@ public class Merger {
                 emptySlot = slot;
             }
         }
-        if (!InteractionHandler.isCursorEmpty() && emptySlot != null) InteractionHandler.leftClickStack(emptySlot);
+        if (InteractionHandler.isCursorFull() && emptySlot != null) InteractionHandler.leftClickStack(emptySlot);
     }
 }

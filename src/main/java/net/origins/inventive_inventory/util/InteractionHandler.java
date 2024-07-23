@@ -15,8 +15,8 @@ public class InteractionHandler {
         return InventiveInventory.getScreenHandler().getCursorStack();
     }
 
-    public static boolean isCursorEmpty() {
-        return getCursorStack().isEmpty();
+    public static boolean isCursorFull() {
+        return !getCursorStack().isEmpty();
     }
 
     public static ItemStack getStackFromSlot(int slot) {
@@ -59,7 +59,7 @@ public class InteractionHandler {
         ClientPlayerEntity player = InventiveInventory.getPlayer();
         manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
         manager.clickSlot(getSyncId(), target, LEFT_CLICK, SlotActionType.PICKUP, player);
-        if (!isCursorEmpty()) {
+        if (isCursorFull()) {
             manager.clickSlot(getSyncId(), slot, LEFT_CLICK, SlotActionType.PICKUP, player);
         }
     }

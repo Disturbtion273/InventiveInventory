@@ -44,7 +44,7 @@ public class ProfilesDeleteCommand {
         return -1;
     }
 
-    private static CompletableFuture<Suggestions> getProfiles(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> getProfiles(CommandContext<FabricClientCommandSource> ignoredContext, SuggestionsBuilder builder) {
         ProfileHandler.getProfiles().forEach(profile -> {
             if (!profile.getName().isEmpty()) builder.suggest(profile.getName());
         });

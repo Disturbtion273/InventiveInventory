@@ -122,10 +122,10 @@ public class ProfileHandler {
         FileHandler.write(ProfileHandler.PROFILES_PATH, jsonObject);
     }
     
-    public static boolean profileExists(String name) {
+    public static boolean isNoProfile(String name) {
         for (Profile profile : getProfiles()) {
-            if (profile.getName().equals(name)) return true;
-        } return false;
+            if (profile.getName().equals(name)) return false;
+        } return true;
     }
 
     public static String getAvailableProfileKey() {

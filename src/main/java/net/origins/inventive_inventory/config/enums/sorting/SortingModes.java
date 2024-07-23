@@ -3,7 +3,6 @@ package net.origins.inventive_inventory.config.enums.sorting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.text.Text;
-import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
@@ -32,11 +31,6 @@ public enum SortingModes implements Configurable {
     @Override
     public Text getTooltip() {
         return Tooltips.S_MODE;
-    }
-
-    @Override
-    public void toggle() {
-        ConfigManager.S_MODE = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {

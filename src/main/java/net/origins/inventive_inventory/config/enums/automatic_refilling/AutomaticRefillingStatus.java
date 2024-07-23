@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.accessibility.Tooltips;
 import net.origins.inventive_inventory.config.enums.Configurable;
 
@@ -41,11 +40,6 @@ public enum AutomaticRefillingStatus implements Configurable {
     @Override
     public Text getTooltip() {
         return Tooltips.STATUS;
-    }
-
-    @Override
-    public void toggle() {
-        ConfigManager.AUTOMATIC_REFILLING = values()[(this.ordinal() + 1) % values().length];
     }
 
     public static Configurable get(JsonObject config) {

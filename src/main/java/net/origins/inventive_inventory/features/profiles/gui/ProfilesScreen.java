@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfilesScreen extends HandledScreen<ScreenHandler> {
-    public static int RADIUS = 60;
+    public static final int RADIUS = 60;
     public static final int COLOR = 0x7F000000;
     public static final int HOVER_COLOR = 0x3FFFFFFF;
     public static final int DELETE_COLOR = 0x7FE4080A;

@@ -18,7 +18,7 @@ public class KeyRegistry {
     public static KeyBinding advancedOperationKey;
     public static KeyBinding openProfilesScreenKey;
     public static KeyBinding loadProfileKey;
-    public static KeyBinding[] profileKeys = new KeyBinding[3];
+    public static final KeyBinding[] profileKeys = new KeyBinding[3];
 
     public static void register() {
         sortKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
