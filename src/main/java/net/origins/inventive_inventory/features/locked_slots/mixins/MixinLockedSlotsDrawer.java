@@ -7,7 +7,6 @@ import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
 import net.origins.inventive_inventory.util.Drawer;
-import net.origins.inventive_inventory.util.ScreenCheck;
 import net.origins.inventive_inventory.util.Textures;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
@@ -48,13 +47,13 @@ public class MixinLockedSlotsDrawer {
     @Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
     private static void onDrawSlotHighlight(DrawContext context, int x, int y, int z, CallbackInfo ci) {
         if (!InventiveInventory.getPlayer().isInCreativeMode()) {
-            if (AdvancedOperationHandler.isPressed() && ScreenCheck.isPlayerInventory()) {
+            if (AdvancedOperationHandler.isPressed()) {
                 Slot slot = MouseLocation.getHoveredSlot();
                 if (slot != null) {
-                    if (LockedSlotsHandler.getLockedSlots().contains(slot.getIndex())) {
+                    if (LockedSlotsHandler.getLockedSlots().adjust().contains(slot.id)) {
                         Drawer.drawSlotBackground(context, x, y, 0xFF8B0000, 1);
                         ci.cancel();
-                    } else if (PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT).contains(slot.getIndex())) {
+                    } else if (PlayerSlots.get().exclude(SlotTypes.LOCKED_SLOT).contains(slot.id)) {
                         Drawer.drawSlotBackground(context, x, y, 0x66FF0000, 1);
                         ci.cancel();
                     }

@@ -1,7 +1,6 @@
 package net.origins.inventive_inventory.features.locked_slots;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.util.ScreenCheck;
@@ -18,7 +17,15 @@ public class LockedSlots extends ArrayList<Integer> {
     public LockedSlots adjust() {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         if (!ScreenCheck.isPlayerHandler()) {
-            this.replaceAll(slot -> slot + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE) - PlayerScreenHandler.EQUIPMENT_END);
+            this.replaceAll(slot -> slot + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE - 9));
+        }
+        return this;
+    }
+
+    public LockedSlots unadjust() {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        if (!ScreenCheck.isPlayerHandler()) {
+            this.replaceAll(slot -> slot - (screenHandler.slots.size() + PlayerInventory.MAIN_SIZE + 9));
         }
         return this;
     }

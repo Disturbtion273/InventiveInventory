@@ -15,13 +15,13 @@ public class LockedSlotsHandler {
     public static final Path LOCKED_SLOTS_PATH = ConfigManager.CONFIG_PATH.resolve(LOCKED_SLOTS_FILE);
 
     public static void toggle(int slot) {
-        LockedSlots lockedSlots = getLockedSlots();
+        LockedSlots lockedSlots = getLockedSlots().adjust();
         if (PlayerSlots.get().contains(slot)) {
             if (lockedSlots.contains(slot)) {
                 lockedSlots.remove(Integer.valueOf(slot));
             } else lockedSlots.add(slot);
             JsonArray lockedSlotsJson = new JsonArray();
-            for (int lockedSlot : lockedSlots) {
+            for (int lockedSlot : lockedSlots.unadjust()) {
                 lockedSlotsJson.add(lockedSlot);
             }
             FileHandler.write(LOCKED_SLOTS_PATH, lockedSlotsJson);

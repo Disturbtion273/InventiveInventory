@@ -12,10 +12,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HandledScreen.class)
-public class MixinMouseHandler {
-    @Shadow
-    @Nullable
-    protected Slot focusedSlot;
+public abstract class MixinMouseHandler {
+    @Shadow @Nullable protected Slot focusedSlot;
 
     @Inject(method = "render", at = @At("HEAD"))
     private void mouseOverSlot(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
