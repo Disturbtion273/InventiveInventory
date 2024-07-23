@@ -24,36 +24,38 @@ public class SortingConfigCommand {
     private static final Style style = Style.EMPTY.withBold(true);
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
-        dispatcher.register(ClientCommandManager.literal("inventive-sorting")
-                .then(ClientCommandManager.literal("set")
-                        .then(ClientCommandManager.literal("Status")
-                                .then(ClientCommandManager.argument("status", StringArgumentType.word())
-                                        .suggests(SortingConfigCommand::getStatuses)
-                                        .executes(SortingConfigCommand::switchStatus)
+        dispatcher.register(ClientCommandManager.literal("inventive-config")
+                .then(ClientCommandManager.literal("Sorting")
+                        .then(ClientCommandManager.literal("set")
+                                .then(ClientCommandManager.literal("Status")
+                                        .then(ClientCommandManager.argument("status", StringArgumentType.word())
+                                                .suggests(SortingConfigCommand::getStatuses)
+                                                .executes(SortingConfigCommand::switchStatus)
+                                        )
+                                )
+                                .then(ClientCommandManager.literal("Mode")
+                                        .then(ClientCommandManager.argument("mode", StringArgumentType.greedyString())
+                                                .suggests(SortingConfigCommand::getModes)
+                                                .executes(SortingConfigCommand::switchMode)
+                                        )
+                                )
+                                .then(ClientCommandManager.literal("Behaviour")
+                                        .then(ClientCommandManager.argument("behaviour", StringArgumentType.greedyString())
+                                                .suggests(SortingConfigCommand::getBehaviours)
+                                                .executes(SortingConfigCommand::switchBehaviour)
+                                        )
                                 )
                         )
-                        .then(ClientCommandManager.literal("Mode")
-                                .then(ClientCommandManager.argument("mode", StringArgumentType.greedyString())
-                                        .suggests(SortingConfigCommand::getModes)
-                                        .executes(SortingConfigCommand::switchMode)
+                        .then(ClientCommandManager.literal("get")
+                                .then(ClientCommandManager.literal("Status")
+                                        .executes(SortingConfigCommand::getStatus)
                                 )
-                        )
-                        .then(ClientCommandManager.literal("Behaviour")
-                                .then(ClientCommandManager.argument("behaviour", StringArgumentType.greedyString())
-                                        .suggests(SortingConfigCommand::getBehaviours)
-                                        .executes(SortingConfigCommand::switchBehaviour)
+                                .then(ClientCommandManager.literal("Mode")
+                                        .executes(SortingConfigCommand::getMode)
                                 )
-                        )
-                )
-                .then(ClientCommandManager.literal("get")
-                        .then(ClientCommandManager.literal("Status")
-                                .executes(SortingConfigCommand::getStatus)
-                        )
-                        .then(ClientCommandManager.literal("Mode")
-                                .executes(SortingConfigCommand::getMode)
-                        )
-                        .then(ClientCommandManager.literal("Behaviour")
-                                .executes(SortingConfigCommand::getBehaviour)
+                                .then(ClientCommandManager.literal("Behaviour")
+                                        .executes(SortingConfigCommand::getBehaviour)
+                                )
                         )
                 )
         );
@@ -75,14 +77,13 @@ public class SortingConfigCommand {
     }
 
     private static int switchStatus(CommandContext<FabricClientCommandSource> context) {
-        String status = StringArgumentType.getString(context, "status");    // context.getArgument("status", String.class);
+        String status = StringArgumentType.getString(context, "status");
         Text text = Text.of("You cannot switch the Status to: " + status).copy().setStyle(style.withColor(Formatting.RED));
         if (Arrays.stream(SortingStatus.values()).anyMatch(s -> s.getName().equals(status))) {
             ConfigManager.SORTING = SortingStatus.valueOf(status.toUpperCase());
             ConfigManager.save();
             text = Text.of("Switched Status to: " + status).copy().setStyle(style.withColor(Formatting.GREEN));
         }
-//      A L T E R N A T I V:  try { ConfigManager.SORTING = SortingStatus.valueOf(status.toUpperCase()); ConfigManager.save(); text = Text.of("Switched Mode to: " + status).copy().setStyle(style.withColor(Formatting.GREEN)); } catch (IllegalArgumentException ignored) {}
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
@@ -98,8 +99,6 @@ public class SortingConfigCommand {
         InventiveInventory.getPlayer().sendMessage(text, true);
         return 1;
     }
-
-
 
     private static int switchBehaviour(CommandContext<FabricClientCommandSource> context) {
         String behaviour = StringArgumentType.getString(context, "behaviour");

@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
@@ -27,6 +30,7 @@ public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.CONFIG_PATH.resolve(PROFILES_FILE);
     public static List<KeyBinding> availableProfileKeys;
+    private static final Style style = Style.EMPTY.withBold(true);
 
     public static void create(String name, String key) {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
@@ -39,6 +43,8 @@ public class ProfileHandler {
         }
         save(new Profile(getId(), name, key, savedSlots));
         availableProfileKeys = getAvailableProfileKeys();
+        Text text = Text.of("Profile created!").copy().setStyle(style.withColor(Formatting.GREEN));
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void load(Profile profile) {
@@ -55,11 +61,15 @@ public class ProfileHandler {
                 break;
             }
         }
+        Text text = Text.of("Profile loaded!").copy().setStyle(style.withColor(Formatting.BLUE));
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void overwrite(Profile profile) {
         delete(profile);
         create("", profile.getKey());
+        Text text = Text.of("Profile overwritten!").copy().setStyle(style.withColor(Formatting.GOLD));
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static void delete(Profile profile) {
@@ -70,6 +80,8 @@ public class ProfileHandler {
         jsonObject.add(InventiveInventory.getWorldName(), profilesJson);
         FileHandler.write(PROFILES_PATH, jsonObject);
         availableProfileKeys = getAvailableProfileKeys();
+        Text text = Text.of("Profile deleted!").copy().setStyle(style.withColor(Formatting.RED));
+        InventiveInventory.getPlayer().sendMessage(text, true);
     }
 
     public static List<Profile> getProfiles() {

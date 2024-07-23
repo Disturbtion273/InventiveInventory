@@ -58,7 +58,7 @@ public class TooltipBuilder {
     private static void addKey(Profile profile, List<Text> textList) {
         if (profile.getKey() != null) {
             KeyBinding keyBinding = KeyRegistry.getByTranslationKey(profile.getKey());
-            if (keyBinding != null) textList.add(Text.of("Key: " + KeyBindingHelper.getBoundKeyOf(keyBinding).getLocalizedText().getString()));
+            if (keyBinding != null) textList.add(Text.of("Key: " + keyBinding.getBoundKeyLocalizedText().getString()));
         }
     }
 }
