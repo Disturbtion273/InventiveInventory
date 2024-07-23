@@ -10,7 +10,6 @@ import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

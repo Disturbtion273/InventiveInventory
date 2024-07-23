@@ -2,7 +2,8 @@ package net.origins.inventive_inventory.config.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;

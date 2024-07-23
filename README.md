@@ -53,4 +53,4 @@ Not implemented yet!
 
 ## Known Bugs 🪲
 ### Sorting
-1. Sometimes, weird stuff can happen when trying to sort items in Creative mode. As our primary focus is on enhancing the Survival experience, we plan to investigate and address these issues in the future. In the meantime, we recommend not using this mod in Creative mode. Please note that the mod currently doesn’t work well on server networks like Hypixel, but it should function normally on other hosted servers.
+1. Sometimes, weird stuff can happen when trying to sort items in Creative mode. As our primary focus is on enhancing the Survival experience, we plan to investigate and address these issues in the future. In the meantime, we recommend not using this mod in Creative mode. Please note that the mod currently doesn't work well on server networks like Hypixel, but it should function normally on other hosted servers.

@@ -6,8 +6,8 @@ import net.minecraft.text.Text;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.util.Textures;
-import net.origins.inventive_inventory.util.tooltips.TooltipBuilder;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
+import net.origins.inventive_inventory.util.tooltips.TooltipBuilder;
 import net.origins.inventive_inventory.util.tooltips.TooltipType;
 
 import java.util.List;
