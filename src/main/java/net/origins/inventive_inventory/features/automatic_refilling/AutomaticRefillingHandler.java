@@ -7,7 +7,6 @@ import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingStatus;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBehaviours;
-import net.origins.inventive_inventory.util.ComponentsHelper;
 import net.origins.inventive_inventory.util.InteractionHandler;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
 import net.origins.inventive_inventory.util.slots.SlotRange;
@@ -71,12 +70,12 @@ public class AutomaticRefillingHandler {
     }
 
     private static List<Integer> getSameItemSlots(ItemStack handStack) {
-        SlotRange slotRange = PlayerSlots.get();
+        SlotRange slotRange = PlayerSlots.get(SlotTypes.INVENTORY, SlotTypes.HOTBAR).exclude(InteractionHandler.getSelectedSlot());
         slotRange = ConfigManager.AR_LS_BEHAVIOUR == AutomaticRefillingLockedSlotsBehaviours.IGNORE ? slotRange.exclude(SlotTypes.LOCKED_SLOT) : slotRange;
-        Stream<Integer> sameItemSlotsStream =  slotRange.append(SlotTypes.HOTBAR).exclude(InteractionHandler.getSelectedSlot()).stream()
+        Stream<Integer> sameItemSlotsStream =  slotRange.stream()
                 .filter(slot -> {
                     ItemStack itemStack = InteractionHandler.getStackFromSlot(slot);
-                    boolean isEqual = ItemStack.areItemsAndComponentsEqual(handStack, itemStack) || ComponentsHelper.arePotionsEqual(handStack, itemStack);
+                    boolean isEqual = ItemStack.areItemsAndComponentsEqual(handStack, itemStack);
                     boolean isToolAndEqual = handStack.getItem().getClass().equals(itemStack.getItem().getClass()) && TOOL_CLASSES.contains(handStack.getItem().getClass());
                     return isEqual || isToolAndEqual;
                 });

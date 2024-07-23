@@ -10,6 +10,7 @@ import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.ComponentsHelper;
+import net.origins.inventive_inventory.util.Converter;
 import net.origins.inventive_inventory.util.FileHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
@@ -82,13 +83,13 @@ public class ProfileHandler {
         JsonObject jsonProfile = new JsonObject();
         jsonProfile.addProperty("name", profile.getName());
         jsonProfile.addProperty("key", profile.getKey());
-        jsonProfile.add("display_stack", profile.getDisplayStackAsJsonObject());
+        jsonProfile.add("display_stack", Converter.itemStackToJson(profile.getDisplayStack()));
 
         JsonArray jsonArray = new JsonArray();
         for (SavedSlot savedSlot : profile.getSavedSlots()) {
             JsonObject savedSlotMap = new JsonObject();
             savedSlotMap.addProperty("slot", savedSlot.slot());
-            savedSlotMap.add("stack", savedSlot.getItemStackAsJsonObject());
+            savedSlotMap.add("stack", Converter.itemStackToJson(savedSlot.stack()));
             jsonArray.add(savedSlotMap);
         }
         jsonProfile.add("saved_slots", jsonArray);
