@@ -8,6 +8,7 @@ import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingModes;
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBreakingBehaviour;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
+import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
@@ -30,15 +31,17 @@ public class TickEvents {
     }
 
     private static void checkKeys(MinecraftClient client) {
+        if (InventiveInventory.getPlayer().isInCreativeMode()) return;
         if (client.currentScreen == null) {
             AdvancedOperationHandler.setPressed(KeyRegistry.advancedOperationKey.isPressed());
         }
-        if (KeyRegistry.openProfilesScreenKey.isPressed()) {
+        if (KeyRegistry.openProfilesScreenKey.isPressed() && ConfigManager.PROFILES == ProfilesStatus.ENABLED) {
             InventiveInventory.getClient().setScreen(new ProfilesScreen());
         }
     }
 
     private static void captureMainHand(MinecraftClient client) {
+        if (InventiveInventory.getPlayer().isInCreativeMode()) return;
         if (client.currentScreen == null) {
             AutomaticRefillingHandler.runMainHand();
             if (client.options.useKey.isPressed() || client.options.dropKey.isPressed() || client.options.attackKey.isPressed()) {
@@ -50,6 +53,7 @@ public class TickEvents {
     }
 
     private static void captureOffHand(MinecraftClient client) {
+        if (InventiveInventory.getPlayer().isInCreativeMode()) return;
         if (client.currentScreen == null) {
             if (AutomaticRefillingHandler.RUN_OFFHAND) AutomaticRefillingHandler.runOffHand();
             else AutomaticRefillingHandler.RUN_OFFHAND = true;
@@ -62,6 +66,7 @@ public class TickEvents {
     }
 
     private static void automaticRefilling(MinecraftClient client) {
+        if (InventiveInventory.getPlayer().isInCreativeMode()) return;
         if (client.currentScreen == null && (client.options.useKey.isPressed() || client.options.dropKey.isPressed() || client.options.attackKey.isPressed())) {
             boolean validMode = AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC
                     || !AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC;
@@ -76,6 +81,7 @@ public class TickEvents {
     }
 
     private static void loadProfile(MinecraftClient ignored) {
+        if (InventiveInventory.getPlayer().isInCreativeMode()) return;
         for (KeyBinding profileKey : KeyRegistry.profileKeys) {
             if (profileKey.isPressed()) {
                 boolean validMode = ConfigManager.P_LOAD_MODE == ProfilesLoadMode.FAST_LOAD || (ConfigManager.P_LOAD_MODE == ProfilesLoadMode.STANDARD_LOAD && KeyRegistry.loadProfileKey.isPressed());

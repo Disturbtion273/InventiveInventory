@@ -11,6 +11,7 @@ import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
+import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.ComponentsHelper;
 import net.origins.inventive_inventory.util.Converter;
@@ -33,6 +34,7 @@ public class ProfileHandler {
     private static final Style style = Style.EMPTY.withBold(true);
 
     public static void create(String name, String key) {
+        if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
         List<SavedSlot> savedSlots = new ArrayList<>();
         for (int slot : PlayerSlots.get(SlotTypes.HOTBAR, SlotTypes.OFFHAND)) {
@@ -48,6 +50,7 @@ public class ProfileHandler {
     }
 
     public static void load(Profile profile) {
+        if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
         SlotRange slotRange = PlayerSlots.get(SlotTypes.INVENTORY, SlotTypes.HOTBAR, SlotTypes.OFFHAND);
         slotRange = ConfigManager.P_LS_BEHAVIOUR == ProfilesLockedSlotsBehaviours.IGNORE ? slotRange : slotRange.append(SlotTypes.LOCKED_SLOT);
         for (SavedSlot savedSlot : profile.getSavedSlots()) {
@@ -66,6 +69,7 @@ public class ProfileHandler {
     }
 
     public static void overwrite(Profile profile) {
+        if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
         delete(profile);
         create("", profile.getKey());
         Text text = Text.of("Profile overwritten!").copy().setStyle(style.withColor(Formatting.GOLD));
@@ -73,6 +77,7 @@ public class ProfileHandler {
     }
 
     public static void delete(Profile profile) {
+        if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
         JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
         profilesJson.remove(Integer.toString(profile.getID()));
         JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();

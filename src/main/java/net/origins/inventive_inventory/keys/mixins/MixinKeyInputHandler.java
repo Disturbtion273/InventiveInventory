@@ -17,7 +17,7 @@ public class MixinKeyInputHandler {
         if (KeyRegistry.advancedOperationKey.matchesKey(keyCode, scanCode)) {
             AdvancedOperationHandler.setPressed(true);
         }
-        if (KeyRegistry.sortKey.matchesKey(keyCode, scanCode)) {
+        if (KeyRegistry.sortKey.matchesKey(keyCode, scanCode) ) {
             SortingHandler.sort();
         }
     }
