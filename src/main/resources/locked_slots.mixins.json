@@ -8,9 +8,7 @@
     },
     "client": [
         "MixinLockedSlotsDrawer",
-        "MixinLockedSlotsToggle"
-    ],
-    "mixins": [
+        "MixinLockedSlotsToggle",
         "MixinItemPickup"
     ]
 }
