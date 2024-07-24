@@ -47,13 +47,6 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        if (this.client != null && this.client.world == null) {
-            this.renderInGameBackground(context);
-        }
-    }
-
-    @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {}
 
     @Override
@@ -102,7 +95,12 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
             if (section != -1) {
                 Profile profile = sections.get(section).getProfile();
                 if (profile == null) {
-                    ProfileHandler.create("", ProfileHandler.getAvailableProfileKey());
+                    if (DELETE_KEY_PRESSED) {
+                        InventiveInventory.getClient().setScreen(new ProfileNamingScreen());
+                        return true;
+                    } else {
+                        ProfileHandler.create("", ProfileHandler.getAvailableProfileKey());
+                    }
                 } else if (DELETE_KEY_PRESSED) {
                     ProfileHandler.delete(profile);
                 } else if (OVERWRITE_KEY_PRESSED) {
