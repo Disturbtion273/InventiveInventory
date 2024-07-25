@@ -12,6 +12,7 @@ import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
 import net.origins.inventive_inventory.features.profiles.gui.ProfilesScreen;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
@@ -38,6 +39,7 @@ public class TickEvents {
         if (KeyRegistry.openProfilesScreenKey.isPressed() && ConfigManager.PROFILES == ProfilesStatus.ENABLED) {
             InventiveInventory.getClient().setScreen(new ProfilesScreen());
         }
+        if (ProfilesConfigScreen.SHOULD_BE_SET) InventiveInventory.getClient().setScreen(new ProfilesConfigScreen(client.currentScreen));
     }
 
     private static void captureMainHand(MinecraftClient client) {

@@ -16,6 +16,7 @@ import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -56,6 +57,9 @@ public class ProfilesConfigCommand {
                                 .then(ClientCommandManager.literal("LockedSlotsBehaviour")
                                         .executes(ProfilesConfigCommand::getLockedSlotsBehaviour)
                                 )
+                        )
+                        .then(ClientCommandManager.literal("ConfigScreen")
+                                .executes(ProfilesConfigCommand::setConfigScreen)
                         )
                 )
         );
@@ -129,4 +133,8 @@ public class ProfilesConfigCommand {
         return 1;
     }
 
+    private static int setConfigScreen(CommandContext<FabricClientCommandSource> ignoredContext) {
+        ProfilesConfigScreen.SHOULD_BE_SET = true;
+        return 1;
+    }
 }

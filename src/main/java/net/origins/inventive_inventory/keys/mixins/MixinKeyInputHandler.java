@@ -1,6 +1,8 @@
 package net.origins.inventive_inventory.keys.mixins;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.origins.inventive_inventory.InventiveInventory;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
 import net.origins.inventive_inventory.features.sorting.SortingHandler;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;

@@ -1,5 +1,6 @@
 package net.origins.inventive_inventory.features.profiles.gui;
 
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.screen.ScreenTexts;
@@ -8,10 +9,10 @@ import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
 import org.lwjgl.glfw.GLFW;
 
-public class ProfileNamingScreen extends Screen {
+public class ProfilesNamingScreen extends Screen {
     private TextFieldWidget textFieldWidget;
 
-    public ProfileNamingScreen() {
+    public ProfilesNamingScreen() {
         super(Text.of("TextFieldScreen"));
         int width = InventiveInventory.getClient().getWindow().getScaledWidth();
         int height = InventiveInventory.getClient().getWindow().getScaledHeight();
@@ -26,7 +27,6 @@ public class ProfileNamingScreen extends Screen {
         int centerY = this.height / 2;
 
         DirectionalLayoutWidget layout = DirectionalLayoutWidget.vertical();
-
         TextWidget textWidget = new TextWidget(150, 10, Text.of("Name your profile:"), this.client.textRenderer);
         this.textFieldWidget = new TextFieldWidget(this.client.textRenderer, 150, 20, Text.empty());
         this.textFieldWidget.setPlaceholder(Text.of("Profile name..."));
