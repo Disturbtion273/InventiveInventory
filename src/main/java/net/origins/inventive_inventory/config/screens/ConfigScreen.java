@@ -2,6 +2,7 @@ package net.origins.inventive_inventory.config.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.option.SimpleOption;
@@ -19,6 +20,7 @@ import net.origins.inventive_inventory.config.enums.sorting.SortingBehaviours;
 import net.origins.inventive_inventory.config.enums.sorting.SortingModes;
 import net.origins.inventive_inventory.config.enums.sorting.SortingStatus;
 import net.origins.inventive_inventory.config.screens.widgets.CustomTextWidget;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -33,6 +35,7 @@ public class ConfigScreen extends GameOptionsScreen {
 
     @Override
     protected void addOptions() {
+        if (client == null || body == null) return;
         this.addTitle("Sorting");
         this.addWidget(SortingStatus.class, ConfigManager.SORTING);
         this.addWidget(SortingModes.class, ConfigManager.S_MODE);
@@ -47,6 +50,7 @@ public class ConfigScreen extends GameOptionsScreen {
 
         this.addTitle("Profiles");
         this.addWidget(ProfilesStatus.class, ConfigManager.PROFILES);
+        this.body.addWidgetEntry(new CustomTextWidget(Text.of("Config Screen:"), this.client.textRenderer), ButtonWidget.builder(Text.of("Config Profiles..."), button -> this.client.setScreen(new ProfilesConfigScreen(this))).build());
         this.addWidget(ProfilesLoadMode.class, ConfigManager.P_LOAD_MODE);
         this.addWidget(ProfilesLockedSlotsBehaviours.class, ConfigManager.P_LS_BEHAVIOUR);
     }

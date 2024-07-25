@@ -9,6 +9,8 @@ import net.origins.inventive_inventory.config.enums.automatic_refilling.Automati
 import net.origins.inventive_inventory.config.enums.automatic_refilling.AutomaticRefillingToolBreakingBehaviour;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
+import net.origins.inventive_inventory.context.ContextManager;
+import net.origins.inventive_inventory.context.Contexts;
 import net.origins.inventive_inventory.features.automatic_refilling.AutomaticRefillingHandler;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
@@ -73,11 +75,13 @@ public class TickEvents {
             boolean validMode = AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.SEMI_AUTOMATIC
                     || !AdvancedOperationHandler.isPressed() && ConfigManager.AR_MODE == AutomaticRefillingModes.AUTOMATIC;
 
-            if (validMode) {
+            if (validMode && ContextManager.isInit()) {
+                ContextManager.setContext(Contexts.AUTOMATIC_REFILLING);
                 AutomaticRefillingHandler.runMainHand();
                 if (AutomaticRefillingHandler.RUN_OFFHAND) {
                     AutomaticRefillingHandler.runOffHand();
                 }
+                ContextManager.setContext(Contexts.INIT);
             } else AutomaticRefillingHandler.reset();
         }
     }
@@ -87,11 +91,13 @@ public class TickEvents {
         for (KeyBinding profileKey : KeyRegistry.profileKeys) {
             if (profileKey.isPressed()) {
                 boolean validMode = ConfigManager.P_LOAD_MODE == ProfilesLoadMode.FAST_LOAD || (ConfigManager.P_LOAD_MODE == ProfilesLoadMode.STANDARD_LOAD && KeyRegistry.loadProfileKey.isPressed());
-                if (validMode) {
+                if (validMode && ContextManager.isInit()) {
+                    ContextManager.setContext(Contexts.PROFILES);
                     List<Profile> profiles = ProfileHandler.getProfiles();
                     profiles.forEach(profile -> {
                         if (profileKey.getTranslationKey().equals(profile.getKey())) ProfileHandler.load(profile);
                     });
+                    ContextManager.setContext(Contexts.INIT);
                 }
             }
         }

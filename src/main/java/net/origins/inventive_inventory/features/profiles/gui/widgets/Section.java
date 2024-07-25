@@ -1,10 +1,11 @@
-package net.origins.inventive_inventory.features.profiles.gui;
+package net.origins.inventive_inventory.features.profiles.gui.widgets;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.text.Text;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesScreen;
 import net.origins.inventive_inventory.util.Textures;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 import net.origins.inventive_inventory.util.tooltips.TooltipBuilder;

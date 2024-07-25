@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
+import net.origins.inventive_inventory.features.profiles.gui.widgets.Section;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.mouse.MouseLocation;
 
@@ -22,7 +23,6 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
     public static final int HOVER_COLOR = 0x3FFFFFFF;
     public static final int DELETE_COLOR = 0x7FE4080A;
     public static final int OVERWRITE_COLOR = 0x7FFFDE59;
-    private static final int MAX_PROFILES = 6;
     public static boolean DELETE_KEY_PRESSED;
     public static boolean OVERWRITE_KEY_PRESSED;
     private static final List<Section> sections = new ArrayList<>();
@@ -35,9 +35,9 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
         if (this.client != null) this.client.setOverlay(null);
         sections.clear();
         for (Profile profile: ProfileHandler.getProfiles()) {
-            if (sections.size() <= MAX_PROFILES) sections.add(new Section(sections.size(), profile));
+            if (sections.size() <= ProfileHandler.MAX_PROFILES) sections.add(new Section(sections.size(), profile));
         }
-        if (sections.size() < MAX_PROFILES) sections.add(new Section(sections.size(), null));
+        if (sections.size() < ProfileHandler.MAX_PROFILES) sections.add(new Section(sections.size(), null));
         DELETE_KEY_PRESSED = false;
         OVERWRITE_KEY_PRESSED = false;
     }
@@ -67,9 +67,6 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
 
         for (Section section : sections) {
             section.drawIcon(context);
-        }
-
-        for (Section section : sections) {
             section.drawTooltips(context, mouseX, mouseY);
         }
 

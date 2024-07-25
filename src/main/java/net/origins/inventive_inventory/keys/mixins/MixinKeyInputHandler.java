@@ -1,8 +1,8 @@
 package net.origins.inventive_inventory.keys.mixins;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.origins.inventive_inventory.InventiveInventory;
-import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
+import net.origins.inventive_inventory.context.ContextManager;
+import net.origins.inventive_inventory.context.Contexts;
 import net.origins.inventive_inventory.features.sorting.SortingHandler;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.keys.handler.AdvancedOperationHandler;
@@ -19,8 +19,10 @@ public class MixinKeyInputHandler {
         if (KeyRegistry.advancedOperationKey.matchesKey(keyCode, scanCode)) {
             AdvancedOperationHandler.setPressed(true);
         }
-        if (KeyRegistry.sortKey.matchesKey(keyCode, scanCode) ) {
+        if (KeyRegistry.sortKey.matchesKey(keyCode, scanCode) && ContextManager.isInit()) {
+            ContextManager.setContext(Contexts.SORTING);
             SortingHandler.sort();
+            ContextManager.setContext(Contexts.INIT);
         }
     }
 
@@ -29,8 +31,10 @@ public class MixinKeyInputHandler {
         if (KeyRegistry.advancedOperationKey.matchesMouse(button)) {
             AdvancedOperationHandler.setPressed(true);
         }
-        if (KeyRegistry.sortKey.matchesMouse(button)) {
+        if (KeyRegistry.sortKey.matchesMouse(button) && ContextManager.isInit()) {
+            ContextManager.setContext(Contexts.SORTING);
             SortingHandler.sort();
+            ContextManager.setContext(Contexts.INIT);
         }
     }
 

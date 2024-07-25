@@ -27,7 +27,7 @@ public class MixinLockedSlotsDrawer {
     @Shadow
     protected int y;
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = "render", at = @At("HEAD"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!InventiveInventory.getPlayer().isInCreativeMode()) {
             context.getMatrices().push();
@@ -36,7 +36,22 @@ public class MixinLockedSlotsDrawer {
             List<Integer> lockedSlots = LockedSlotsHandler.getLockedSlots().adjust();
             for (Integer lockedSlot : lockedSlots) {
                 Slot slot = InventiveInventory.getScreenHandler().getSlot(lockedSlot);
-                Drawer.drawSlotBackground(context, slot.x, slot.y, 0xFF4D4D4D, 0);
+                Drawer.drawSlotBackground(context, slot.x, slot.y, 0xFF4D4D4D, 1);
+            }
+
+            context.getMatrices().pop();
+        }
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void afterRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (!InventiveInventory.getPlayer().isInCreativeMode()) {
+            context.getMatrices().push();
+            context.getMatrices().translate(this.x, this.y, 0.0f);
+
+            List<Integer> lockedSlots = LockedSlotsHandler.getLockedSlots().adjust();
+            for (Integer lockedSlot : lockedSlots) {
+                Slot slot = InventiveInventory.getScreenHandler().getSlot(lockedSlot);
                 context.drawTexture(Textures.LOCK, slot.x + 11, slot.y - 2, 300, 0, 0, 8, 8, 8, 8);
             }
 

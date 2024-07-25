@@ -8,21 +8,18 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLoadMode;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlotsBehaviours;
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
 import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
+import net.origins.inventive_inventory.util.Notifier;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class ProfilesConfigCommand {
-    private static final Style style = Style.EMPTY.withBold(true);
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-config")
@@ -82,54 +79,52 @@ public class ProfilesConfigCommand {
 
     private static int switchStatus(CommandContext<FabricClientCommandSource> context) {
         String status = StringArgumentType.getString(context, "status");
-        Text text = Text.of("You cannot switch the Status to: " + status).copy().setStyle(style.withColor(Formatting.RED));
         if (Arrays.stream(ProfilesStatus.values()).anyMatch(s -> s.getName().equals(status))) {
             ConfigManager.PROFILES = ProfilesStatus.valueOf(status.toUpperCase());
             ConfigManager.save();
-            text = Text.of("Switched Status to: " + status).copy().setStyle(style.withColor(Formatting.GREEN));
+            Notifier.send("Switched Status to: " + status, Formatting.GREEN);
+            return 1;
         }
-        InventiveInventory.getPlayer().sendMessage(text, true);
-        return 1;
+        Notifier.error("You cannot switch the Status to: " + status);
+        return -1;
     }
 
     private static int switchLoadMode(CommandContext<FabricClientCommandSource> context) {
         String loadMode = StringArgumentType.getString(context, "loadMode");
-        Text text = Text.of("You cannot switch the Load Mode to: " + loadMode).copy().setStyle(style.withColor(Formatting.RED));
         if (Arrays.stream(ProfilesLoadMode.values()).anyMatch(s -> s.getName().equals(loadMode))) {
             ConfigManager.P_LOAD_MODE = ProfilesLoadMode.valueOf(loadMode.replaceAll("[ -]", "_").toUpperCase());
             ConfigManager.save();
-            text = Text.of("Switched Load Mode to: " + loadMode).copy().setStyle(style.withColor(Formatting.GREEN));
+            Notifier.send("Switched Load Mode to: " + loadMode, Formatting.GREEN);
+            return 1;
         }
-        InventiveInventory.getPlayer().sendMessage(text, true);
-        return 1;
+        Notifier.error("You cannot switch the Load Mode to: " + loadMode);
+        return -1;
     }
 
     private static int switchLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> context) {
         String lockedSlotsBehaviour = StringArgumentType.getString(context, "lockedSlotsBehaviour");
-        Text text = Text.of("You cannot switch the Locked Slots Behaviour to: " + lockedSlotsBehaviour).copy().setStyle(style.withColor(Formatting.RED));
         if (Arrays.stream(ProfilesLockedSlotsBehaviours.values()).anyMatch(s -> s.getName().equals(lockedSlotsBehaviour))) {
             ConfigManager.P_LS_BEHAVIOUR = ProfilesLockedSlotsBehaviours.valueOf(lockedSlotsBehaviour.toUpperCase());
             ConfigManager.save();
-            text = Text.of("Switched Locked Slots Behaviour to: " + lockedSlotsBehaviour).copy().setStyle(style.withColor(Formatting.GREEN));
+            Notifier.send("Switched Locked Slots Behaviour to: " + lockedSlotsBehaviour, Formatting.GREEN);
+            return 1;
         }
-        InventiveInventory.getPlayer().sendMessage(text, true);
-        return 1;
+        Notifier.error("You cannot switch the Locked Slots Behaviour to: " + lockedSlotsBehaviour);
+        return -1;
     }
 
     private static int getStatus(CommandContext<FabricClientCommandSource> ignoredContext) {
-        Text text = Text.of("Status: " + ConfigManager.PROFILES.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.send("Status: " + ConfigManager.PROFILES.getName(), Formatting.BLUE);
         return 1;
     }
+
     private static int getLoadMode(CommandContext<FabricClientCommandSource> ignoredContext) {
-        Text text = Text.of("Load Mode: " + ConfigManager.P_LOAD_MODE.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.send("Load Mode: " + ConfigManager.P_LOAD_MODE.getName(), Formatting.BLUE);
         return 1;
     }
 
     private static int getLockedSlotsBehaviour(CommandContext<FabricClientCommandSource> ignoredContext) {
-        Text text = Text.of("Locked Slots Behaviour: " + ConfigManager.P_LS_BEHAVIOUR.getName()).copy().setStyle(style.withColor(Formatting.BLUE));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.send("Locked Slots Behaviour: " + ConfigManager.P_LS_BEHAVIOUR.getName(), Formatting.BLUE);
         return 1;
     }
 

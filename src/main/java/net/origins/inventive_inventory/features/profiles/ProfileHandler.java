@@ -1,12 +1,11 @@
 package net.origins.inventive_inventory.features.profiles;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.config.ConfigManager;
@@ -14,9 +13,9 @@ import net.origins.inventive_inventory.config.enums.profiles.ProfilesLockedSlots
 import net.origins.inventive_inventory.config.enums.profiles.ProfilesStatus;
 import net.origins.inventive_inventory.keys.KeyRegistry;
 import net.origins.inventive_inventory.util.ComponentsHelper;
-import net.origins.inventive_inventory.util.Converter;
 import net.origins.inventive_inventory.util.FileHandler;
 import net.origins.inventive_inventory.util.InteractionHandler;
+import net.origins.inventive_inventory.util.Notifier;
 import net.origins.inventive_inventory.util.slots.PlayerSlots;
 import net.origins.inventive_inventory.util.slots.SlotRange;
 import net.origins.inventive_inventory.util.slots.SlotTypes;
@@ -24,29 +23,24 @@ import net.origins.inventive_inventory.util.slots.SlotTypes;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class ProfileHandler {
     private static final String PROFILES_FILE = "profiles.json";
     public static final Path PROFILES_PATH = ConfigManager.CONFIG_PATH.resolve(PROFILES_FILE);
-    public static List<KeyBinding> availableProfileKeys;
-    private static final Style style = Style.EMPTY.withBold(true);
+    public static final int MAX_PROFILES = 5;
 
     public static void create(String name, String key) {
         if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
-        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        List<SavedSlot> savedSlots = new ArrayList<>();
-        for (int slot : PlayerSlots.get(SlotTypes.HOTBAR, SlotTypes.OFFHAND)) {
-            ItemStack stack = screenHandler.getSlot(slot).getStack();
-            if (!stack.isEmpty()) {
-                savedSlots.add(new SavedSlot(slot, stack));
-            }
+        JsonArray profilesJson = getJsonProfiles();
+        Profile profile = new Profile(profilesJson.size(), name, key, createSavedSlots());
+        if (profilesJson.size() < MAX_PROFILES) {
+            profilesJson.add(profile.getAsJsonObject());
+            save(profilesJson);
+            Notifier.send("Profile created!", Formatting.GREEN);
+            return;
         }
-        save(new Profile(getId(), name, key, savedSlots));
-        availableProfileKeys = getAvailableProfileKeys();
-        Text text = Text.of("Profile created!").copy().setStyle(style.withColor(Formatting.GREEN));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.error("Max amount of profiles reached!");
     }
 
     public static void load(Profile profile) {
@@ -64,62 +58,48 @@ public class ProfileHandler {
                 break;
             }
         }
-        Text text = Text.of("Profile loaded!").copy().setStyle(style.withColor(Formatting.BLUE));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.send("Profile loaded!", Formatting.BLUE);
     }
 
     public static void overwrite(Profile profile) {
         if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
-        delete(profile);
-        create("", profile.getKey());
-        Text text = Text.of("Profile overwritten!").copy().setStyle(style.withColor(Formatting.GOLD));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        JsonArray profilesJson = getJsonProfiles();
+        Profile newProfile = new Profile(profile.getId(), profile.getName(), profile.getKey(), createSavedSlots());
+        if (profilesJson.isEmpty()) profilesJson.add(newProfile.getAsJsonObject());
+        else profilesJson.set(profile.getId(), newProfile.getAsJsonObject());
+
+        save(profilesJson);
+        Notifier.send("Profile overwritten!", Formatting.GOLD);
+    }
+
+    public static void update(Profile profile) {
+        if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
+        JsonArray profilesJson = getJsonProfiles();
+        Profile newProfile = new Profile(profile.getId(), profile.getName(), profile.getKey(), profile.getSavedSlots());
+        if (profilesJson.isEmpty()) profilesJson.add(newProfile.getAsJsonObject());
+        else profilesJson.set(profile.getId(), newProfile.getAsJsonObject());
+
+        save(profilesJson);
+        Notifier.send("Profile updated!", Formatting.GOLD);
     }
 
     public static void delete(Profile profile) {
         if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
-        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
-        profilesJson.remove(Integer.toString(profile.getID()));
-        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
-        jsonObject.remove(InventiveInventory.getWorldName());
-        jsonObject.add(InventiveInventory.getWorldName(), profilesJson);
-        FileHandler.write(PROFILES_PATH, jsonObject);
-        availableProfileKeys = getAvailableProfileKeys();
-        Text text = Text.of("Profile deleted!").copy().setStyle(style.withColor(Formatting.RED));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        JsonArray profilesJson = getJsonProfiles();
+        if (!profilesJson.isEmpty()) profilesJson.remove(profile.getId());
+        save(profilesJson);
+        Notifier.send("Profile deleted!", Formatting.RED);
     }
 
     public static List<Profile> getProfiles() {
-        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
         List<Profile> profiles = new ArrayList<>();
-        for (String id : profilesJson.keySet()) {
-            JsonObject jsonProfile = profilesJson.getAsJsonObject(id);
-            profiles.add(new Profile(Integer.parseInt(id), jsonProfile.get("name").getAsString(), jsonProfile.get("key").getAsString(), jsonProfile.getAsJsonObject("display_stack"), jsonProfile.getAsJsonArray("saved_slots")));
+        for (JsonElement profileElement : getJsonProfiles()) {
+            JsonObject jsonProfile = profileElement.getAsJsonObject();
+            if (profiles.size() < MAX_PROFILES) {
+                profiles.add(new Profile(jsonProfile.get("id").getAsInt(), jsonProfile.get("name").getAsString(), jsonProfile.get("key").getAsString(), jsonProfile.getAsJsonObject("display_stack"), jsonProfile.getAsJsonArray("saved_slots")));
+            }
         }
         return profiles;
-    }
-
-    private static void save(Profile profile) {
-        JsonObject jsonProfile = new JsonObject();
-        jsonProfile.addProperty("name", profile.getName());
-        jsonProfile.addProperty("key", profile.getKey());
-        jsonProfile.add("display_stack", Converter.itemStackToJson(profile.getDisplayStack()));
-
-        JsonArray jsonArray = new JsonArray();
-        for (SavedSlot savedSlot : profile.getSavedSlots()) {
-            JsonObject savedSlotMap = new JsonObject();
-            savedSlotMap.addProperty("slot", savedSlot.slot());
-            savedSlotMap.add("stack", Converter.itemStackToJson(savedSlot.stack()));
-            jsonArray.add(savedSlotMap);
-        }
-        jsonProfile.add("saved_slots", jsonArray);
-
-        JsonObject profilesJson = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
-        profilesJson.add(Integer.toString(profile.getID()), jsonProfile);
-        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
-        jsonObject.remove(InventiveInventory.getWorldName());
-        jsonObject.add(InventiveInventory.getWorldName(), profilesJson);
-        FileHandler.write(ProfileHandler.PROFILES_PATH, jsonObject);
     }
     
     public static boolean isNoProfile(String name) {
@@ -129,7 +109,7 @@ public class ProfileHandler {
     }
 
     public static String getAvailableProfileKey() {
-        availableProfileKeys = getAvailableProfileKeys();
+        List<KeyBinding> availableProfileKeys = getAvailableProfileKeys();
         if (availableProfileKeys.isEmpty()) return "";
         else return availableProfileKeys.getFirst().getTranslationKey();
     }
@@ -144,9 +124,24 @@ public class ProfileHandler {
         return availableProfileKeys;
     }
 
-    private static int getId() {
-        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonObject(InventiveInventory.getWorldName()) : new JsonObject();
-        if (jsonObject.isEmpty()) return 0;
-        return Integer.parseInt(jsonObject.keySet().stream().sorted(Comparator.comparing(Integer::valueOf)).toList().getLast()) + 1;
+    private static void save(JsonArray profiles) {
+        JsonObject jsonObject = FileHandler.get(PROFILES_PATH).isJsonObject() ? FileHandler.get(PROFILES_PATH).getAsJsonObject() : new JsonObject();
+        jsonObject.remove(InventiveInventory.getWorldName());
+        jsonObject.add(InventiveInventory.getWorldName(), profiles);
+        FileHandler.write(ProfileHandler.PROFILES_PATH, jsonObject);
+    }
+
+    private static List<SavedSlot> createSavedSlots() {
+        ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
+        List<SavedSlot> savedSlots = new ArrayList<>();
+        for (int slot : PlayerSlots.get(SlotTypes.HOTBAR, SlotTypes.OFFHAND)) {
+            ItemStack stack = screenHandler.getSlot(slot).getStack();
+            if (!stack.isEmpty()) savedSlots.add(new SavedSlot(slot, stack));
+        }
+        return savedSlots;
+    }
+
+    private static JsonArray getJsonProfiles() {
+        return FileHandler.get(PROFILES_PATH).isJsonObject() && FileHandler.get(PROFILES_PATH).getAsJsonObject().has(InventiveInventory.getWorldName()) ? FileHandler.get(PROFILES_PATH).getAsJsonObject().getAsJsonArray(InventiveInventory.getWorldName()) : new JsonArray();
     }
 }

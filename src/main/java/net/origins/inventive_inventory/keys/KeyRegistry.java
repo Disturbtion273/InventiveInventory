@@ -62,4 +62,12 @@ public class KeyRegistry {
         }
         return null;
     }
+
+    @Nullable
+    public static KeyBinding getByBoundKey(String boundKey) {
+        for (KeyBinding keyBinding : profileKeys) {
+            if (keyBinding.getBoundKeyLocalizedText().getString().equals(boundKey)) return keyBinding;
+        }
+        return null;
+    }
 }

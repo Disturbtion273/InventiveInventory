@@ -34,6 +34,7 @@ public class InventiveInventory implements ClientModInitializer {
         } catch (IOException e) {
             LOGGER.error("Couldn't create config files", e);
             LOGGER.error(MOD_NAME + " could not be initialized correctly!");
+            LOGGER.error("DELETE THE " + InventiveInventory.MOD_ID + " CONFIG DIRECTORY!");
         }
     }
 

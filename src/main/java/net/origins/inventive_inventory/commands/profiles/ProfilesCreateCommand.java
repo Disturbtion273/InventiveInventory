@@ -9,17 +9,12 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
+import net.origins.inventive_inventory.util.Notifier;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ProfilesCreateCommand {
-    private static final Style style = Style.EMPTY.withBold(true);
-
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignored) {
         dispatcher.register(ClientCommandManager.literal("inventive-profiles")
                 .then(ClientCommandManager.literal("create")
@@ -40,8 +35,7 @@ public class ProfilesCreateCommand {
             ProfileHandler.create(name, "");
             return 1;
         }
-        Text text = Text.of("Profile needs an exclusive name!").copy().setStyle(style.withColor(Formatting.RED));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.error("Profile needs an exclusive name!");
         return -1;
     }
 
@@ -55,12 +49,10 @@ public class ProfilesCreateCommand {
                     return 1;
                 }
             }
-            Text text = Text.of("Key is not available!").copy().setStyle(style.withColor(Formatting.RED));
-            InventiveInventory.getPlayer().sendMessage(text, true);
+            Notifier.error("Key is not available!");
             return -1;
         }
-        Text text = Text.of("Profile needs a name!").copy().setStyle(style.withColor(Formatting.RED));
-        InventiveInventory.getPlayer().sendMessage(text, true);
+        Notifier.error("Profile needs a name!");
         return -1;
     }
 

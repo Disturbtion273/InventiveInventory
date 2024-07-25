@@ -15,9 +15,12 @@ import net.origins.inventive_inventory.features.locked_slots.LockedSlotsHandler;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
 import net.origins.inventive_inventory.util.FileHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class ConfigManager {
     private static final String CONFIG_FILE = "config.json";
@@ -38,6 +41,7 @@ public class ConfigManager {
     public static Configurable P_LS_BEHAVIOUR;
 
     public static void init() throws IOException {
+        deleteOldConfigs();
         Files.createDirectories(CONFIG_PATH);
         FileHandler.createFile(CONFIG_FILE_PATH);
         FileHandler.createFile(LockedSlotsHandler.LOCKED_SLOTS_PATH);
@@ -96,5 +100,16 @@ public class ConfigManager {
         PROFILES = ProfilesStatus.get(config);
         P_LOAD_MODE = ProfilesLoadMode.get(config);
         P_LS_BEHAVIOUR = ProfilesLockedSlotsBehaviours.get(config);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void deleteOldConfigs() throws IOException {
+        if (Files.exists(CONFIG_PATH.resolve("settings.properties"))) {
+            try (Stream<Path> paths = Files.walk(CONFIG_PATH)) {
+                paths.sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            }
+        }
     }
 }
