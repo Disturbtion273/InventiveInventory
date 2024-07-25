@@ -87,6 +87,11 @@ public class ProfileHandler {
         if (InventiveInventory.getPlayer().isInCreativeMode() || ConfigManager.PROFILES == ProfilesStatus.DISABLED) return;
         JsonArray profilesJson = getJsonProfiles();
         if (!profilesJson.isEmpty()) profilesJson.remove(profile.getId());
+        for (int i = 0; i < profilesJson.size(); i++) {
+            JsonObject jsonProfile = profilesJson.get(i).getAsJsonObject();
+            jsonProfile.addProperty("id", i);
+            profilesJson.set(i, jsonProfile);
+        }
         save(profilesJson);
         Notifier.send("Profile deleted!", Formatting.RED);
     }

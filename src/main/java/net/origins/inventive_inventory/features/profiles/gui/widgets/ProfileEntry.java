@@ -9,46 +9,32 @@ import net.minecraft.text.Text;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.features.profiles.Profile;
 import net.origins.inventive_inventory.features.profiles.ProfileHandler;
+import net.origins.inventive_inventory.features.profiles.gui.ProfilesConfigScreen;
 import net.origins.inventive_inventory.keys.KeyRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 
 public class ProfileEntry extends DirectionalLayoutWidget implements Drawable {
     private final TextFieldWidget nameTextField;
-    private final CyclingButtonWidget<Text> keyButton;
+    private final ButtonWidget keyButton;
     private final Profile profile;
+    private final ProfilesConfigScreen parent;
 
 
-    public ProfileEntry(int index, int x, int y, Profile profile) {
+    public ProfileEntry(int index, int x, int y, Profile profile, ProfilesConfigScreen parent) {
         super(x, y, DisplayAxis.HORIZONTAL);
         this.profile = profile;
+        this.parent = parent;
         int height = 20;
         MinecraftClient client = InventiveInventory.getClient();
-
         TextWidget indexText = new TextWidget(40, height, Text.of(index + "."), client.textRenderer);
         this.nameTextField = new TextFieldWidget(client.textRenderer, 80, height, Text.empty());
         this.nameTextField.setText(profile.getName());
         this.nameTextField.setPlaceholder(Text.of("Name..."));
 
-        List<KeyBinding> availableBindings = ProfileHandler.getAvailableProfileKeys();
-        availableBindings.add(KeyRegistry.getByTranslationKey(this.profile.getKey()));
-
-        List<Text> availableBindingsText = new ArrayList<>(List.of(Text.of("Not Bound")));
-        availableBindings.forEach(binding -> {
-            if (binding != null) availableBindingsText.add(binding.getBoundKeyLocalizedText());
-        });
-
         KeyBinding profileKey = KeyRegistry.getByTranslationKey(this.profile.getKey());
         Text initially = profileKey != null ? profileKey.getBoundKeyLocalizedText() : Text.of("Not Bound");
 
-        this.keyButton = CyclingButtonWidget.builder(Function.identity())
-                .omitKeyText()
-                .values(availableBindingsText)
-                .initially(initially)
-                .build(Text.empty(), ((button, value) -> {}));
-        keyButton.setWidth(60);
+        this.keyButton = ButtonWidget.builder(Text.of(initially), this.toggle()).build();
+        this.keyButton.setWidth(60);
 
         Hotbar hotbar = new Hotbar(200, y, profile.getSavedSlots());
 
@@ -70,7 +56,7 @@ public class ProfileEntry extends DirectionalLayoutWidget implements Drawable {
 
     public void updateProfile() {
         String name = this.nameTextField.getText();
-        KeyBinding keyBinding = KeyRegistry.getByBoundKey(this.keyButton.getValue().getString());
+        KeyBinding keyBinding = KeyRegistry.getByBoundKey(this.keyButton.getMessage().getString());
         String key = keyBinding != null ? keyBinding.getTranslationKey() : "";
         if (!name.equals(this.profile.getName()) || !key.equals(this.profile.getKey())) {
             this.profile.setName(name);
@@ -78,4 +64,25 @@ public class ProfileEntry extends DirectionalLayoutWidget implements Drawable {
             ProfileHandler.update(this.profile);
         }
     }
+
+    private ButtonWidget.PressAction toggle() {
+        return button -> {
+            Text message = button.getMessage();
+            Text newMessage = this.parent.availableKeys.getFirst();
+            if (message.getString().equals(newMessage.getString())) {
+                this.parent.availableKeys.remove(newMessage);
+                this.parent.availableKeys.add(newMessage);
+                newMessage = this.parent.availableKeys.getFirst();
+            }
+            if (!message.getString().equals("Not Bound")) {
+                this.parent.availableKeys.add(message);
+            }
+            if (!newMessage.getString().equals("Not Bound")) {
+                this.parent.availableKeys.remove(newMessage);
+            }
+            button.setMessage(newMessage);
+            this.profile.setKey(button.getMessage().getString());
+        };
+    }
+
 }
