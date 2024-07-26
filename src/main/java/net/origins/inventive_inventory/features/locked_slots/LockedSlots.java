@@ -1,6 +1,7 @@
 package net.origins.inventive_inventory.features.locked_slots;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.CrafterScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.origins.inventive_inventory.InventiveInventory;
 import net.origins.inventive_inventory.util.ScreenCheck;
@@ -16,7 +17,9 @@ public class LockedSlots extends ArrayList<Integer> {
 
     public LockedSlots adjust() {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        if (!ScreenCheck.isPlayerHandler()) {
+        if (screenHandler instanceof CrafterScreenHandler) {
+            this.replaceAll(slot -> slot + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE - 10));
+        } else if (!ScreenCheck.isPlayerHandler()) {
             this.replaceAll(slot -> slot + (screenHandler.slots.size() - PlayerInventory.MAIN_SIZE - 9));
         }
         return this;
@@ -24,8 +27,10 @@ public class LockedSlots extends ArrayList<Integer> {
 
     public LockedSlots unadjust() {
         ScreenHandler screenHandler = InventiveInventory.getScreenHandler();
-        if (!ScreenCheck.isPlayerHandler()) {
-            this.replaceAll(slot -> slot - (screenHandler.slots.size() + PlayerInventory.MAIN_SIZE + 9));
+        if (screenHandler instanceof CrafterScreenHandler) {
+            this.replaceAll(slot -> slot - screenHandler.slots.size() + PlayerInventory.MAIN_SIZE + 10);
+        } else if (!ScreenCheck.isPlayerHandler()) {
+            this.replaceAll(slot -> slot - screenHandler.slots.size() + PlayerInventory.MAIN_SIZE + 9);
         }
         return this;
     }
