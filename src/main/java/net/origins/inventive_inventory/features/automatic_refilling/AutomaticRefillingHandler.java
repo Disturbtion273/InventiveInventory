@@ -37,6 +37,7 @@ public class AutomaticRefillingHandler {
     }
 
     public static void runMainHand() {
+        SELECTED_SLOT = InteractionHandler.getSelectedSlot();
         boolean isAutomaticRefillingDisabled = ConfigManager.AUTOMATIC_REFILLING == AutomaticRefillingStatus.DISABLED;
         boolean capturedStackIsEmpty = ItemStack.areItemsEqual(mainHandStack, ItemStack.EMPTY);
         ItemStack currentStack = InteractionHandler.getMainHandStack();
@@ -44,7 +45,6 @@ public class AutomaticRefillingHandler {
         boolean handFullAndToolDurabilityOver1 = ItemStack.areItemsEqual(mainHandStack, currentStack) && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() > 1;
         if (isAutomaticRefillingDisabled || capturedStackIsEmpty || handFullAndNoTool || handFullAndToolDurabilityOver1) return;
         if (ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR == AutomaticRefillingToolBreakingBehaviour.BREAK_TOOL && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() == 1) return;
-        SELECTED_SLOT = InteractionHandler.getSelectedSlot();
 
         List<Integer> sameItemSlots = getSameItemSlots(mainHandStack);
 
