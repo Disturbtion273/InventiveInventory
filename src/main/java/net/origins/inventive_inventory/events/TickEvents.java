@@ -34,9 +34,12 @@ public class TickEvents {
     }
 
     private static void checkKeys(MinecraftClient client) {
-        if (InventiveInventory.getPlayer() != null && InventiveInventory.getPlayer().isInCreativeMode()) return;
+        if (client.player == null || client.player.isInCreativeMode()) return;
         if (client.currentScreen == null) {
             AdvancedOperationHandler.setPressed(KeyRegistry.advancedOperationKey.isPressed());
+        }
+        if (AutomaticRefillingHandler.SELECTED_SLOT != InteractionHandler.getSelectedSlot()) {
+            AutomaticRefillingHandler.reset();
         }
         if (KeyRegistry.openProfilesScreenKey.isPressed() && ConfigManager.PROFILES == ProfilesStatus.ENABLED) {
             InventiveInventory.getClient().setScreen(new ProfilesScreen());

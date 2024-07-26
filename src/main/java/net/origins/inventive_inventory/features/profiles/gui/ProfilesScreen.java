@@ -119,4 +119,39 @@ public class ProfilesScreen extends HandledScreen<ScreenHandler> {
         }
         return false;
     }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (KeyRegistry.openProfilesScreenKey.matchesMouse(button)) {
+            int section = MouseLocation.getHoveredProfileSection(this.mouseX, this.mouseY);
+            if (section != -1) {
+                Profile profile = sections.get(section).getProfile();
+                if (profile == null) {
+                    if (DELETE_KEY_PRESSED) {
+                        InventiveInventory.getClient().setScreen(new ProfilesNamingScreen());
+                        return true;
+                    } else {
+                        ProfileHandler.create("", ProfileHandler.getAvailableProfileKey());
+                    }
+                } else if (DELETE_KEY_PRESSED) {
+                    ProfileHandler.delete(profile);
+                } else if (OVERWRITE_KEY_PRESSED) {
+                    ProfileHandler.overwrite(profile);
+                } else {
+                    ProfileHandler.load(profile);
+                }
+            }
+            this.close();
+            return true;
+        }
+        if (InputUtil.GLFW_KEY_LEFT_CONTROL == button) {
+            OVERWRITE_KEY_PRESSED = false;
+            return true;
+        }
+        if (InputUtil.GLFW_KEY_LEFT_ALT == button) {
+            DELETE_KEY_PRESSED = false;
+            return true;
+        }
+        return false;
+    }
 }

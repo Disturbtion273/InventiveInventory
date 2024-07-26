@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 public class AutomaticRefillingHandler {
 
+    public static int SELECTED_SLOT;
     public static boolean RUN_OFFHAND = true;
     private static ItemStack offHandStack = ItemStack.EMPTY;
     private static ItemStack mainHandStack = ItemStack.EMPTY;
@@ -43,6 +44,7 @@ public class AutomaticRefillingHandler {
         boolean handFullAndToolDurabilityOver1 = ItemStack.areItemsEqual(mainHandStack, currentStack) && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() > 1;
         if (isAutomaticRefillingDisabled || capturedStackIsEmpty || handFullAndNoTool || handFullAndToolDurabilityOver1) return;
         if (ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR == AutomaticRefillingToolBreakingBehaviour.BREAK_TOOL && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() == 1) return;
+        SELECTED_SLOT = InteractionHandler.getSelectedSlot();
 
         List<Integer> sameItemSlots = getSameItemSlots(mainHandStack);
 
@@ -69,6 +71,7 @@ public class AutomaticRefillingHandler {
         boolean handFullAndToolDurabilityOver1 = ItemStack.areItemsEqual(offHandStack, currentStack) && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() > 1;
         if (isAutomaticRefillingDisabled || capturedStackIsEmpty || handFullAndNoTool || handFullAndToolDurabilityOver1) return;
         if (ConfigManager.AR_TOOL_BREAKING_BEHAVIOUR == AutomaticRefillingToolBreakingBehaviour.BREAK_TOOL && TOOL_CLASSES.contains(currentStack.getItem().getClass()) && currentStack.getMaxDamage() - currentStack.getDamage() == 1) return;
+        SELECTED_SLOT = InteractionHandler.getSelectedSlot();
 
         List<Integer> sameItemSlots = getSameItemSlots(offHandStack);
 
@@ -83,9 +86,10 @@ public class AutomaticRefillingHandler {
     }
 
     public static void reset() {
-        AutomaticRefillingHandler.setMainHandStack(ItemStack.EMPTY);
-        AutomaticRefillingHandler.setOffHandStack(ItemStack.EMPTY);
-        AutomaticRefillingHandler.RUN_OFFHAND = true;
+        setMainHandStack(ItemStack.EMPTY);
+        setOffHandStack(ItemStack.EMPTY);
+        RUN_OFFHAND = true;
+        SELECTED_SLOT = -1;
     }
 
     private static List<Integer> getSameItemSlots(ItemStack handStack) {
