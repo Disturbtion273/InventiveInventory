@@ -7,11 +7,12 @@
         "defaultRequire": 1
     },
     "client": [
-        "MixinItemPickup",
         "MixinLockedSlotsDrawer",
         "MixinLockedSlotsToggle"
     ],
-    "mixins": [
+    "server": [
+        "MixinItemPickup",
         "MixinItemQuickMove"
+
     ]
 }

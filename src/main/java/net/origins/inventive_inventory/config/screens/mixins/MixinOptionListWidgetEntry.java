@@ -1,5 +1,7 @@
 package net.origins.inventive_inventory.config.screens.mixins;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @Mixin(OptionListWidget.WidgetEntry.class)
 public abstract class MixinOptionListWidgetEntry {
     @Shadow @Final private Screen screen;

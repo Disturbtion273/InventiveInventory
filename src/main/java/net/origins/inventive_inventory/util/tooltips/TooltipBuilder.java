@@ -19,6 +19,7 @@ public class TooltipBuilder {
         if (type == TooltipType.NAME) return buildName(profile);
         else if (type == TooltipType.ITEM) return buildItem(profile);
         else if (type == TooltipType.UNKNOWN) return buildUnknown(profile);
+        else if (type == TooltipType.PLUS) return buildPlus();
         else return new ArrayList<>();
     }
 
@@ -46,6 +47,13 @@ public class TooltipBuilder {
         List<Text> textList = new ArrayList<>();
         addTitle("Unnamed", Formatting.GRAY, textList);
         addKey(profile, textList);
+        return textList;
+    }
+
+    private static List<Text> buildPlus() {
+        List<Text> textList = new ArrayList<>();
+        textList.add(Text.of("Create a new profile."));
+        textList.add(Text.of("Hold ALT to give it a name."));
         return textList;
     }
 

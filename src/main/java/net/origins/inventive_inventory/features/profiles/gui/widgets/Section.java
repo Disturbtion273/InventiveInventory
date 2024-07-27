@@ -100,13 +100,13 @@ public class Section {
         boolean inX = this.iconX < mouseX && mouseX < this.iconX + 16;
         boolean inY = this.iconY < mouseY && mouseY < this.iconY + 16;
         boolean isMouseOverIcon = inX && inY;
-        if (isMouseOverIcon && this.profile != null) {
+        if (isMouseOverIcon) {
             List<Text> textList;
-            if (!this.profile.getName().isEmpty()) {
-                textList = TooltipBuilder.of(TooltipType.NAME, profile);
-            } else if (this.profile.getDisplayStack() != null) {
-                textList = TooltipBuilder.of(TooltipType.ITEM, profile);
-            } else textList = TooltipBuilder.of(TooltipType.UNKNOWN, profile);
+            if (this.profile != null) {
+                if (!this.profile.getName().isEmpty()) textList = TooltipBuilder.of(TooltipType.NAME, this.profile);
+                else if (this.profile.getDisplayStack() != null) textList = TooltipBuilder.of(TooltipType.ITEM, this.profile);
+                else textList = TooltipBuilder.of(TooltipType.UNKNOWN, this.profile);
+            } else textList = TooltipBuilder.of(TooltipType.PLUS, null);
             context.drawTooltip(InventiveInventory.getClient().textRenderer, textList, mouseX, mouseY);
         }
     }

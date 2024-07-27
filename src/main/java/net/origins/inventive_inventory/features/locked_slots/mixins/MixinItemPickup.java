@@ -1,5 +1,7 @@
 package net.origins.inventive_inventory.features.locked_slots.mixins;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
+@Environment(EnvType.SERVER)
 @Mixin(PlayerInventory.class)
 public abstract class MixinItemPickup {
 

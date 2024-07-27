@@ -1,5 +1,7 @@
 package net.origins.inventive_inventory.features.locked_slots.mixins;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -12,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Environment(EnvType.SERVER)
 @Mixin(ScreenHandler.class)
 public class MixinItemQuickMove {
     @Shadow @Final public DefaultedList<Slot> slots;
